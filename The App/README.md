@@ -1,6 +1,6 @@
 # SG Transport
 
-A new Flutter project.
+A EGE312 Project
 
 ## Getting Started
 
