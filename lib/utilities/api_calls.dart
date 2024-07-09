@@ -8,8 +8,11 @@ import '../models/train_crowd_density.dart';
 import '../models/taxi_stand.dart';
 
 class ApiCalls {
+  // String strTrainLine = 'EWL';
+
   Map<String, String> requestHeaders = {
     'Accept': 'application/json',
+    'AccountKey': 'mxj5m356TyWIdVUsvXlWqg==',
     //TODO
   };
 
@@ -39,7 +42,10 @@ class ApiCalls {
   // Refer to 2.1 Bus Arrival
   Future<List<BusArrival>> fetchBusArrivals(String busStopCode) async {
     String baseURL =
-        'http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=$busStopCode';
+        'http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=$busStopCode'; //Jason this has 2 pramas
+
+    //TODO Add query parameters
+    Map<String, String> queryParams = {};
 
     final response =
         await http.get(Uri.parse(baseURL), headers: requestHeaders);
@@ -56,8 +62,32 @@ class ApiCalls {
   }
 
   // Refer to 2.25 Platform Crowd Density needs params
-  void fetchCrowdDensity() async {
+  Future<List<CrowdDensity>> fetchCrowdDensity(String TrainLine) async {
     // TODO return List<CrowdDensity>
+/*    String baseURL =
+        'http://datamall2.mytransport.sg/ltaodataservice/PCDRealTime?TrainLine=$TrainLine';*/
+    String baseURL =
+        'http://datamall2.mytransport.sg/ltaodataservice/PCDRealTime?TrainLine=EWL';
+
+    //TODO Add query parameters
+    Map<String, String> queryParams = {
+      "TrainLine": TrainLine,
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+/*    final response = await http.get(Uri.parse(baseURL + '?' + queryString),
+        headers: requestHeaders);*/
+    final response =
+        await http.get(Uri.parse(baseURL), headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print(response.body);
+      List<dynamic> jsonList = jsonDecode(response.body)['value'];
+      List<CrowdDensity> crowddensity =
+          jsonList.map((json) => CrowdDensity.fromJson(json)).toList();
+      return crowddensity;
+    } else {
+      throw Exception('Failed to load Train station');
+    }
   }
 
   // Refer to 2.10 Taxi Stands
