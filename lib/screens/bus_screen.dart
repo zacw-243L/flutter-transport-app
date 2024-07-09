@@ -72,19 +72,25 @@ class _BusScreenState extends State<BusScreen> {
               style: TextStyle(fontSize: 20),
             ),
           ),
-          DropdownButton<BusStop>(
-            hint: Text('Select Bus Stop'),
-            value:
-                _selectedBusStop.busStopCode.isEmpty ? null : _selectedBusStop,
-            items: _allBusStops.map((busStop) {
-              return DropdownMenuItem<BusStop>(
-                value: busStop,
-                child: Text(busStop.description),
-              );
-            }).toList(),
-            onChanged: (busStop) {
+          Autocomplete<BusStop>(
+            displayStringForOption: (option) => option.description,
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return const Iterable<BusStop>.empty();
+              } else {
+                return _allBusStops.where((busStop) {
+                  return busStop.description
+                          .toLowerCase()
+                          .contains(textEditingValue.text.toLowerCase()) ||
+                      busStop.roadName
+                          .toLowerCase()
+                          .contains(textEditingValue.text.toLowerCase());
+                });
+              }
+            },
+            onSelected: (BusStop selection) {
               setState(() {
-                _selectedBusStop = busStop!;
+                _selectedBusStop = selection;
               });
             },
           ),
