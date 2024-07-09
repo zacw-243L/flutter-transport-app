@@ -21,6 +21,30 @@ class _TrainScreenState extends State<TrainScreen> {
     trainLineCode: '',
   );
 
+  List<CrowdDensity> _crowdDensities = [];
+  final TrainStationsRepository _trainStationsRepository =
+      TrainStationsRepository();
+  List<TrainStation> _allTrainStations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _allTrainStations = _trainStationsRepository.allTrainStations.toList();
+  }
+
+  Future<void> _fetchCrowdDensity() async {
+    try {
+      List<CrowdDensity> crowdDensities = await ApiCalls()
+          .fetchCrowdDensity(_selectedTrainStation.trainLineCode);
+      setState(() {
+        _crowdDensities = crowdDensities;
+      });
+    } catch (error) {
+      print('Error fetching crowd density: $error');
+      // Handle error (e.g., show error message)
+    }
+  }
+
 /*  void initState() {
     // TODO: implement initState
     Future.delayed(Duration.zero, () async {
@@ -30,12 +54,7 @@ class _TrainScreenState extends State<TrainScreen> {
     super.initState();
   }*/
 
-  List<CrowdDensity> _crowdDensities = [];
-  final TrainStationsRepository _trainStationsRepository =
-      TrainStationsRepository();
-  List<TrainStation> _allTrainStations = [];
-
-  void initState() {
+/*  void initState() {
     // TODO: implement initState
     Future.delayed(Duration.zero, () async {
       _crowdDensities =
@@ -44,7 +63,7 @@ class _TrainScreenState extends State<TrainScreen> {
 
     super.initState();
     _allTrainStations = _trainStationsRepository.allTrainStations.toList();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +85,14 @@ class _TrainScreenState extends State<TrainScreen> {
                       ));
             },
             displayStringForOption: (TrainStation option) => option.stnName,
-            onSelected: (TrainStation station) {
+            onSelected: (TrainStation station) async {
               setState(() {
                 _selectedTrainStation = station;
               });
+              await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
             },
           ),
-/*          Text('Selected Station: ${_selectedTrainStation.stnName}'),*/
+          Text('Selected Station: ${_selectedTrainStation.stnName}'),
         ],
       ),
     );
