@@ -8,6 +8,9 @@ class BusArrival {
   });
 
   // TODO implement BusArrival.fromJson
+  factory BusArrival.fromJson(Map<String, dynamic> json) {
+    return BusArrival(serviceNo: serviceNo, nextBus: nextBus);
+  }
   // JSON response returns the timestamp that the next bus will arrive
   // The computeArrival function calculates the difference between the timestamp and current time &
   // returns the difference in minutes.
@@ -22,7 +25,6 @@ class BusArrival {
   //     return '';
   //   }
   // }
-
 }
 
 class NextBus {
@@ -37,4 +39,12 @@ class NextBus {
     required this.feature,
     required this.type,
   });
+
+  factory NextBus.fromJson(Map<String, dynamic> json) {
+    return NextBus(
+        estimatedArrival: estimatedArrival,
+        load: load,
+        feature: feature,
+        type: type);
+  }
 }
