@@ -55,12 +55,14 @@ class _BusScreenState extends State<BusScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              // Implement logout functionality
+              auth.signOut();
+              Navigator.pushReplacementNamed(context, '/');
             },
             icon: const Icon(Icons.logout),
           ),
         ],
       ),
+      bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 0),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
