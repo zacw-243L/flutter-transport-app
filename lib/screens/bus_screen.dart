@@ -35,6 +35,18 @@ class _BusScreenState extends State<BusScreen> {
     super.initState();
   }
 
+  Future<void> fetchBusStops() async {
+    try {
+      List<BusStop> busStops = await ApiCalls().fetchBusStops();
+      setState(() {
+        _allBusStops = busStops;
+      });
+    } catch (error) {
+      print('Error fetching bus stops $error');
+      // Handle error (e.g., show error message)
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,17 +55,37 @@ class _BusScreenState extends State<BusScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              auth.signOut();
-              Navigator.pushReplacementNamed(context, '/');
+              // Implement logout functionality
             },
             icon: const Icon(Icons.logout),
           ),
         ],
       ),
-      bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 0),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Hello ${auth.currentUser?.displayName}'),
+          Center(
+            child: Text(
+              'Hello ${auth.currentUser?.displayName}',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          DropdownButton<BusStop>(
+            hint: Text('Select Bus Stop'),
+            value:
+                _selectedBusStop.busStopCode.isEmpty ? null : _selectedBusStop,
+            items: _allBusStops.map((busStop) {
+              return DropdownMenuItem<BusStop>(
+                value: busStop,
+                child: Text(busStop.description),
+              );
+            }).toList(),
+            onChanged: (busStop) {
+              setState(() {
+                _selectedBusStop = busStop!;
+              });
+            },
+          ),
         ],
       ),
     );
