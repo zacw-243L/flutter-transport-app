@@ -40,12 +40,13 @@ class ApiCalls {
   }*/
 
   // Refer to 2.1 Bus Arrival
-  Future<List<BusArrival>> fetchBusArrivals(String busStopCode) async {
+  Future<List<BusArrival>> fetchBusArrivals(
+      String busStopCode, ServiceNo) async {
     String baseURL =
-        'http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=$busStopCode'; //Jason this has 2 pramas
+        'http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=$busStopCode&ServiceNo=$ServiceNo'; //Jason this has 2 pramas
 
-    //TODO Add query parameters
-    Map<String, String> queryParams = {};
+    /*//TODO Add query parameters
+    Map<String, String> queryParams = {};*/
 
     final response =
         await http.get(Uri.parse(baseURL), headers: requestHeaders);

@@ -17,7 +17,7 @@ class _TrainScreenState extends State<TrainScreen> {
   TrainStation _selectedTrainStation = TrainStation(
     stnCode: '',
     stnName: '',
-    trainLine: 'EWL',
+    trainLine: '',
     trainLineCode: '',
   );
 
@@ -31,6 +31,9 @@ class _TrainScreenState extends State<TrainScreen> {
   }*/
 
   List<CrowdDensity> _crowdDensities = [];
+  final TrainStationsRepository _trainStationsRepository =
+      TrainStationsRepository();
+  List<TrainStation> _allTrainStations = [];
 
   void initState() {
     // TODO: implement initState
@@ -40,6 +43,7 @@ class _TrainScreenState extends State<TrainScreen> {
     });
 
     super.initState();
+    _allTrainStations = _trainStationsRepository.allTrainStations.toList();
   }
 
   @override
@@ -49,6 +53,28 @@ class _TrainScreenState extends State<TrainScreen> {
         title: const Text('Train'),
       ),
       bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 1),
+      body: Column(
+        children: [
+          Autocomplete<TrainStation>(
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text.isEmpty) {
+                return const Iterable<TrainStation>.empty();
+              }
+              return _allTrainStations
+                  .where((station) => station.stnName.toLowerCase().contains(
+                        textEditingValue.text.toLowerCase(),
+                      ));
+            },
+            displayStringForOption: (TrainStation option) => option.stnName,
+            onSelected: (TrainStation station) {
+              setState(() {
+                _selectedTrainStation = station;
+              });
+            },
+          ),
+/*          Text('Selected Station: ${_selectedTrainStation.stnName}'),*/
+        ],
+      ),
     );
   }
 }
