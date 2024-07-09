@@ -45,6 +45,32 @@ class _TrainScreenState extends State<TrainScreen> {
     }
   }
 
+/*  String _getCrowdLevelForStation() {
+    for (var crowdDensity in _crowdDensities) {
+      if (crowdDensity.station == _selectedTrainStation.stnCode) {
+        return crowdDensity.crowdLevel;
+      }
+    }
+    return 'No data available';
+  }*/
+  String _getCrowdLevelForStation() {
+    for (var crowdDensity in _crowdDensities) {
+      if (crowdDensity.station == _selectedTrainStation.stnCode) {
+        switch (crowdDensity.crowdLevel) {
+          case 'l':
+            return 'Low';
+          case 'm':
+            return 'Moderate';
+          case 'h':
+            return 'High';
+          default:
+            return 'Unknown';
+        }
+      }
+    }
+    return 'No data available';
+  }
+
 /*  void initState() {
     // TODO: implement initState
     Future.delayed(Duration.zero, () async {
@@ -92,7 +118,12 @@ class _TrainScreenState extends State<TrainScreen> {
               await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
             },
           ),
+          SizedBox(height: 20),
           Text('Selected Station: ${_selectedTrainStation.stnName}'),
+          SizedBox(height: 20),
+          Text('Station Code: ${_selectedTrainStation.stnCode}'),
+          SizedBox(height: 20),
+          Text('Crowd Level: ${_getCrowdLevelForStation()}'),
         ],
       ),
     );
