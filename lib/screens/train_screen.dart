@@ -17,30 +17,9 @@ class _TrainScreenState extends State<TrainScreen> {
   TrainStation _selectedTrainStation = TrainStation(
     stnCode: '',
     stnName: '',
-    trainLine: 'EWL',
+    trainLine: '',
     trainLineCode: '',
   );
-
-/*  void initState() {
-    // TODO: implement initState
-    Future.delayed(Duration.zero, () async {
-      _selectedTrainStation = await ApiCalls().fetchCrowdDensity('trainLine');
-    });
-
-    super.initState();
-  }*/
-
-  List<CrowdDensity> _crowdDensities = [];
-
-  void initState() {
-    // TODO: implement initState
-    Future.delayed(Duration.zero, () async {
-      _crowdDensities =
-          await ApiCalls().fetchCrowdDensity(_selectedTrainStation.trainLine);
-    });
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
