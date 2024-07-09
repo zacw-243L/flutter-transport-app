@@ -64,18 +64,18 @@ class ApiCalls {
   // Refer to 2.25 Platform Crowd Density needs params
   Future<List<CrowdDensity>> fetchCrowdDensity(String TrainLine) async {
     // TODO return List<CrowdDensity>
-/*    String baseURL =
-        'http://datamall2.mytransport.sg/ltaodataservice/PCDRealTime?TrainLine=$TrainLine';*/
     String baseURL =
-        'http://datamall2.mytransport.sg/ltaodataservice/PCDRealTime?TrainLine=EWL';
+        'http://datamall2.mytransport.sg/ltaodataservice/PCDRealTime?TrainLine=$TrainLine';
+/*    String baseURL =
+        'http://datamall2.mytransport.sg/ltaodataservice/PCDRealTime?TrainLine=EWL';*/
 
     //TODO Add query parameters
-    Map<String, String> queryParams = {
+/*    Map<String, String> queryParams = {
       "TrainLine": TrainLine,
-    };
+    };*/
 
-    String queryString = Uri(queryParameters: queryParams).query;
-/*    final response = await http.get(Uri.parse(baseURL + '?' + queryString),
+/*    String queryString = Uri(queryParameters: queryParams).query;*/
+/*    final response = await http.get(Uri.parse(baseURL + queryString),
         headers: requestHeaders);*/
     final response =
         await http.get(Uri.parse(baseURL), headers: requestHeaders);

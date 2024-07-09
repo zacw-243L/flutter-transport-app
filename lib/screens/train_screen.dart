@@ -17,7 +17,7 @@ class _TrainScreenState extends State<TrainScreen> {
   TrainStation _selectedTrainStation = TrainStation(
     stnCode: '',
     stnName: '',
-    trainLine: '',
+    trainLine: 'EWL',
     trainLineCode: '',
   );
 
