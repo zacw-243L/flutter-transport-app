@@ -94,6 +94,36 @@ class _BusScreenState extends State<BusScreen> {
               });
             },
           ),
+          SizedBox(height: 20), // Add a 20 pixel high empty space
+          Center(
+            child: SizedBox(
+              width: 200, // Set the width of the button
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 40),
+                ),
+                onPressed: () async {
+                  if (_selectedBusStop.latitude != 0 &&
+                      _selectedBusStop.longitude != 0) {
+                    try {
+                      await openMap(
+                        _selectedBusStop.latitude,
+                        _selectedBusStop.longitude,
+                      );
+                    } catch (e) {
+                      print('Error opening map: $e');
+                      // Handle error (e.g., show error message to user)
+                    }
+                  } else {
+                    print(
+                        'Invalid coordinates: ${_selectedBusStop.latitude}, ${_selectedBusStop.longitude}');
+                    // Handle invalid coordinates (e.g., show message to user)
+                  }
+                },
+                child: const Text('Show Map'),
+              ),
+            ),
+          ),
         ],
       ),
     );
