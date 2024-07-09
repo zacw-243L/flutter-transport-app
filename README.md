@@ -1,17 +1,16 @@
-# EGE312 Project
+# SG Transport
 
-In this project, you will build a SG Transport app
+A EGE312 Project
 
-To use API to fetch Bus Arrival from LTA DataMall<br>
-To use API to fetch Platform Crowd Density from LTA DataMall<br>
-To use API to fetch all Taxi Stands  from LTA DataMall<br>
-To log taxi trips and store in Firestore Database<br>
+## Getting Started
 
-Submission of Project codes:
-7 Aug (Wed), 12pm
+This project is a starting point for a Flutter application.
 
-Project Presentation (30 mins / group):
-6 Aug (Tue) & 7 Aug (Wed) 
+A few resources to get you started if this is your first Flutter project:
 
-Submission of Presentation slides:
-7 Aug (Wed), 5pm
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
