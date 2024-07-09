@@ -44,23 +44,25 @@ class _TaxiScreenState extends State<TaxiScreen> {
       bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 2),
       body: Column(
         children: [
-          ElevatedButton(
-            onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (BuildContext context) {
-                  return SingleChildScrollView(
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: const AddTaxiScreen(),
-                    ),
-                  );
-                },
-              );
-            },
-            child: const Text('Add Taxi Fare'),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SingleChildScrollView(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: const AddTaxiScreen(),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: const Text('Add Taxi Fare'),
+            ),
           ),
         ],
       ),
