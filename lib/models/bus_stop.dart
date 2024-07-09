@@ -14,5 +14,13 @@ class BusStop {
   });
 
   // TODO implement BusStop.fromJson
-
+  factory BusStop.fromJson(Map<String, dynamic> json) {
+    return BusStop(
+      busStopCode: json['BusStopCode'],
+      roadName: json['RoadName'],
+      description: json['Description'],
+      latitude: json['Latitude'],
+      longitude: json['Longitude'],
+    );
+  }
 }

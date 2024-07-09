@@ -10,4 +10,11 @@ class TaxiStand {
   });
 
   // TODO implement TaxiStand.fromJson
+  factory TaxiStand.fromJson(Map<String, dynamic> json) {
+    return TaxiStand(
+      name: json['Name'],
+      latitude: json['Latitude'],
+      longitude: json['Longitude'],
+    );
+  }
 }

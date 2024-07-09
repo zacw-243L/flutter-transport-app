@@ -29,17 +29,17 @@ class ApiCalls {
   }
 
   // Refer to 2.1 Bus Arrival
-  void fetchBusArrival() {
+  void fetchBusArrival() async {
     // TODO return List<BusArrival>
   }
 
   // Refer to 2.25 Platform Crowd Density
-  void fetchCrowdDensity() {
+  void fetchCrowdDensity() async {
     // TODO return List<CrowdDensity>
   }
 
   // Refer to 2.10 Taxi Stands
-  List<TaxiStand> fetchTaxiStands() {
+  Future<List<TaxiStand>> fetchTaxiStands() async {
     // TODO return List<TaxiStand>
     return [];
   }
