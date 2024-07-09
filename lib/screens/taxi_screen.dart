@@ -50,54 +50,77 @@ class _TaxiScreenState extends State<TaxiScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Taxi'),
-      ),
-      bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 2),
-      body: Column(
-        children: [
-          Autocomplete<TaxiStand>(
-            displayStringForOption: (TaxiStand option) => option.name,
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              if (textEditingValue.text == '') {
-                return const Iterable<TaxiStand>.empty();
-              } else {
-                return _alltaxiStands.where((TaxiStand taxiStand) {
-                  return taxiStand.name
-                      .toLowerCase()
-                      .contains(textEditingValue.text.toLowerCase());
+        appBar: AppBar(
+          title: const Text('Taxi'),
+        ),
+        bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 2),
+        body: Column(
+          children: [
+            Autocomplete<TaxiStand>(
+              displayStringForOption: (TaxiStand option) => option.name,
+              optionsBuilder: (TextEditingValue textEditingValue) {
+                if (textEditingValue.text == '') {
+                  return const Iterable<TaxiStand>.empty();
+                } else {
+                  return _alltaxiStands.where((TaxiStand taxiStand) {
+                    return taxiStand.name
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase());
+                  });
+                }
+              },
+              onSelected: (TaxiStand selection) {
+                setState(() {
+                  _selectedTaxiStand = selection;
                 });
-              }
-            },
-            onSelected: (TaxiStand selection) {
-              setState(() {
-                _selectedTaxiStand = selection;
-              });
-            },
-          ),
-          SizedBox(height: 20), // Add a 20 pixel high empty space
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SingleChildScrollView(
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: const AddTaxiScreen(),
-                      ),
+              },
+            ),
+            SizedBox(height: 20), // Add a 20 pixel high empty space
+            Center(
+              child: SizedBox(
+                width: 200, // Set the width of the button
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, 40),
+                  ),
+                  onPressed: () async {
+                    await openMap(
+                      _selectedTaxiStand.latitude,
+                      _selectedTaxiStand.longitude,
                     );
                   },
-                );
-              },
-              child: const Text('Add Taxi Fare'),
+                  child: const Text('Show Map'),
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+            SizedBox(height: 20), // Add a 20 pixel high empty space
+            Center(
+              child: SizedBox(
+                width: 200, // Set the width of the button
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 40)),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SingleChildScrollView(
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom),
+                            child: const AddTaxiScreen(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: const Text('Add Taxi Fare'),
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 }
