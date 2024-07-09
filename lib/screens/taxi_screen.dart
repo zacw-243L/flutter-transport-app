@@ -84,10 +84,22 @@ class _TaxiScreenState extends State<TaxiScreen> {
                     minimumSize: Size(double.infinity, 40),
                   ),
                   onPressed: () async {
-                    await openMap(
-                      _selectedTaxiStand.latitude,
-                      _selectedTaxiStand.longitude,
-                    );
+                    if (_selectedTaxiStand.latitude != 0 &&
+                        _selectedTaxiStand.longitude != 0) {
+                      try {
+                        await openMap(
+                          _selectedTaxiStand.latitude,
+                          _selectedTaxiStand.longitude,
+                        );
+                      } catch (e) {
+                        print('Error opening map: $e');
+                        // Handle error (e.g., show error message)
+                      }
+                    } else {
+                      print(
+                          'Invalid coordinates: ${_selectedTaxiStand.latitude}, ${_selectedTaxiStand.longitude}');
+                      // Handle invalid coordinates (e.g., show message to user)
+                    }
                   },
                   child: const Text('Show Map'),
                 ),

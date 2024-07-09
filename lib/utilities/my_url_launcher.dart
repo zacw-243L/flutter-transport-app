@@ -7,12 +7,11 @@ Future<void> launchURL(String url) async {
 }
 
 Future<void> openMap(double lat, double lng) async {
-  Uri uri =
-      Uri.parse('https://www.google.com/maps/search/?api=1&query=$lat,$lng');
-
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-  } else {
-    throw 'Could not launch Google Maps';
+  try {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
+    await launchURL(url);
+  } catch (e) {
+    print('Error opening map: $e');
+    throw Exception('Could not launch Google Maps');
   }
 }
