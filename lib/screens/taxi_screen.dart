@@ -89,70 +89,93 @@ class _TaxiScreenState extends State<TaxiScreen> {
               ),
               SizedBox(height: 20), // Add a 20 pixel high empty space
               Center(
-                child: SizedBox(
-                  width: 200, // Set the width of the button
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 40),
-                    ),
-                    onPressed: () async {
-                      if (_selectedTaxiStand.latitude != 0 &&
-                          _selectedTaxiStand.longitude != 0) {
-                        try {
-                          await openMap(
-                            _selectedTaxiStand.latitude,
-                            _selectedTaxiStand.longitude,
-                          );
-                        } catch (e) {
-                          print('Error opening map: $e');
-                          // Handle error (e.g., show error message)
-                        }
-                      } else {
-                        print(
-                            'Invalid coordinates: ${_selectedTaxiStand.latitude}, ${_selectedTaxiStand.longitude}');
-                        // Handle invalid coordinates (e.g., show message to user)
-                      }
-                    },
-                    child: const Text(
-                      'Show Map',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
+                child: ShowMapButton(
+                  selectedTaxiStand: _selectedTaxiStand,
+                  openMap: openMap,
                 ),
               ),
               SizedBox(height: 20), // Add a 20 pixel high empty space
               Center(
-                child: SizedBox(
-                  width: 200, // Set the width of the button
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.infinity, 40)),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return SingleChildScrollView(
-                            child: Container(
-                              padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom),
-                              child: const AddTaxiScreen(),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: const Text(
-                      'Add Taxi Fare',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ),
+                child: AddTaxiFareButton(),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ShowMapButton extends StatelessWidget {
+  final TaxiStand selectedTaxiStand;
+  final Future<void> Function(double latitude, double longitude) openMap;
+
+  ShowMapButton({
+    required this.selectedTaxiStand,
+    required this.openMap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200, // Set the width of the button
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          minimumSize: Size(double.infinity, 40),
+        ),
+        onPressed: () async {
+          if (selectedTaxiStand.latitude != 0 &&
+              selectedTaxiStand.longitude != 0) {
+            try {
+              await openMap(
+                selectedTaxiStand.latitude,
+                selectedTaxiStand.longitude,
+              );
+            } catch (e) {
+              print('Error opening map: $e');
+              // Handle error (e.g., show error message)
+            }
+          } else {
+            print(
+                'Invalid coordinates: ${selectedTaxiStand.latitude}, ${selectedTaxiStand.longitude}');
+            // Handle invalid coordinates (e.g., show message to user)
+          }
+        },
+        child: const Text(
+          'Show Map',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+    );
+  }
+}
+
+class AddTaxiFareButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200, // Set the width of the button
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 40)),
+        onPressed: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (BuildContext context) {
+              return SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: const AddTaxiScreen(),
+                ),
+              );
+            },
+          );
+        },
+        child: const Text(
+          'Add Taxi Fare',
+          style: TextStyle(fontSize: 20),
+        ),
       ),
     );
   }
