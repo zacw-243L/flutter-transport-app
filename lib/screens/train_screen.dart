@@ -62,7 +62,7 @@ class _TrainScreenState extends State<TrainScreen> {
         }
       }
     }
-    return 'No data available';
+    return '';
   }
 
   Color _getCrowdLevelColor(String crowdLevel) {
@@ -76,6 +76,23 @@ class _TrainScreenState extends State<TrainScreen> {
       default:
         return Colors
             .black; // Default color for 'Unknown' or 'No data available'
+    }
+  }
+
+  Color _getTrainLineColor(String trainLineCode) {
+    switch (trainLineCode) {
+      case 'EWL':
+        return Colors.green;
+      case 'CCL':
+        return Colors.orange;
+      case 'NSL':
+        return Colors.red;
+      case 'NEL':
+        return Colors.purple;
+      case 'DTL':
+        return Colors.blue;
+      default:
+        return Colors.white; // Default color if train line code doesn't match
     }
   }
 
@@ -150,47 +167,79 @@ class _TrainScreenState extends State<TrainScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              RichText(
-                text: TextSpan(
-                  text: 'Selected Station: ',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: _selectedTrainStation.stnName,
-                      style: TextStyle(color: Colors.white70, fontSize: 18),
-                    ),
-                  ],
+              Container(
+                margin: EdgeInsets.all(20),
+                padding: EdgeInsets.all(
+                    30), // Add some padding to make the container bigger
+                decoration: BoxDecoration(
+                  color: Colors.deepPurple
+                      .withOpacity(0.65), // 30% opacity deep purple background
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(10)), // Round the corners
                 ),
-              ),
-              SizedBox(height: 20),
-              RichText(
-                text: TextSpan(
-                  text: 'Station Code: ',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: _selectedTrainStation.stnCode,
-                      style: TextStyle(color: Colors.white70, fontSize: 18),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Text.rich(
-                TextSpan(
-                  text: 'Crowd Level: ',
-                  style: TextStyle(
-                      color: Colors.white), // Default text color for the prefix
+                child: Column(
                   children: [
-                    TextSpan(
-                      text: crowdLevel,
-                      style: TextStyle(
-                          color: _getCrowdLevelColor(
-                              crowdLevel)), // Color based on crowd level
+                    RichText(
+                      text: TextSpan(
+                        text: 'Selected Station: ', // Bold the text
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: _selectedTrainStation.stnName,
+                            style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Station Code: ', // Bold the text
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: _selectedTrainStation.stnCode,
+                            style: TextStyle(
+                              color: _getTrainLineColor(
+                                  _selectedTrainStation.trainLineCode),
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Crowd Level: ', // Bold the text
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: crowdLevel,
+                            style: TextStyle(
+                                color: _getCrowdLevelColor(crowdLevel),
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
+              )
             ],
           ),
         ],
