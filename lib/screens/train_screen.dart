@@ -98,35 +98,46 @@ class _TrainScreenState extends State<TrainScreen> {
         title: const Text('Train'),
       ),
       bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 1),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-            child: Autocomplete<TrainStation>(
-              optionsBuilder: (TextEditingValue textEditingValue) {
-                if (textEditingValue.text.isEmpty) {
-                  return const Iterable<TrainStation>.empty();
-                }
-                return _allTrainStations
-                    .where((station) => station.stnName.toLowerCase().contains(
-                          textEditingValue.text.toLowerCase(),
-                        ));
-              },
-              displayStringForOption: (TrainStation option) => option.stnName,
-              onSelected: (TrainStation station) async {
-                setState(() {
-                  _selectedTrainStation = station;
-                });
-                await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
-              },
+          Positioned.fill(
+            child: Image.asset(
+              'images/trainkun.png', // Replace with your image asset path
+              fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 20),
-          Text('Selected Station: ${_selectedTrainStation.stnName}'),
-          SizedBox(height: 20),
-          Text('Station Code: ${_selectedTrainStation.stnCode}'),
-          SizedBox(height: 20),
-          Text('Crowd Level: ${_getCrowdLevelForStation()}'),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                child: Autocomplete<TrainStation>(
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    if (textEditingValue.text.isEmpty) {
+                      return const Iterable<TrainStation>.empty();
+                    }
+                    return _allTrainStations.where(
+                        (station) => station.stnName.toLowerCase().contains(
+                              textEditingValue.text.toLowerCase(),
+                            ));
+                  },
+                  displayStringForOption: (TrainStation option) =>
+                      option.stnName,
+                  onSelected: (TrainStation station) async {
+                    setState(() {
+                      _selectedTrainStation = station;
+                    });
+                    await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
+                  },
+                ),
+              ),
+              SizedBox(height: 20),
+              Text('Selected Station: ${_selectedTrainStation.stnName}'),
+              SizedBox(height: 20),
+              Text('Station Code: ${_selectedTrainStation.stnCode}'),
+              SizedBox(height: 20),
+              Text('Crowd Level: ${_getCrowdLevelForStation()}'),
+            ],
+          ),
         ],
       ),
     );

@@ -79,14 +79,31 @@ class _BusScreenState extends State<BusScreen> {
   String BusType(BusArrival busArrival) {
     switch (busArrival.nextBus.type.toLowerCase()) {
       case 'dd':
-        return 'Double deck';
+        return 'Double decker';
       case 'sd':
-        return 'Single deck';
+        return 'Single decker';
       case 'bd':
         return 'Bendy Bus';
       default:
         return 'Unknown';
     }
+  }
+
+  String arriveTime(String dateTimeString) {
+    // Parse the input datetime string into a DateTime object
+    DateTime parsedDateTime = DateTime.parse(dateTimeString);
+
+    // Get the current time
+    DateTime now = DateTime.now();
+
+    // Calculate the difference between now and the parsed datetime
+    Duration difference = now.difference(parsedDateTime);
+
+    // Convert the difference to minutes
+    int minutes = difference.inMinutes;
+
+    // Return the formatted string
+    return 'Arriving in ${minutes * -1} min';
   }
 
   @override
@@ -241,7 +258,8 @@ class _BusScreenState extends State<BusScreen> {
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 25)),
                                 Text(
-                                  'Estimated Arrival: ${busArrival.nextBus.estimatedArrival}',
+                                  arriveTime(
+                                      busArrival.nextBus.estimatedArrival),
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 Center(
