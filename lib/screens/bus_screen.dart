@@ -50,12 +50,9 @@ class _BusScreenState extends State<BusScreen> {
   }
 
   Future<void> fetchBusArrivals(String busStopCode, String serviceNo) async {
-    print("H1fssew");
     try {
       List<BusArrival> busArrivals =
           await ApiCalls().fetchBusArrivals(busStopCode, serviceNo);
-      print("H1few");
-      print(busArrivals);
       setState(() {
         _busArrivals = busArrivals;
       });
@@ -66,21 +63,8 @@ class _BusScreenState extends State<BusScreen> {
     }
   }
 
-  IconData getLoadIcon(String load) {
-    switch (load.toLowerCase()) {
-      case 'LSD':
-        return Icons.directions_bus;
-      case 'SEA':
-        return Icons.directions_bus_filled;
-      case 'SDA':
-        return Icons.directions_bus_rounded;
-      default:
-        return Icons.directions_bus;
-    }
-  }
-
   Color getLoadColor(String load) {
-    switch (load.toLowerCase()) {
+    switch (load.toUpperCase()) {
       case 'LSD':
         return Colors.red;
       case 'SEA':
@@ -92,25 +76,16 @@ class _BusScreenState extends State<BusScreen> {
     }
   }
 
-  IconData getFeatureIcon(String feature) {
-    switch (feature.toLowerCase()) {
-      case 'WAB':
-        return Icons.accessible;
-      default:
-        return Icons.directions_bus;
-    }
-  }
-
-  IconData getTypeIcon(String type) {
-    switch (type.toLowerCase()) {
+  String BusType(BusArrival busArrival) {
+    switch (busArrival.nextBus.type.toLowerCase()) {
       case 'dd':
-        return Icons.directions_bus_filled;
+        return 'Double deck';
       case 'sd':
-        return Icons.directions_bus_rounded;
+        return 'Single deck';
       case 'bd':
-        return Icons.directions_transit;
+        return 'Bendy Bus';
       default:
-        return Icons.directions_bus;
+        return 'Unknown';
     }
   }
 
@@ -222,44 +197,68 @@ class _BusScreenState extends State<BusScreen> {
                   itemBuilder: (context, index) {
                     BusArrival busArrival = _busArrivals[index];
                     return ListTile(
-                      leading: Icon(
-                        getTypeIcon(busArrival.nextBus.type),
-                        color: getLoadColor(busArrival.nextBus.load),
+                      leading: Container(
+                        width: 40, // Example width
+                        height: 40, // Example height
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xFFFFFFFF),
+                        ),
+                        child: Icon(
+                          Icons.directions_bus,
+                          color: getLoadColor(busArrival.nextBus.load),
+                          size: 30,
+                        ),
                       ),
-                      title: Text('Bus ${busArrival.serviceNo}',
-                          style: TextStyle(color: Colors.white)),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Estimated Arrival: ${busArrival.nextBus.estimatedArrival}',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                getLoadIcon(busArrival.nextBus.load),
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                busArrival.nextBus.load,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                getFeatureIcon(busArrival.nextBus.feature),
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                busArrival.nextBus.feature,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
+                          Card(
+                            color: Color(0xFF5E60CE).withOpacity(0.85),
+                            child: Column(
+                              children: [
+                                Text('Bus No: ${busArrival.serviceNo}',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 25)),
+                                Text(
+                                  'Estimated Arrival: ${busArrival.nextBus.estimatedArrival}',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                Center(
+                                  child: Text(
+                                    BusType(busArrival),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(width: 30),
+                                    Icon(
+                                      Icons.accessible,
+                                      color: busArrival.nextBus.feature == "WAB"
+                                          ? Colors.green
+                                          : Colors.red,
+                                      size: 40,
+                                    ),
+                                    SizedBox(
+                                        width:
+                                            8), // Adjust spacing between Icon and Text
+                                    Text(
+                                      busArrival.nextBus.feature == "WAB"
+                                          ? "Wheelchair Accessible"
+                                          : "Wheelchair Inaccessible",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors
+                                            .white, // Adjust text color as needed
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

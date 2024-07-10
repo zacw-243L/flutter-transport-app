@@ -54,7 +54,7 @@ class ApiCalls {
         await http.get(Uri.parse(baseURL), headers: requestHeaders);
 
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       List<dynamic> jsonList = jsonDecode(response.body)['Services'];
       List<BusArrival> busArrivals =
           jsonList.map((json) => BusArrival.fromJson(json)).toList();
