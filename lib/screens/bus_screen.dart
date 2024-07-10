@@ -183,7 +183,6 @@ class _BusScreenState extends State<BusScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
                   itemCount: _busArrivals.length,
@@ -199,7 +198,7 @@ class _BusScreenState extends State<BusScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(10.0),
                 child: ShowMap(selectedBusStop: _selectedBusStop),
               ),
             ],
@@ -277,7 +276,7 @@ class BusArrivalTile extends StatelessWidget {
           Stack(
             children: [
               Transform.translate(
-                offset: Offset(20.0, 30.0),
+                offset: Offset(10.0, 30.0),
                 child: buildInfoCard(),
               ),
               Transform.translate(
@@ -295,7 +294,7 @@ class BusArrivalTile extends StatelessWidget {
                           Icon(
                             Icons.directions_bus,
                             color: getLoadColor(busArrival.nextBus.load),
-                            size: 40,
+                            size: 30,
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -304,7 +303,7 @@ class BusArrivalTile extends StatelessWidget {
                               color: busArrival.nextBus.feature == "WAB"
                                   ? Colors.green
                                   : Colors.red,
-                              size: 40,
+                              size: 30,
                             ),
                           ),
                         ]),

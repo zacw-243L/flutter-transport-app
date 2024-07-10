@@ -178,7 +178,7 @@ class _TrainScreenState extends State<TrainScreen> {
                   color: Colors.deepPurple
                       .withOpacity(0.65), // 30% opacity deep purple background
                   borderRadius: BorderRadius.all(
-                      Radius.circular(10)), // Round the corners
+                      Radius.circular(23)), // Round the corners
                 ),
                 child: Column(
                   children: [
