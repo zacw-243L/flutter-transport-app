@@ -172,20 +172,44 @@ class _TaxiScreenState extends State<TaxiScreen> {
                             title: Text(
                               '$origin > $destination',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20), // Bigger font size
+                                color: Colors.white,
+                                fontSize: 20, // Bigger font size
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(2.0, 2.0),
+                                    blurRadius: 3.0,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                ],
+                              ),
                             ),
                             subtitle: Text(
                               formattedDate,
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18), // Bigger font size
+                                color: Colors.white,
+                                fontSize: 18, // Bigger font size
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(2.0, 2.0),
+                                    blurRadius: 3.0,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                ],
+                              ),
                             ),
                             trailing: Text(
                               '\$$fare',
                               style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 18), // Bigger font size
+                                color: Colors.white70,
+                                fontSize: 18, // Bigger font size
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(2.0, 2.0),
+                                    blurRadius: 3.0,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         }).toList(),
