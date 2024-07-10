@@ -277,33 +277,30 @@ class ShowMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 200,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(double.infinity, 40),
-          ),
-          onPressed: () async {
-            if (_selectedBusStop.latitude != 0 &&
-                _selectedBusStop.longitude != 0) {
-              try {
-                await openMap(
-                  _selectedBusStop.latitude,
-                  _selectedBusStop.longitude,
-                );
-              } catch (e) {
-                print('Error opening map: $e');
-              }
-            } else {
-              print(
-                  'Invalid coordinates: ${_selectedBusStop.latitude}, ${_selectedBusStop.longitude}');
+    return SizedBox(
+      width: 200,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          minimumSize: Size(double.infinity, 40),
+        ),
+        onPressed: () async {
+          if (_selectedBusStop.latitude != 0 &&
+              _selectedBusStop.longitude != 0) {
+            try {
+              await openMap(
+                _selectedBusStop.latitude,
+                _selectedBusStop.longitude,
+              );
+            } catch (e) {
+              throw ('Error opening map: $e');
             }
-          },
-          child: const Text(
-            'Show Map',
-            style: TextStyle(fontSize: 20),
-          ),
+          } else {
+            throw ('Invalid coordinates: ${_selectedBusStop.latitude}, ${_selectedBusStop.longitude}');
+          }
+        },
+        child: const Text(
+          'Show Map',
+          style: TextStyle(fontSize: 20),
         ),
       ),
     );
