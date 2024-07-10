@@ -87,7 +87,7 @@ class _BusScreenState extends State<BusScreen> {
     int minutes = difference.inMinutes * -1;
     if (minutes <= 0) {
       return 'Departed';
-    } else if (minutes == 0 || minutes == 1) {
+    } else if (minutes > 0 && minutes <= 1) {
       return 'Arrived';
     }
     return 'Arriving in $minutes min';
