@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../utilities/api_calls.dart';
-import '../utilities/firebase_calls.dart';
 import '../utilities/my_url_launcher.dart';
-
 import '../models/taxi_stand.dart';
 import '../widgets/navigation_bar.dart';
 import 'add_taxi_screen.dart';
@@ -27,12 +26,8 @@ class _TaxiScreenState extends State<TaxiScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    Future.delayed(Duration.zero, () async {
-      _alltaxiStands = await ApiCalls().fetchTaxiStands();
-    });
-
     super.initState();
+    fetchTaxiStands();
   }
 
   Future<void> fetchTaxiStands() async {
@@ -97,6 +92,40 @@ class _TaxiScreenState extends State<TaxiScreen> {
               SizedBox(height: 20), // Add a 20 pixel high empty space
               Center(
                 child: AddTaxiFareButton(),
+              ),
+              SizedBox(height: 20), // Add a 20 pixel high empty space
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('fares')
+                      .where('userid',
+                          isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return Center(child: Text('No fares found'));
+                    }
+                    return ListView(
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                            document.data() as Map<String, dynamic>;
+                        return ListTile(
+                          title: Text(
+                              '${data['origin']} > ${data['destination']}'),
+                          subtitle: Text('${data['date']}'),
+                          trailing: Text('\$${data['fare']}'),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
               ),
             ],
           ),
