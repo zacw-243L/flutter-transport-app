@@ -104,7 +104,10 @@ class _TaxiScreenState extends State<TaxiScreen> {
                       // Handle invalid coordinates (e.g., show message to user)
                     }
                   },
-                  child: const Text('Show Map'),
+                  child: const Text(
+                    'Show Map',
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ),
               ),
             ),
@@ -131,7 +134,10 @@ class _TaxiScreenState extends State<TaxiScreen> {
                       },
                     );
                   },
-                  child: const Text('Add Taxi Fare'),
+                  child: const Text(
+                    'Add Taxi Fare',
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ),
               ),
             ),
