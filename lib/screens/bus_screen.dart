@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../utilities/api_calls.dart';
 import '../utilities/constants.dart';
@@ -261,58 +262,102 @@ class BusArrivalTile extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Transform.translate(
-            offset: Offset(100.0, 30.0),
-            child: Card(
-              color: Color(0xFF5E60CE).withOpacity(0.85),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(23),
+          Stack(
+            children: [
+              Transform.translate(
+                offset: Offset(25.0, 80.0),
+                child: buildInfoCard(),
               ),
-              child: Row(
-                children: [
-                  Column(children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      child: Icon(
-                        Icons.directions_bus,
-                        color: getLoadColor(busArrival.nextBus.load),
-                        size: 30,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.accessible,
-                        color: busArrival.nextBus.feature == "WAB"
-                            ? Colors.green
-                            : Colors.red,
-                        size: 40,
-                      ),
-                    ),
-                  ]),
-                  Column(
-                    children: [
-                      Text('Bus No: ${busArrival.serviceNo}', style: kBusTitle),
-                      Text(arriveTime(busArrival.nextBus.estimatedArrival),
-                          style: kInfo),
-                      Text(
-                        busArrival.nextBus.feature == "WAB"
-                            ? "Wheelchair Accessible"
-                            : "Wheelchair Inaccessible",
-                        style: kAccessible,
-                      ),
-                      Center(
-                        child: Text(BusType(busArrival), style: kInfo),
-                      ),
-                    ],
+              Transform.translate(
+                offset: Offset(120.0, 30.0),
+                child: Card(
+                  color: Color(0xFF5E60CE).withOpacity(0.80),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(23),
                   ),
-                ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        Column(children: [
+                          Icon(
+                            Icons.directions_bus,
+                            color: getLoadColor(busArrival.nextBus.load),
+                            size: 40,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.accessible,
+                              color: busArrival.nextBus.feature == "WAB"
+                                  ? Colors.green
+                                  : Colors.red,
+                              size: 40,
+                            ),
+                          ),
+                        ]),
+                        Column(
+                          children: [
+                            Text('Bus No: ${busArrival.serviceNo}',
+                                style: kBusTitle),
+                            Text(
+                                arriveTime(busArrival.nextBus.estimatedArrival),
+                                style: kInfo),
+                            Text(
+                              busArrival.nextBus.feature == "WAB"
+                                  ? "Wheelchair Accessible"
+                                  : "Wheelchair Inaccessible",
+                              style: kAccessible,
+                            ),
+                            Center(
+                              child: Text(BusType(busArrival), style: kInfo),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildInfoCard() {
+    return Card(
+      color: Color(0xFF5E60CE).withOpacity(0.65),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(23),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 10, 30, 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildRow(Icons.directions_bus, " 5 min :", Colors.yellow),
+            buildRow(Icons.directions_bus, " 5 min :", Colors.green),
+            buildRow(Icons.directions_bus, " 5 min :", Colors.red),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildRow(IconData icon, String text, Color color) {
+    return Row(
+      children: [
+        Text(
+          text,
+          style: kInfo,
+        ),
+        Icon(
+          icon,
+          color: color,
+        ),
+      ],
     );
   }
 }
