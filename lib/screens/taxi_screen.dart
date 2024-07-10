@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../utilities/api_calls.dart';
 import '../utilities/constants.dart';
+import '../utilities/firebase_calls.dart';
 import '../utilities/my_url_launcher.dart';
 import '../models/taxi_stand.dart';
 import '../widgets/navigation_bar.dart';
@@ -48,7 +49,20 @@ class _TaxiScreenState extends State<TaxiScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Taxi'),
+        backgroundColor: Color(0xFF5E60CE).withOpacity(0.85),
+        title: Text(
+          "LionTransport".toUpperCase(),
+          style: kAppName,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              auth.signOut();
+              Navigator.pushReplacementNamed(context, '/');
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
       ),
       bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 2),
       body: Stack(
@@ -106,10 +120,6 @@ class _TaxiScreenState extends State<TaxiScreen> {
                   selectedTaxiStand: _selectedTaxiStand,
                   openMap: openMap,
                 ),
-              ),
-              SizedBox(height: 20), // Add a 20 pixel high empty space
-              Center(
-                child: AddTaxiFareButton(),
               ),
               SizedBox(height: 20), // Add a 20 pixel high empty space
               Expanded(
@@ -178,7 +188,39 @@ class _TaxiScreenState extends State<TaxiScreen> {
                     );
                   },
                 ),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SingleChildScrollView(
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                                child: const AddTaxiScreen(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: const Icon(Icons.add),
+                      backgroundColor:
+                          Color(0xFFFFFFFF), // Customize the background color
+                      tooltip:
+                          'Add Taxi Fare', // Optional tooltip for accessibility
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ],
@@ -199,7 +241,7 @@ class ShowMapButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200, // Set the width of the button
+      width: 170, // Set the width of the button
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: Size(double.infinity, 40),
@@ -222,9 +264,14 @@ class ShowMapButton extends StatelessWidget {
             // Handle invalid coordinates (e.g., show message to user)
           }
         },
-        child: const Text(
-          'Show Map',
-          style: TextStyle(fontSize: 20),
+        child: Row(
+          children: [
+            const Text(
+              'Show Map',
+              style: TextStyle(fontSize: 20),
+            ),
+            Icon(Icons.location_on)
+          ],
         ),
       ),
     );

@@ -101,7 +101,7 @@ class _BusScreenState extends State<BusScreen> {
       appBar: AppBar(
         backgroundColor: Color(0xFF5E60CE).withOpacity(0.85),
         title: Text(
-          "Bus lai liao".toUpperCase(),
+          "LionTransport".toUpperCase(),
           style: kAppName,
         ),
         actions: [
@@ -215,7 +215,7 @@ class ShowMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
+      width: 170,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: Size(double.infinity, 40),

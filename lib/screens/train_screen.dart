@@ -5,6 +5,7 @@ import '../utilities/api_calls.dart';
 import '../models/train_stations_repository.dart';
 import '../models/train_crowd_density.dart';
 import '../utilities/constants.dart';
+import '../utilities/firebase_calls.dart';
 import '../widgets/navigation_bar.dart';
 
 class TrainScreen extends StatefulWidget {
@@ -83,7 +84,20 @@ class _TrainScreenState extends State<TrainScreen> {
     String crowdLevel = _getCrowdLevelForStation();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Train'),
+        backgroundColor: Color(0xFF5E60CE).withOpacity(0.85),
+        title: Text(
+          "LionTransport".toUpperCase(),
+          style: kAppName,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              auth.signOut();
+              Navigator.pushReplacementNamed(context, '/');
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
       ),
       bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 1),
       body: Stack(
