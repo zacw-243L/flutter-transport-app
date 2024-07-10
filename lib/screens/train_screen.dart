@@ -112,7 +112,10 @@ class _TrainScreenState extends State<TrainScreen> {
               auth.signOut();
               Navigator.pushReplacementNamed(context, '/');
             },
-            icon: const Icon(Icons.logout),
+            icon: Icon(
+              Icons.logout,
+              color: Colors.black, // Set the color of the logout icon to black
+            ),
           ),
         ],
       ),
