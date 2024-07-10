@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/taxi_fare.dart';
 import '../utilities/firebase_calls.dart';
@@ -11,6 +13,10 @@ class AddTaxiScreen extends StatefulWidget {
 }
 
 class _AddTaxiScreenState extends State<AddTaxiScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  CollectionReference tasksCollection =
+      FirebaseFirestore.instance.collection('fares');
+
   final TextEditingController originController = TextEditingController();
   final TextEditingController destController = TextEditingController();
   final TextEditingController fareController = TextEditingController();
