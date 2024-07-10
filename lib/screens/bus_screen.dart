@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-
 import '../utilities/api_calls.dart';
 import '../utilities/firebase_calls.dart';
 import '../utilities/my_url_launcher.dart';
-
 import '../models/bus_arrival.dart';
 import '../models/bus_stop.dart';
 import '../widgets/navigation_bar.dart';
 
 class BusScreen extends StatefulWidget {
   const BusScreen({super.key});
-
   @override
   State<BusScreen> createState() => _BusScreenState();
 }
@@ -26,15 +23,12 @@ class _BusScreenState extends State<BusScreen> {
     longitude: 0,
   );
   String _selectedServiceNo = '';
-  String _busStopCode = '';
-
   @override
   void initState() {
-    // TODO: implement initState
     Future.delayed(Duration.zero, () async {
       _allBusStops = await ApiCalls().fetchBusStops();
     });
-    super.initState();
+    super.initState(); // TODO: implement initState
   }
 
   Future<void> fetchBusStops() async {
@@ -44,8 +38,7 @@ class _BusScreenState extends State<BusScreen> {
         _allBusStops = busStops;
       });
     } catch (error) {
-      print('Error fetching bus stops $error');
-      // Handle error (e.g., show error message)
+      throw (error);
     }
   }
 
@@ -56,10 +49,8 @@ class _BusScreenState extends State<BusScreen> {
       setState(() {
         _busArrivals = busArrivals;
       });
-      print('Bus arrivals fetched: ${_busArrivals.length}');
     } catch (error) {
-      print('Error fetching bus arrivals $error');
-      // Handle error (e.g., show error message)
+      throw (error);
     }
   }
 
@@ -90,32 +81,23 @@ class _BusScreenState extends State<BusScreen> {
   }
 
   String arriveTime(String dateTimeString) {
-    // Parse the input datetime string into a DateTime object
     DateTime parsedDateTime = DateTime.parse(dateTimeString);
-
-    // Get the current time
     DateTime now = DateTime.now();
-
-    // Calculate the difference between now and the parsed datetime
     Duration difference = now.difference(parsedDateTime);
-
-    // Convert the difference to minutes
-    int minutes = difference.inMinutes;
-    if (minutes == -1) {
+    int minutes = difference.inMinutes * -1;
+    if (minutes <= 0) {
       return 'Departed';
     } else if (minutes == 0 || minutes == 1) {
       return 'Arrived';
     }
-
-    // Return the formatted string
-    return 'Arriving in ${minutes * -1} min';
+    return 'Arriving in $minutes min';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0x995E60CE).withOpacity(0.7),
+        backgroundColor: Color(0xFF5E60CE).withOpacity(0.85),
         title: Text(
           "Bus lai liao".toUpperCase(),
           style: TextStyle(color: Color(0xFFFFFFFF)),
@@ -172,15 +154,12 @@ class _BusScreenState extends State<BusScreen> {
                       print(
                           "Selected BusStop: ${_selectedBusStop!.description}"); // or print(_selectedBusStop.roadName)
                     });
-
                     List<BusArrival> busArrivals = await ApiCalls()
                         .fetchBusArrivals(
                             _selectedBusStop!.busStopCode, _selectedServiceNo);
-
                     setState(() {
                       _busArrivals = busArrivals;
                     });
-                    print("Finish");
                   },
                   fieldViewBuilder: (BuildContext context,
                       TextEditingController textEditingController,
@@ -193,7 +172,7 @@ class _BusScreenState extends State<BusScreen> {
                           color:
                               Colors.white), // Change the text color to white
                       decoration: InputDecoration(
-                        hintText: 'Enter name of bus stop',
+                        hintText: 'Enter bus stop',
                         hintStyle: TextStyle(
                             color: Colors
                                 .white), // Change the hint text color to white
@@ -203,36 +182,7 @@ class _BusScreenState extends State<BusScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              Center(
-                child: SizedBox(
-                  width: 200,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 40),
-                    ),
-                    onPressed: () async {
-                      if (_selectedBusStop.latitude != 0 &&
-                          _selectedBusStop.longitude != 0) {
-                        try {
-                          await openMap(
-                            _selectedBusStop.latitude,
-                            _selectedBusStop.longitude,
-                          );
-                        } catch (e) {
-                          print('Error opening map: $e');
-                        }
-                      } else {
-                        print(
-                            'Invalid coordinates: ${_selectedBusStop.latitude}, ${_selectedBusStop.longitude}');
-                      }
-                    },
-                    child: const Text(
-                      'Show Map',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ),
-              ),
+              ShowMap(selectedBusStop: _selectedBusStop),
               Expanded(
                 child: ListView.builder(
                   itemCount: _busArrivals.length,
@@ -317,116 +267,44 @@ class _BusScreenState extends State<BusScreen> {
   }
 }
 
-class PopOutCard extends StatefulWidget {
-  final Color color;
-  final String arrivalTime;
-  final List<String> buses;
-  final String departureTime;
-  final String wheelchair;
-  final String eta;
+class ShowMap extends StatelessWidget {
+  const ShowMap({
+    super.key,
+    required BusStop selectedBusStop,
+  }) : _selectedBusStop = selectedBusStop;
 
-  PopOutCard({
-    required this.color,
-    required this.arrivalTime,
-    required this.buses,
-    required this.departureTime,
-    required this.wheelchair,
-    required this.eta,
-  });
+  final BusStop _selectedBusStop;
 
-  @override
-  _PopOutCardState createState() => _PopOutCardState();
-}
-
-class _PopOutCardState extends State<PopOutCard> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-            child: Container(
-              height: 140, // Specify the desired height
-              width: 140, // Specify the desired width
-              child: Card(
-                //color: Colors.transparent,
-                color: Color(0xFF5E60CE).withOpacity(0.5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Column(children: [
-                      Text(
-                        widget.buses[0],
-                        style: TextStyle(fontSize: 20, color: Colors.amber),
-                      ),
-                      Text(
-                        widget.buses[1],
-                        style: TextStyle(fontSize: 16, color: Colors.amber),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Very empty",
-                        style: TextStyle(fontSize: 14, color: Colors.amber),
-                      )
-                    ]),
-                  ),
-                ),
-              ),
-            ),
+    return Center(
+      child: SizedBox(
+        width: 200,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(double.infinity, 40),
           ),
-          Transform.translate(
-            offset: Offset(120.0, 0.0), // Adjust the vertical offset as needed
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              color: widget.color,
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.bus_alert_outlined,
-                            size: 30, color: Color(0xFFFFFFFF)),
-                        Text('Arriving in: ${widget.arrivalTime}',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    Text('Departure time: ${widget.departureTime}',
-                        style: TextStyle(color: Colors.white.withOpacity(0.9))),
-                    SizedBox(height: 8),
-                    Text('Estimated arrival time: ${widget.eta}',
-                        style: TextStyle(color: Colors.white.withOpacity(0.9))),
-                    SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(Icons.wheelchair_pickup,
-                            size: 30, color: Color(0xFFFFFFFF)),
-                        Text('  Wheelchair accessible',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          onPressed: () async {
+            if (_selectedBusStop.latitude != 0 &&
+                _selectedBusStop.longitude != 0) {
+              try {
+                await openMap(
+                  _selectedBusStop.latitude,
+                  _selectedBusStop.longitude,
+                );
+              } catch (e) {
+                print('Error opening map: $e');
+              }
+            } else {
+              print(
+                  'Invalid coordinates: ${_selectedBusStop.latitude}, ${_selectedBusStop.longitude}');
+            }
+          },
+          child: const Text(
+            'Show Map',
+            style: TextStyle(fontSize: 20),
           ),
-        ],
+        ),
       ),
     );
   }
