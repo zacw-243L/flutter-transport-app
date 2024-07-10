@@ -29,7 +29,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: Colors.lightBlue,
+      backgroundColor: Color(0xFF3E80CE).withOpacity(0.65),
       items: const [
         BottomNavigationBarItem(
           label: 'Bus',

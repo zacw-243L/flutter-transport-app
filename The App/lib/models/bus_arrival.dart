@@ -7,30 +7,6 @@ class BusArrival {
     required this.nextBus,
   });
 
-  // JSON response returns the timestamp that the next bus will arrive
-  // The computeArrival function calculates the difference between the timestamp and current time &
-  // returns the difference in minutes.
-
-  // factory BusArrival.fromJson(Map<String, dynamic> json) {
-  //   String computeArrival(String estimatedArrival) {
-  //     if (estimatedArrival != '') {
-  //       var nextBus = DateTime.parse(estimatedArrival);
-  //       var difference = nextBus.difference(DateTime.now()).inMinutes;
-  //       return difference.toString();
-  //     }
-  //     return '';
-  //   }
-  // }
-
-/*  factory BusArrival.fromJson(Map<String, dynamic> json) {
-    return BusArrival(
-      serviceNo: json['ServiceNo'],
-      nextBus: (json['NextBus'] as List<dynamic>)
-          .map((bus) => NextBus.fromJson(bus as Map<String, dynamic>))
-          .toList(),
-    ); //Takes out NextBus and make it a list then map it for each bus in the list
-  }*/
-
   factory BusArrival.fromJson(Map<String, dynamic> json) {
     return BusArrival(
       serviceNo: json['ServiceNo'],

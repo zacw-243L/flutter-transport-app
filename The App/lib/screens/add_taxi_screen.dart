@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/taxi_fare.dart';
 import '../utilities/firebase_calls.dart';
@@ -11,10 +13,110 @@ class AddTaxiScreen extends StatefulWidget {
 }
 
 class _AddTaxiScreenState extends State<AddTaxiScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  CollectionReference faresCollection =
+      FirebaseFirestore.instance.collection('fares');
+
   final TextEditingController originController = TextEditingController();
   final TextEditingController destController = TextEditingController();
   final TextEditingController fareController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+
+  Future<void> _addfares(TaxiFare taxiFare) async {
+    try {
+      await faresCollection.add(taxiFare.toMap());
+      print("Taxi fare added");
+    } catch (e) {
+      print("Failed to add taxi fare: $e");
+    }
+  }
+
+  void _handleAdd() {
+    String origin = originController.text;
+    String dest = destController.text;
+    double fare;
+    DateTime date;
+
+    if (origin.isEmpty ||
+        dest.isEmpty ||
+        fareController.text.isEmpty ||
+        dateController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    if (origin.contains(RegExp(r'[0-9]')) || dest.contains(RegExp(r'[0-9]'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Origin and Destination should not contain numbers')),
+      );
+      return;
+    }
+
+    if (!fareController.text.contains(RegExp(r'^[0-9\.]+$'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Fare should only contain numbers')),
+      );
+      return;
+    }
+
+    fare = double.parse(fareController.text);
+
+    String dateInput = dateController.text;
+    if (!dateInput.contains(RegExp(r'^\d{4}-\d{2}-\d{2}$'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'Invalid input. Enter a valid date in YYYY-MM-DD format.')),
+      );
+      return;
+    }
+
+    List<String> dateParts = dateInput.split('-');
+    if (dateParts.length != 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'Invalid input. Enter a valid date in YYYY-MM-DD format.')),
+      );
+      return;
+    }
+
+    int year = int.parse(dateParts[0]);
+    int month = int.parse(dateParts[1]);
+    int day = int.parse(dateParts[2]);
+
+    if (!(1 <= month && month <= 12) || !(1 <= day && day <= 31)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid input. Invalid date.')),
+      );
+      return;
+    }
+
+    date = DateTime(year, month, day);
+
+    // Convert the DateTime to a Timestamp
+    Timestamp timestamp = Timestamp.fromDate(date);
+
+    TaxiFare taxiFare = TaxiFare(
+      origin: origin,
+      dest: dest,
+      fare: fare.toString(),
+      date: timestamp, // Use the timestamp here
+      userid: auth.currentUser?.uid ?? '', // Ensure non-null value for userid
+    );
+    // Add the taxiFare to your database or perform any other operation
+
+    _addfares(taxiFare).then((_) {
+      // Clear the text fields after successful addition
+      originController.clear();
+      destController.clear();
+      fareController.clear();
+      dateController.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +142,12 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
           ),
           TextField(
             textAlign: TextAlign.center,
-            decoration: const InputDecoration(labelText: 'Date'),
+            decoration: const InputDecoration(labelText: 'Date (YYYY-MM-DD)'),
             controller: dateController,
           ),
           SizedBox(height: 20), // Add some space before the button
           ElevatedButton(
-            onPressed: () {}, // Empty onPressed callback
+            onPressed: _handleAdd,
             child: const Text('Add'),
           ),
         ],
