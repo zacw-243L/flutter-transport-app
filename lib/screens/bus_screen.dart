@@ -265,7 +265,7 @@ class BusArrivalTile extends StatelessWidget {
           Stack(
             children: [
               Transform.translate(
-                offset: Offset(25.0, 80.0),
+                offset: Offset(20.0, 30.0),
                 child: buildInfoCard(),
               ),
               Transform.translate(
@@ -327,20 +327,25 @@ class BusArrivalTile extends StatelessWidget {
   }
 
   Widget buildInfoCard() {
-    return Card(
-      color: Color(0xFF5E60CE).withOpacity(0.65),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(23),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 10, 30, 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildRow(Icons.directions_bus, " 5 min :", Colors.yellow),
-            buildRow(Icons.directions_bus, " 5 min :", Colors.green),
-            buildRow(Icons.directions_bus, " 5 min :", Colors.red),
-          ],
+    return Container(
+      width: 550, // Example width
+      height: 155, // Example height
+      child: Card(
+        color: Color(0xFF3E80CE).withOpacity(0.65),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(23),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(13, 10, 40, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildRow(Icons.directions_bus, " 5 min :", Colors.yellow),
+              buildRow(Icons.directions_bus, " 5 min :", Colors.green),
+              buildRow(Icons.directions_bus, " 5 min :", Colors.red),
+            ],
+          ),
         ),
       ),
     );
