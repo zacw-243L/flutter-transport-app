@@ -181,7 +181,6 @@ class _BusScreenState extends State<BusScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              ShowMap(selectedBusStop: _selectedBusStop),
               Expanded(
                 child: ListView.builder(
                   itemCount: _busArrivals.length,
@@ -195,6 +194,10 @@ class _BusScreenState extends State<BusScreen> {
                     );
                   },
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ShowMap(selectedBusStop: _selectedBusStop),
               ),
             ],
           ),
