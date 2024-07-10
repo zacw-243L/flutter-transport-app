@@ -132,50 +132,52 @@ class _TaxiScreenState extends State<TaxiScreen> {
                           child: Text('No fares found',
                               style: TextStyle(color: Colors.white60)));
                     }
-                    return ListView(
-                      children:
-                          snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data() as Map<String, dynamic>;
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: snapshot.data!.docs
+                            .map((DocumentSnapshot document) {
+                          Map<String, dynamic> data =
+                              document.data() as Map<String, dynamic>;
 
-                        // Ensure the necessary fields are not null and handle the date formatting
-                        String origin = data['origin'] ?? 'Unknown Origin';
-                        String destination =
-                            data['dest'] ?? 'Unknown Destination';
-                        String fare =
-                            data['fare']?.toString() ?? 'Unknown Fare';
+                          // Ensure the necessary fields are not null and handle the date formatting
+                          String origin = data['origin'] ?? 'Unknown Origin';
+                          String destination =
+                              data['dest'] ?? 'Unknown Destination';
+                          String fare =
+                              data['fare']?.toString() ?? 'Unknown Fare';
 
-                        // Handle Firestore Timestamp
-                        Timestamp timestamp = data['date'] ?? Timestamp.now();
-                        DateTime date = timestamp.toDate();
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(date);
+                          // Handle Firestore Timestamp
+                          Timestamp timestamp = data['date'] ?? Timestamp.now();
+                          DateTime date = timestamp.toDate();
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(date);
 
-                        return ListTile(
-                          title: Text(
-                            '$origin > $destination',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20), // Bigger font size
-                          ),
-                          subtitle: Text(
-                            formattedDate,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18), // Bigger font size
-                          ),
-                          trailing: Text(
-                            '\$$fare',
-                            style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 18), // Bigger font size
-                          ),
-                        );
-                      }).toList(),
+                          return ListTile(
+                            title: Text(
+                              '$origin > $destination',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20), // Bigger font size
+                            ),
+                            subtitle: Text(
+                              formattedDate,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18), // Bigger font size
+                            ),
+                            trailing: Text(
+                              '\$$fare',
+                              style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 18), // Bigger font size
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     );
                   },
                 ),
-              ),
+              )
             ],
           ),
         ],

@@ -43,12 +43,6 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
     double fare;
     DateTime date;
 
-    try {
-      date = DateTime.parse(dateController.text);
-    } catch (e) {
-      date = DateTime.now();
-    }
-
     if (origin.isEmpty ||
         dest.isEmpty ||
         fareController.text.isEmpty ||
@@ -75,6 +69,39 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
     }
 
     fare = double.parse(fareController.text);
+
+    String dateInput = dateController.text;
+    if (!dateInput.contains(RegExp(r'^\d{4}-\d{2}-\d{2}$'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'Invalid input. Enter a valid date in YYYY-MM-DD format.')),
+      );
+      return;
+    }
+
+    List<String> dateParts = dateInput.split('-');
+    if (dateParts.length != 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'Invalid input. Enter a valid date in YYYY-MM-DD format.')),
+      );
+      return;
+    }
+
+    int year = int.parse(dateParts[0]);
+    int month = int.parse(dateParts[1]);
+    int day = int.parse(dateParts[2]);
+
+    if (!(1 <= month && month <= 12) || !(1 <= day && day <= 31)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid input. Invalid date.')),
+      );
+      return;
+    }
+
+    date = DateTime(year, month, day);
 
     _addfares(origin, dest, fare, date).then((_) {
       // Clear the text fields after successful addition
