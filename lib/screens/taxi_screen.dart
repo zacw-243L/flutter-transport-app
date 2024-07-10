@@ -115,13 +115,6 @@ class _TaxiScreenState extends State<TaxiScreen> {
                 ),
               ),
               SizedBox(height: 20), // Add a 20 pixel high empty space
-              Center(
-                child: ShowMapButton(
-                  selectedTaxiStand: _selectedTaxiStand,
-                  openMap: openMap,
-                ),
-              ),
-              SizedBox(height: 20), // Add a 20 pixel high empty space
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
@@ -194,6 +187,13 @@ class _TaxiScreenState extends State<TaxiScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    ShowMapButton(
+                      selectedTaxiStand: _selectedTaxiStand,
+                      openMap: openMap,
+                    ),
+                    SizedBox(
+                      width: 50,
+                    ),
                     FloatingActionButton(
                       onPressed: () {
                         showModalBottomSheet(
@@ -241,7 +241,7 @@ class ShowMapButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 170, // Set the width of the button
+      width: 180, // Set the width of the button
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: Size(double.infinity, 40),

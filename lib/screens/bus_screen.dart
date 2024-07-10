@@ -215,7 +215,7 @@ class ShowMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 170,
+      width: 180,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: Size(double.infinity, 40),
