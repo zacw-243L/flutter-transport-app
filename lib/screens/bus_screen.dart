@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utilities/api_calls.dart';
+import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
 import '../utilities/my_url_launcher.dart';
 import '../models/bus_arrival.dart';
@@ -100,7 +101,7 @@ class _BusScreenState extends State<BusScreen> {
         backgroundColor: Color(0xFF5E60CE).withOpacity(0.85),
         title: Text(
           "Bus lai liao".toUpperCase(),
-          style: TextStyle(color: Color(0xFFFFFFFF)),
+          style: kAppName,
         ),
         actions: [
           IconButton(
@@ -128,7 +129,7 @@ class _BusScreenState extends State<BusScreen> {
               Center(
                 child: Text(
                   'Hello ${auth.currentUser?.displayName}',
-                  style: TextStyle(fontSize: 27, color: Color(0xFFffffff)),
+                  style: kWelcomeUser,
                 ),
               ),
               Padding(
@@ -151,8 +152,6 @@ class _BusScreenState extends State<BusScreen> {
                   onSelected: (BusStop selection) async {
                     setState(() {
                       _selectedBusStop = selection;
-                      print(
-                          "Selected BusStop: ${_selectedBusStop!.description}"); // or print(_selectedBusStop.roadName)
                     });
                     List<BusArrival> busArrivals = await ApiCalls()
                         .fetchBusArrivals(
@@ -173,9 +172,8 @@ class _BusScreenState extends State<BusScreen> {
                               Colors.white), // Change the text color to white
                       decoration: InputDecoration(
                         hintText: 'Enter bus stop',
-                        hintStyle: TextStyle(
-                            color: Colors
-                                .white), // Change the hint text color to white
+                        hintStyle:
+                            kWhite, // Change the hint text color to white
                       ),
                     );
                   },
@@ -188,73 +186,11 @@ class _BusScreenState extends State<BusScreen> {
                   itemCount: _busArrivals.length,
                   itemBuilder: (context, index) {
                     BusArrival busArrival = _busArrivals[index];
-                    return ListTile(
-                      leading: Container(
-                        width: 40, // Example width
-                        height: 40, // Example height
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFFFFFFFF),
-                        ),
-                        child: Icon(
-                          Icons.directions_bus,
-                          color: getLoadColor(busArrival.nextBus.load),
-                          size: 30,
-                        ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Card(
-                            color: Color(0xFF5E60CE).withOpacity(0.85),
-                            child: Column(
-                              children: [
-                                Text('Bus No: ${busArrival.serviceNo}',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 25)),
-                                Text(
-                                  arriveTime(
-                                      busArrival.nextBus.estimatedArrival),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Center(
-                                  child: Text(
-                                    BusType(busArrival),
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    SizedBox(width: 30),
-                                    Icon(
-                                      Icons.accessible,
-                                      color: busArrival.nextBus.feature == "WAB"
-                                          ? Colors.green
-                                          : Colors.red,
-                                      size: 40,
-                                    ),
-                                    SizedBox(
-                                        width:
-                                            8), // Adjust spacing between Icon and Text
-                                    Text(
-                                      busArrival.nextBus.feature == "WAB"
-                                          ? "Wheelchair Accessible"
-                                          : "Wheelchair Inaccessible",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors
-                                            .white, // Adjust text color as needed
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    return BusArrivalTile(
+                      busArrival: busArrival,
+                      getLoadColor: getLoadColor,
+                      BusType: BusType,
+                      arriveTime: arriveTime,
                     );
                   },
                 ),
@@ -302,6 +238,76 @@ class ShowMap extends StatelessWidget {
           'Show Map',
           style: TextStyle(fontSize: 20),
         ),
+      ),
+    );
+  }
+}
+
+class BusArrivalTile extends StatelessWidget {
+  final BusArrival busArrival;
+  final Color Function(String) getLoadColor;
+  final String Function(BusArrival) BusType;
+  final String Function(String) arriveTime;
+
+  BusArrivalTile({
+    required this.busArrival,
+    required this.getLoadColor,
+    required this.BusType,
+    required this.arriveTime,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color(0xFFFFFFFF),
+        ),
+        child: Icon(
+          Icons.directions_bus,
+          color: getLoadColor(busArrival.nextBus.load),
+          size: 30,
+        ),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Card(
+            color: Color(0xFF5E60CE).withOpacity(0.85),
+            child: Column(
+              children: [
+                Text('Bus No: ${busArrival.serviceNo}', style: kBusTitle),
+                Text(arriveTime(busArrival.nextBus.estimatedArrival),
+                    style: kWhite),
+                Center(
+                  child: Text(BusType(busArrival), style: kWhite),
+                ),
+                Row(
+                  children: [
+                    SizedBox(width: 30),
+                    Icon(
+                      Icons.accessible,
+                      color: busArrival.nextBus.feature == "WAB"
+                          ? Colors.green
+                          : Colors.red,
+                      size: 40,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      busArrival.nextBus.feature == "WAB"
+                          ? "Wheelchair Accessible"
+                          : "Wheelchair Inaccessible",
+                      style: kWhite,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
