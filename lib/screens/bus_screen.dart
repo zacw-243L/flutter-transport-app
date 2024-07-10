@@ -101,6 +101,11 @@ class _BusScreenState extends State<BusScreen> {
 
     // Convert the difference to minutes
     int minutes = difference.inMinutes;
+    if (minutes == -1) {
+      return 'Departed';
+    } else if (minutes == 0 || minutes == 1) {
+      return 'Arrived';
+    }
 
     // Return the formatted string
     return 'Arriving in ${minutes * -1} min';
