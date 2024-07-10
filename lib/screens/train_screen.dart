@@ -187,15 +187,30 @@ class _TrainScreenState extends State<TrainScreen> {
                         text: 'Selected Station: ', // Bold the text
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 24,
+                          fontSize: 22,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ],
                         ),
                         children: <TextSpan>[
                           TextSpan(
                             text: _selectedTrainStation.stnName,
                             style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
+                              color: Colors.white70,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(2.0, 2.0),
+                                  blurRadius: 3.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -206,7 +221,14 @@ class _TrainScreenState extends State<TrainScreen> {
                         text: 'Station Code: ', // Bold the text
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 24,
+                          fontSize: 22,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ],
                         ),
                         children: <TextSpan>[
                           TextSpan(
@@ -214,8 +236,15 @@ class _TrainScreenState extends State<TrainScreen> {
                             style: TextStyle(
                               color: _getTrainLineColor(
                                   _selectedTrainStation.trainLineCode),
-                              fontSize: 24,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(2.0, 2.0),
+                                  blurRadius: 3.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -226,16 +255,31 @@ class _TrainScreenState extends State<TrainScreen> {
                       text: TextSpan(
                         text: 'Crowd Level: ', // Bold the text
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 22,
                           color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ],
                         ),
                         children: [
                           TextSpan(
                             text: crowdLevel,
                             style: TextStyle(
-                                color: _getCrowdLevelColor(crowdLevel),
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
+                              color: _getCrowdLevelColor(crowdLevel),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(2.0, 2.0),
+                                  blurRadius: 3.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
