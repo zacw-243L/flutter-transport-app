@@ -40,8 +40,41 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
   void _handleAdd() {
     String origin = originController.text;
     String dest = destController.text;
-    double fare = double.tryParse(fareController.text) ?? 0.0;
-    DateTime date = DateTime.tryParse(dateController.text) ?? DateTime.now();
+    double fare;
+    DateTime date;
+
+    try {
+      date = DateTime.parse(dateController.text);
+    } catch (e) {
+      date = DateTime.now();
+    }
+
+    if (origin.isEmpty ||
+        dest.isEmpty ||
+        fareController.text.isEmpty ||
+        dateController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    if (origin.contains(RegExp(r'[0-9]')) || dest.contains(RegExp(r'[0-9]'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Origin and Destination should not contain numbers')),
+      );
+      return;
+    }
+
+    if (!fareController.text.contains(RegExp(r'^[0-9\.]+$'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Fare should only contain numbers')),
+      );
+      return;
+    }
+
+    fare = double.parse(fareController.text);
 
     _addfares(origin, dest, fare, date).then((_) {
       // Clear the text fields after successful addition

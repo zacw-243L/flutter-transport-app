@@ -95,6 +95,7 @@ class _TrainScreenState extends State<TrainScreen> {
           ),
           Column(
             children: [
+              SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                 child: Autocomplete<TrainStation>(
@@ -115,18 +116,56 @@ class _TrainScreenState extends State<TrainScreen> {
                     });
                     await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
                   },
+                  fieldViewBuilder: (BuildContext context,
+                      TextEditingController textEditingController,
+                      FocusNode focusNode,
+                      VoidCallback onFieldSubmitted) {
+                    return TextField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      style: TextStyle(
+                          color: Colors.white), // user input text color
+                      decoration: InputDecoration(
+                        hintText: 'Enter train station', // hint text
+                        hintStyle:
+                            TextStyle(color: Colors.white), // hint text color
+                      ),
+                    );
+                  },
                 ),
               ),
               SizedBox(height: 20),
-              Text('Selected Station: ${_selectedTrainStation.stnName}'),
+              RichText(
+                text: TextSpan(
+                  text: 'Selected Station: ',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: _selectedTrainStation.stnName,
+                      style: TextStyle(color: Colors.white70, fontSize: 18),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 20),
-              Text('Station Code: ${_selectedTrainStation.stnCode}'),
+              RichText(
+                text: TextSpan(
+                  text: 'Station Code: ',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: _selectedTrainStation.stnCode,
+                      style: TextStyle(color: Colors.white70, fontSize: 18),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 20),
               Text.rich(
                 TextSpan(
                   text: 'Crowd Level: ',
                   style: TextStyle(
-                      color: Colors.black), // Default text color for the prefix
+                      color: Colors.white), // Default text color for the prefix
                   children: [
                     TextSpan(
                       text: crowdLevel,
