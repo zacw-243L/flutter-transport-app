@@ -45,14 +45,6 @@ class _TrainScreenState extends State<TrainScreen> {
     }
   }
 
-/*  String _getCrowdLevelForStation() {
-    for (var crowdDensity in _crowdDensities) {
-      if (crowdDensity.station == _selectedTrainStation.stnCode) {
-        return crowdDensity.crowdLevel;
-      }
-    }
-    return 'No data available';
-  }*/
   String _getCrowdLevelForStation() {
     for (var crowdDensity in _crowdDensities) {
       if (crowdDensity.station == _selectedTrainStation.stnCode) {
@@ -71,28 +63,23 @@ class _TrainScreenState extends State<TrainScreen> {
     return 'No data available';
   }
 
-/*  void initState() {
-    // TODO: implement initState
-    Future.delayed(Duration.zero, () async {
-      _selectedTrainStation = await ApiCalls().fetchCrowdDensity('trainLine');
-    });
-
-    super.initState();
-  }*/
-
-/*  void initState() {
-    // TODO: implement initState
-    Future.delayed(Duration.zero, () async {
-      _crowdDensities =
-          await ApiCalls().fetchCrowdDensity(_selectedTrainStation.trainLine);
-    });
-
-    super.initState();
-    _allTrainStations = _trainStationsRepository.allTrainStations.toList();
-  }*/
+  Color _getCrowdLevelColor(String crowdLevel) {
+    switch (crowdLevel) {
+      case 'Low':
+        return Colors.green;
+      case 'Moderate':
+        return Colors.orange;
+      case 'High':
+        return Colors.red;
+      default:
+        return Colors
+            .black; // Default color for 'Unknown' or 'No data available'
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    String crowdLevel = _getCrowdLevelForStation();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Train'),
@@ -135,7 +122,21 @@ class _TrainScreenState extends State<TrainScreen> {
               SizedBox(height: 20),
               Text('Station Code: ${_selectedTrainStation.stnCode}'),
               SizedBox(height: 20),
-              Text('Crowd Level: ${_getCrowdLevelForStation()}'),
+              Text.rich(
+                TextSpan(
+                  text: 'Crowd Level: ',
+                  style: TextStyle(
+                      color: Colors.black), // Default text color for the prefix
+                  children: [
+                    TextSpan(
+                      text: crowdLevel,
+                      style: TextStyle(
+                          color: _getCrowdLevelColor(
+                              crowdLevel)), // Color based on crowd level
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ],
