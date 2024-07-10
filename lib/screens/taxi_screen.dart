@@ -50,98 +50,110 @@ class _TaxiScreenState extends State<TaxiScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Taxi'),
-        ),
-        bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 2),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-              child: Autocomplete<TaxiStand>(
-                displayStringForOption: (TaxiStand option) => option.name,
-                optionsBuilder: (TextEditingValue textEditingValue) {
-                  if (textEditingValue.text == '') {
-                    return const Iterable<TaxiStand>.empty();
-                  } else {
-                    return _alltaxiStands.where((TaxiStand taxiStand) {
-                      return taxiStand.name
-                          .toLowerCase()
-                          .contains(textEditingValue.text.toLowerCase());
-                    });
-                  }
-                },
-                onSelected: (TaxiStand selection) {
-                  setState(() {
-                    _selectedTaxiStand = selection;
-                  });
-                },
-              ),
+      appBar: AppBar(
+        title: const Text('Taxi'),
+      ),
+      bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 2),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'images/taxikun.png', // Replace with your image asset path
+              fit: BoxFit.cover,
             ),
-            SizedBox(height: 20), // Add a 20 pixel high empty space
-            Center(
-              child: SizedBox(
-                width: 200, // Set the width of the button
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 40),
-                  ),
-                  onPressed: () async {
-                    if (_selectedTaxiStand.latitude != 0 &&
-                        _selectedTaxiStand.longitude != 0) {
-                      try {
-                        await openMap(
-                          _selectedTaxiStand.latitude,
-                          _selectedTaxiStand.longitude,
-                        );
-                      } catch (e) {
-                        print('Error opening map: $e');
-                        // Handle error (e.g., show error message)
-                      }
+          ),
+          Column(
+            children: [
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                child: Autocomplete<TaxiStand>(
+                  displayStringForOption: (TaxiStand option) => option.name,
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    if (textEditingValue.text == '') {
+                      return const Iterable<TaxiStand>.empty();
                     } else {
-                      print(
-                          'Invalid coordinates: ${_selectedTaxiStand.latitude}, ${_selectedTaxiStand.longitude}');
-                      // Handle invalid coordinates (e.g., show message to user)
+                      return _alltaxiStands.where((TaxiStand taxiStand) {
+                        return taxiStand.name
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase());
+                      });
                     }
                   },
-                  child: const Text(
-                    'Show Map',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20), // Add a 20 pixel high empty space
-            Center(
-              child: SizedBox(
-                width: 200, // Set the width of the button
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 40)),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return SingleChildScrollView(
-                          child: Container(
-                            padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom),
-                            child: const AddTaxiScreen(),
-                          ),
-                        );
-                      },
-                    );
+                  onSelected: (TaxiStand selection) {
+                    setState(() {
+                      _selectedTaxiStand = selection;
+                    });
                   },
-                  child: const Text(
-                    'Add Taxi Fare',
-                    style: TextStyle(fontSize: 20),
+                ),
+              ),
+              SizedBox(height: 20), // Add a 20 pixel high empty space
+              Center(
+                child: SizedBox(
+                  width: 200, // Set the width of the button
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 40),
+                    ),
+                    onPressed: () async {
+                      if (_selectedTaxiStand.latitude != 0 &&
+                          _selectedTaxiStand.longitude != 0) {
+                        try {
+                          await openMap(
+                            _selectedTaxiStand.latitude,
+                            _selectedTaxiStand.longitude,
+                          );
+                        } catch (e) {
+                          print('Error opening map: $e');
+                          // Handle error (e.g., show error message)
+                        }
+                      } else {
+                        print(
+                            'Invalid coordinates: ${_selectedTaxiStand.latitude}, ${_selectedTaxiStand.longitude}');
+                        // Handle invalid coordinates (e.g., show message to user)
+                      }
+                    },
+                    child: const Text(
+                      'Show Map',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ));
+              SizedBox(height: 20), // Add a 20 pixel high empty space
+              Center(
+                child: SizedBox(
+                  width: 200, // Set the width of the button
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 40)),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SingleChildScrollView(
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: const AddTaxiScreen(),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: const Text(
+                      'Add Taxi Fare',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
