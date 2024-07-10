@@ -193,7 +193,7 @@ class _BusScreenState extends State<BusScreen> {
                           color:
                               Colors.white), // Change the text color to white
                       decoration: InputDecoration(
-                        hintText: 'Enter bus stop',
+                        hintText: 'Enter name of bus stop',
                         hintStyle: TextStyle(
                             color: Colors
                                 .white), // Change the hint text color to white

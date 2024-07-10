@@ -38,8 +38,8 @@ class ApiCalls {
   void fetchBusArrival() async {
     // TODO return List<BusArrival>
   }*/
-  String busStopCode = "83139";
-  String ServiceNo = "15";
+/*  String busStopCode = "83139";
+  String ServiceNo = "15";*/
 
   // Refer to 2.1 Bus Arrival
   Future<List<BusArrival>> fetchBusArrivals(
