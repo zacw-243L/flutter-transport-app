@@ -153,8 +153,17 @@ class _TaxiScreenState extends State<TaxiScreen> {
                           String fare =
                               data['fare']?.toString() ?? 'Unknown Fare';
 
-                          // Handle Firestore Timestamp
-                          Timestamp timestamp = data['date'] ?? Timestamp.now();
+                          // Handle Firestore Timestamp or String
+                          Timestamp timestamp;
+                          if (data['date'] is Timestamp) {
+                            timestamp = data['date'];
+                          } else if (data['date'] is String) {
+                            timestamp = Timestamp.fromDate(
+                                DateFormat('yyyy-MM-dd').parse(data['date']));
+                          } else {
+                            timestamp = Timestamp.now();
+                          }
+
                           DateTime date = timestamp.toDate();
                           String formattedDate =
                               DateFormat('yyyy-MM-dd').format(date);

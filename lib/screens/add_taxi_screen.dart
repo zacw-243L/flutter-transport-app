@@ -22,19 +22,13 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
   final TextEditingController fareController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
 
-  Future<void> _addfares(
-      String newOrigin, String newDest, double fare, DateTime date) {
-    return faresCollection
-        .add({
-          'origin': newOrigin,
-          'dest': newDest,
-          'fare': fare,
-          'date': date,
-          'userid':
-              auth.currentUser?.uid ?? '', // Ensure non-null value for userid
-        })
-        .then((value) => print("Taxi fare added"))
-        .catchError((error) => print("Failed to add taxi fare: $error"));
+  Future<void> _addfares(TaxiFare taxiFare) async {
+    try {
+      await faresCollection.add(taxiFare.toMap());
+      print("Taxi fare added");
+    } catch (e) {
+      print("Failed to add taxi fare: $e");
+    }
   }
 
   void _handleAdd() {
@@ -103,7 +97,19 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
 
     date = DateTime(year, month, day);
 
-    _addfares(origin, dest, fare, date).then((_) {
+    // Convert the DateTime to a Timestamp
+    Timestamp timestamp = Timestamp.fromDate(date);
+
+    TaxiFare taxiFare = TaxiFare(
+      origin: origin,
+      dest: dest,
+      fare: fare.toString(),
+      date: timestamp, // Use the timestamp here
+      userid: auth.currentUser?.uid ?? '', // Ensure non-null value for userid
+    );
+    // Add the taxiFare to your database or perform any other operation
+
+    _addfares(taxiFare).then((_) {
       // Clear the text fields after successful addition
       originController.clear();
       destController.clear();
