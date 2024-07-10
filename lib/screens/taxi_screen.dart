@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 import '../utilities/api_calls.dart';
 import '../utilities/my_url_launcher.dart';
@@ -80,6 +81,22 @@ class _TaxiScreenState extends State<TaxiScreen> {
                       _selectedTaxiStand = selection;
                     });
                   },
+                  fieldViewBuilder: (BuildContext context,
+                      TextEditingController textEditingController,
+                      FocusNode focusNode,
+                      VoidCallback onFieldSubmitted) {
+                    return TextField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      style: TextStyle(
+                          color: Colors.white), // user input text color
+                      decoration: InputDecoration(
+                        hintText: 'Enter taxi stand name', // hint text
+                        hintStyle:
+                            TextStyle(color: Colors.white), // hint text color
+                      ),
+                    );
+                  },
                 ),
               ),
               SizedBox(height: 20), // Add a 20 pixel high empty space
@@ -106,21 +123,53 @@ class _TaxiScreenState extends State<TaxiScreen> {
                       return Center(child: CircularProgressIndicator());
                     }
                     if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
+                      return Center(
+                          child: Text('Error: ${snapshot.error}',
+                              style: TextStyle(color: Colors.white70)));
                     }
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return Center(child: Text('No fares found'));
+                      return Center(
+                          child: Text('No fares found',
+                              style: TextStyle(color: Colors.white60)));
                     }
                     return ListView(
                       children:
                           snapshot.data!.docs.map((DocumentSnapshot document) {
                         Map<String, dynamic> data =
                             document.data() as Map<String, dynamic>;
+
+                        // Ensure the necessary fields are not null and handle the date formatting
+                        String origin = data['origin'] ?? 'Unknown Origin';
+                        String destination =
+                            data['dest'] ?? 'Unknown Destination';
+                        String fare =
+                            data['fare']?.toString() ?? 'Unknown Fare';
+
+                        // Handle Firestore Timestamp
+                        Timestamp timestamp = data['date'] ?? Timestamp.now();
+                        DateTime date = timestamp.toDate();
+                        String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(date);
+
                         return ListTile(
                           title: Text(
-                              '${data['origin']} > ${data['destination']}'),
-                          subtitle: Text('${data['date']}'),
-                          trailing: Text('\$${data['fare']}'),
+                            '$origin > $destination',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20), // Bigger font size
+                          ),
+                          subtitle: Text(
+                            formattedDate,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18), // Bigger font size
+                          ),
+                          trailing: Text(
+                            '\$$fare',
+                            style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 18), // Bigger font size
+                          ),
                         );
                       }).toList(),
                     );
