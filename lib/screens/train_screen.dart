@@ -4,6 +4,7 @@ import '../utilities/api_calls.dart';
 
 import '../models/train_stations_repository.dart';
 import '../models/train_crowd_density.dart';
+import '../utilities/constants.dart';
 import '../widgets/navigation_bar.dart';
 
 class TrainScreen extends StatefulWidget {
@@ -127,8 +128,8 @@ class _TrainScreenState extends State<TrainScreen> {
                           color: Colors.white), // user input text color
                       decoration: InputDecoration(
                         hintText: 'Enter train station', // hint text
-                        hintStyle:
-                            TextStyle(color: Colors.white), // hint text color
+                        hintStyle: kInfo,
+                        prefixIcon: Icon(Icons.search, color: Colors.white),
                       ),
                     );
                   },

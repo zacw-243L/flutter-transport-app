@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 import '../utilities/api_calls.dart';
+import '../utilities/constants.dart';
 import '../utilities/my_url_launcher.dart';
 import '../models/taxi_stand.dart';
 import '../widgets/navigation_bar.dart';
@@ -92,8 +93,8 @@ class _TaxiScreenState extends State<TaxiScreen> {
                           color: Colors.white), // user input text color
                       decoration: InputDecoration(
                         hintText: 'Enter taxi stand name', // hint text
-                        hintStyle:
-                            TextStyle(color: Colors.white), // hint text color
+                        hintStyle: kInfo,
+                        prefixIcon: Icon(Icons.search, color: Colors.white),
                       ),
                     );
                   },
