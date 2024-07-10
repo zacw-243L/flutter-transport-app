@@ -24,7 +24,7 @@ class ApiCalls {
         await http.get(Uri.parse(baseURL), headers: requestHeaders);
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       List<dynamic> jsonList = jsonDecode(response.body)['value'];
       List<BusStop> busStops =
           jsonList.map((json) => BusStop.fromJson(json)).toList();
@@ -38,6 +38,8 @@ class ApiCalls {
   void fetchBusArrival() async {
     // TODO return List<BusArrival>
   }*/
+  String busStopCode = "83139";
+  String ServiceNo = "15";
 
   // Refer to 2.1 Bus Arrival
   Future<List<BusArrival>> fetchBusArrivals(
@@ -52,10 +54,11 @@ class ApiCalls {
         await http.get(Uri.parse(baseURL), headers: requestHeaders);
 
     if (response.statusCode == 200) {
+      //print(response.body);
       List<dynamic> jsonList = jsonDecode(response.body)['Services'];
       List<BusArrival> busArrivals =
           jsonList.map((json) => BusArrival.fromJson(json)).toList();
-
+      //print(busArrivals);
       return busArrivals;
     } else {
       throw Exception('Failed to load bus arrivals');

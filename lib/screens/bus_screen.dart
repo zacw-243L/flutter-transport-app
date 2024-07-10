@@ -34,11 +34,6 @@ class _BusScreenState extends State<BusScreen> {
     Future.delayed(Duration.zero, () async {
       _allBusStops = await ApiCalls().fetchBusStops();
     });
-    Future.delayed(Duration.zero, () async {
-      _busArrivals =
-          await ApiCalls().fetchBusArrivals(_busStopCode, _selectedServiceNo);
-    });
-
     super.initState();
   }
 
@@ -55,9 +50,12 @@ class _BusScreenState extends State<BusScreen> {
   }
 
   Future<void> fetchBusArrivals(String busStopCode, String serviceNo) async {
+    print("H1fssew");
     try {
       List<BusArrival> busArrivals =
           await ApiCalls().fetchBusArrivals(busStopCode, serviceNo);
+      print("H1few");
+      print(busArrivals);
       setState(() {
         _busArrivals = busArrivals;
       });
@@ -119,24 +117,25 @@ class _BusScreenState extends State<BusScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0x995E60CE).withOpacity(0.7),
-          title: Text(
-            "Bus lai liao".toUpperCase(),
-            style: TextStyle(color: Color(0xFFFFFFFF)),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                auth.signOut();
-                Navigator.pushReplacementNamed(context, '/');
-              },
-              icon: const Icon(Icons.logout),
-            ),
-          ],
+      appBar: AppBar(
+        backgroundColor: Color(0x995E60CE).withOpacity(0.7),
+        title: Text(
+          "Bus lai liao".toUpperCase(),
+          style: TextStyle(color: Color(0xFFFFFFFF)),
         ),
-        bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 0),
-        body: Stack(children: [
+        actions: [
+          IconButton(
+            onPressed: () {
+              auth.signOut();
+              Navigator.pushReplacementNamed(context, '/');
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
+      ),
+      bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 0),
+      body: Stack(
+        children: [
           Positioned.fill(
             child: Image.asset(
               'images/bus.png', // Replace with your image asset path
@@ -169,8 +168,20 @@ class _BusScreenState extends State<BusScreen> {
                   }
                 },
                 onSelected: (BusStop selection) {
-                  setState(() {
+                  setState(() async {
                     _selectedBusStop = selection;
+                    print(
+                        "Selected BusStop: ${_selectedBusStop.description}"); // or print(_selectedBusStop.roadName)
+                    // _busStopCode = _selectedBusStop; // Make sure _busStopCode is assigned correctly if needed.
+
+                    List<BusArrival> busArrivals = await ApiCalls()
+                        .fetchBusArrivals(
+                            _selectedBusStop.busStopCode, _selectedServiceNo);
+
+                    setState(() {
+                      _busArrivals = busArrivals;
+                    });
+                    print("Finish");
                   });
                 },
               ),
@@ -210,72 +221,57 @@ class _BusScreenState extends State<BusScreen> {
                   itemCount: _busArrivals.length,
                   itemBuilder: (context, index) {
                     BusArrival busArrival = _busArrivals[index];
-                    print('Displaying bus arrival: ${busArrival.serviceNo}');
-                    return Column(
-                      children: [
-                        PopOutCard(
-                            color: Color(0xFF5E60CE).withOpacity(0.85),
-                            arrivalTime: '04 min',
-                            buses: ['50', 'Double decker'],
-                            departureTime: '12:30PM',
-                            wheelchair: '2.50',
-                            eta: "01:14PM"),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        ListTile(
-                          leading: Icon(
-                            getTypeIcon(busArrival.nextBus.type),
-                            color: getLoadColor(busArrival.nextBus.load),
+                    return ListTile(
+                      leading: Icon(
+                        getTypeIcon(busArrival.nextBus.type),
+                        color: getLoadColor(busArrival.nextBus.load),
+                      ),
+                      title: Text('Bus ${busArrival.serviceNo}',
+                          style: TextStyle(color: Colors.white)),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Estimated Arrival: ${busArrival.nextBus.estimatedArrival}',
+                            style: TextStyle(color: Colors.white),
                           ),
-                          title: Text(
-                            'Bus ${busArrival.serviceNo}',
-                            style: TextStyle(color: Color(0xFFFFFFFF)),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
+                              Icon(
+                                getLoadIcon(busArrival.nextBus.load),
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 5),
                               Text(
-                                'Estimated Arrival: ${busArrival.nextBus.estimatedArrival}',
-                                style: TextStyle(color: Color(0xFFFFFFFF)),
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    getLoadIcon(busArrival.nextBus.load),
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    busArrival.nextBus.load,
-                                    style: TextStyle(color: Color(0xFFFFFFFF)),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    getFeatureIcon(busArrival.nextBus.feature),
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    busArrival.nextBus.feature,
-                                    style: TextStyle(color: Color(0xFFFFFFFF)),
-                                  ),
-                                ],
+                                busArrival.nextBus.load,
+                                style: TextStyle(color: Colors.white),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          Row(
+                            children: [
+                              Icon(
+                                getFeatureIcon(busArrival.nextBus.feature),
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                busArrival.nextBus.feature,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),
               ),
             ],
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }
 
