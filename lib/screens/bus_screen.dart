@@ -89,7 +89,7 @@ class _BusScreenState extends State<BusScreen> {
     int minutes = difference.inMinutes * -1;
     if (minutes <= 0) {
       return 'Departed';
-    } else if (minutes > 0 && minutes <= 1) {
+    } else if (minutes <= 1) {
       return 'Arrived';
     }
     return 'Arriving in $minutes min';
@@ -173,7 +173,8 @@ class _BusScreenState extends State<BusScreen> {
                               Colors.white), // Change the text color to white
                       decoration: InputDecoration(
                         hintText: 'Enter bus stop',
-                        hintStyle: kInfo, // Change the hint text color to white
+                        hintStyle: kInfo,
+                        prefixIcon: Icon(Icons.search, color: Colors.white),
                       ),
                     );
                   },
@@ -234,9 +235,14 @@ class ShowMap extends StatelessWidget {
             throw ('Invalid coordinates: ${_selectedBusStop.latitude}, ${_selectedBusStop.longitude}');
           }
         },
-        child: const Text(
-          'Show Map',
-          style: TextStyle(fontSize: 20),
+        child: Row(
+          children: [
+            const Text(
+              'Show Map',
+              style: TextStyle(fontSize: 20),
+            ),
+            Icon(Icons.location_on)
+          ],
         ),
       ),
     );
