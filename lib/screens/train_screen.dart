@@ -100,23 +100,26 @@ class _TrainScreenState extends State<TrainScreen> {
       bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 1),
       body: Column(
         children: [
-          Autocomplete<TrainStation>(
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              if (textEditingValue.text.isEmpty) {
-                return const Iterable<TrainStation>.empty();
-              }
-              return _allTrainStations
-                  .where((station) => station.stnName.toLowerCase().contains(
-                        textEditingValue.text.toLowerCase(),
-                      ));
-            },
-            displayStringForOption: (TrainStation option) => option.stnName,
-            onSelected: (TrainStation station) async {
-              setState(() {
-                _selectedTrainStation = station;
-              });
-              await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
-            },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+            child: Autocomplete<TrainStation>(
+              optionsBuilder: (TextEditingValue textEditingValue) {
+                if (textEditingValue.text.isEmpty) {
+                  return const Iterable<TrainStation>.empty();
+                }
+                return _allTrainStations
+                    .where((station) => station.stnName.toLowerCase().contains(
+                          textEditingValue.text.toLowerCase(),
+                        ));
+              },
+              displayStringForOption: (TrainStation option) => option.stnName,
+              onSelected: (TrainStation station) async {
+                setState(() {
+                  _selectedTrainStation = station;
+                });
+                await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
+              },
+            ),
           ),
           SizedBox(height: 20),
           Text('Selected Station: ${_selectedTrainStation.stnName}'),

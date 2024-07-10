@@ -56,24 +56,27 @@ class _TaxiScreenState extends State<TaxiScreen> {
         bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 2),
         body: Column(
           children: [
-            Autocomplete<TaxiStand>(
-              displayStringForOption: (TaxiStand option) => option.name,
-              optionsBuilder: (TextEditingValue textEditingValue) {
-                if (textEditingValue.text == '') {
-                  return const Iterable<TaxiStand>.empty();
-                } else {
-                  return _alltaxiStands.where((TaxiStand taxiStand) {
-                    return taxiStand.name
-                        .toLowerCase()
-                        .contains(textEditingValue.text.toLowerCase());
+            Padding(
+              padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+              child: Autocomplete<TaxiStand>(
+                displayStringForOption: (TaxiStand option) => option.name,
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text == '') {
+                    return const Iterable<TaxiStand>.empty();
+                  } else {
+                    return _alltaxiStands.where((TaxiStand taxiStand) {
+                      return taxiStand.name
+                          .toLowerCase()
+                          .contains(textEditingValue.text.toLowerCase());
+                    });
+                  }
+                },
+                onSelected: (TaxiStand selection) {
+                  setState(() {
+                    _selectedTaxiStand = selection;
                   });
-                }
-              },
-              onSelected: (TaxiStand selection) {
-                setState(() {
-                  _selectedTaxiStand = selection;
-                });
-              },
+                },
+              ),
             ),
             SizedBox(height: 20), // Add a 20 pixel high empty space
             Center(

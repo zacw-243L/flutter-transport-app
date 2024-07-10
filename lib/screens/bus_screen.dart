@@ -120,45 +120,65 @@ class _BusScreenState extends State<BusScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 20),
               Center(
                 child: Text(
                   'Hello ${auth.currentUser?.displayName}',
-                  style: TextStyle(fontSize: 27, color: Color(0xFF0000000)),
+                  style: TextStyle(fontSize: 27, color: Color(0xFFffffff)),
                 ),
               ),
-              Autocomplete<BusStop>(
-                displayStringForOption: (option) => option.description,
-                optionsBuilder: (TextEditingValue textEditingValue) {
-                  if (textEditingValue.text == '') {
-                    return const Iterable<BusStop>.empty();
-                  } else {
-                    return _allBusStops.where((busStop) {
-                      return busStop.description
-                              .toLowerCase()
-                              .contains(textEditingValue.text.toLowerCase()) ||
-                          busStop.roadName
-                              .toLowerCase()
-                              .contains(textEditingValue.text.toLowerCase());
+              Padding(
+                padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                child: Autocomplete<BusStop>(
+                  displayStringForOption: (option) => option.description,
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    if (textEditingValue.text == '') {
+                      return const Iterable<BusStop>.empty();
+                    } else {
+                      return _allBusStops.where((busStop) {
+                        return busStop.description.toLowerCase().contains(
+                                textEditingValue.text.toLowerCase()) ||
+                            busStop.roadName
+                                .toLowerCase()
+                                .contains(textEditingValue.text.toLowerCase());
+                      });
+                    }
+                  },
+                  onSelected: (BusStop selection) async {
+                    setState(() {
+                      _selectedBusStop = selection;
+                      print(
+                          "Selected BusStop: ${_selectedBusStop!.description}"); // or print(_selectedBusStop.roadName)
                     });
-                  }
-                },
-                onSelected: (BusStop selection) {
-                  setState(() async {
-                    _selectedBusStop = selection;
-                    print(
-                        "Selected BusStop: ${_selectedBusStop.description}"); // or print(_selectedBusStop.roadName)
-                    // _busStopCode = _selectedBusStop; // Make sure _busStopCode is assigned correctly if needed.
 
                     List<BusArrival> busArrivals = await ApiCalls()
                         .fetchBusArrivals(
-                            _selectedBusStop.busStopCode, _selectedServiceNo);
+                            _selectedBusStop!.busStopCode, _selectedServiceNo);
 
                     setState(() {
                       _busArrivals = busArrivals;
                     });
                     print("Finish");
-                  });
-                },
+                  },
+                  fieldViewBuilder: (BuildContext context,
+                      TextEditingController textEditingController,
+                      FocusNode focusNode,
+                      VoidCallback onFieldSubmitted) {
+                    return TextField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      style: TextStyle(
+                          color:
+                              Colors.white), // Change the text color to white
+                      decoration: InputDecoration(
+                        hintText: 'Enter bus stop',
+                        hintStyle: TextStyle(
+                            color: Colors
+                                .white), // Change the hint text color to white
+                      ),
+                    );
+                  },
+                ),
               ),
               SizedBox(height: 20),
               Center(
