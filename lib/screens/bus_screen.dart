@@ -172,8 +172,7 @@ class _BusScreenState extends State<BusScreen> {
                               Colors.white), // Change the text color to white
                       decoration: InputDecoration(
                         hintText: 'Enter bus stop',
-                        hintStyle:
-                            kWhite, // Change the hint text color to white
+                        hintStyle: kInfo, // Change the hint text color to white
                       ),
                     );
                   },
@@ -259,52 +258,57 @@ class BusArrivalTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Color(0xFFFFFFFF),
-        ),
-        child: Icon(
-          Icons.directions_bus,
-          color: getLoadColor(busArrival.nextBus.load),
-          size: 30,
-        ),
-      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Card(
-            color: Color(0xFF5E60CE).withOpacity(0.85),
-            child: Column(
-              children: [
-                Text('Bus No: ${busArrival.serviceNo}', style: kBusTitle),
-                Text(arriveTime(busArrival.nextBus.estimatedArrival),
-                    style: kWhite),
-                Center(
-                  child: Text(BusType(busArrival), style: kWhite),
-                ),
-                Row(
-                  children: [
-                    SizedBox(width: 30),
-                    Icon(
-                      Icons.accessible,
-                      color: busArrival.nextBus.feature == "WAB"
-                          ? Colors.green
-                          : Colors.red,
-                      size: 40,
+          Transform.translate(
+            offset: Offset(100.0, 30.0),
+            child: Card(
+              color: Color(0xFF5E60CE).withOpacity(0.85),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(23),
+              ),
+              child: Row(
+                children: [
+                  Column(children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      child: Icon(
+                        Icons.directions_bus,
+                        color: getLoadColor(busArrival.nextBus.load),
+                        size: 30,
+                      ),
                     ),
-                    SizedBox(width: 8),
-                    Text(
-                      busArrival.nextBus.feature == "WAB"
-                          ? "Wheelchair Accessible"
-                          : "Wheelchair Inaccessible",
-                      style: kWhite,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.accessible,
+                        color: busArrival.nextBus.feature == "WAB"
+                            ? Colors.green
+                            : Colors.red,
+                        size: 40,
+                      ),
                     ),
-                  ],
-                ),
-              ],
+                  ]),
+                  Column(
+                    children: [
+                      Text('Bus No: ${busArrival.serviceNo}', style: kBusTitle),
+                      Text(arriveTime(busArrival.nextBus.estimatedArrival),
+                          style: kInfo),
+                      Text(
+                        busArrival.nextBus.feature == "WAB"
+                            ? "Wheelchair Accessible"
+                            : "Wheelchair Inaccessible",
+                        style: kAccessible,
+                      ),
+                      Center(
+                        child: Text(BusType(busArrival), style: kInfo),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],

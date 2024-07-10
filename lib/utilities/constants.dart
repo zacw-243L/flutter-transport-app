@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
 
-const kAppName = TextStyle(
-  fontSize: 20.0,
+// Colors
+const Color kPrimaryColor = Color(0xFF5E60CE);
+const Color kWhiteColor = Color(0xFFFFFFFF);
+
+// Text Styles
+const TextStyle kAppName = TextStyle(
+  fontSize: 24,
   fontWeight: FontWeight.bold,
-  color: Colors.white,
+  color: kWhiteColor,
 );
-const kWelcomeUser = TextStyle(
-  fontSize: 20.0,
+
+const TextStyle kWelcomeUser = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.normal,
+  color: kWhiteColor,
+);
+
+const TextStyle kInfo = TextStyle(
+  fontSize: 18,
+  color: kWhiteColor,
+);
+
+const TextStyle kAccessible = TextStyle(
+  fontSize: 16,
+  color: kWhiteColor,
+);
+
+const TextStyle kBusTitle = TextStyle(
+  fontSize: 24,
   fontWeight: FontWeight.bold,
-  color: Colors.white,
+  color: kWhiteColor,
 );
 
-const kWhite = TextStyle(
-  fontSize: 16.0,
-  color: Colors.white,
-);
-
-const kBusTitle = TextStyle(
-  fontSize: 25.0,
-  color: Colors.white,
-);
-
-const kPurple = TextStyle(
-  fontSize: 20.0,
-  color: Color(0xFF5E60CE),
-);
+// Other constants
+const double kPadding = 16.0;
