@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../utilities/api_calls.dart';
@@ -25,12 +26,29 @@ class _BusScreenState extends State<BusScreen> {
     longitude: 0,
   );
   String _selectedServiceNo = '';
+  String _greeting = '';
+
   @override
   void initState() {
+    super.initState();
+    _setRandomGreeting();
     Future.delayed(Duration.zero, () async {
       _allBusStops = await ApiCalls().fetchBusStops();
     });
-    super.initState(); // TODO: implement initState
+  }
+
+  void _setRandomGreeting() {
+    final greetings = [
+      'Hello',
+      'Welcome',
+      'Hi there',
+      'Greetings',
+      'Salutations',
+      'Howdy',
+      'Hey',
+    ];
+    final random = Random();
+    _greeting = greetings[random.nextInt(greetings.length)];
   }
 
   Future<void> fetchBusStops() async {
@@ -129,13 +147,14 @@ class _BusScreenState extends State<BusScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20),
+              SizedBox(height: 15),
               Center(
                 child: Text(
-                  'Hello ${auth.currentUser?.displayName}',
+                  '$_greeting ${auth.currentUser?.displayName}',
                   style: kWelcomeUser,
                 ),
               ),
+              SizedBox(height: 15),
               Padding(
                 padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                 child: Autocomplete<BusStop>(
@@ -159,7 +178,7 @@ class _BusScreenState extends State<BusScreen> {
                     });
                     List<BusArrival> busArrivals = await ApiCalls()
                         .fetchBusArrivals(
-                            _selectedBusStop!.busStopCode, _selectedServiceNo);
+                            _selectedBusStop.busStopCode, _selectedServiceNo);
                     setState(() {
                       _busArrivals = busArrivals;
                     });
