@@ -22,15 +22,6 @@ class BusArrival {
   //   }
   // }
 
-/*  factory BusArrival.fromJson(Map<String, dynamic> json) {
-    return BusArrival(
-      serviceNo: json['ServiceNo'],
-      nextBus: (json['NextBus'] as List<dynamic>)
-          .map((bus) => NextBus.fromJson(bus as Map<String, dynamic>))
-          .toList(),
-    ); //Takes out NextBus and make it a list then map it for each bus in the list
-  }*/
-
   factory BusArrival.fromJson(Map<String, dynamic> json) {
     return BusArrival(
       serviceNo: json['ServiceNo'],
