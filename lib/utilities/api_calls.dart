@@ -12,6 +12,7 @@ class ApiCalls {
 
   Map<String, String> requestHeaders = {
     'Accept': 'application/json',
+
     //TODO
   };
 
@@ -23,6 +24,7 @@ class ApiCalls {
         await http.get(Uri.parse(baseURL), headers: requestHeaders);
 
     if (response.statusCode == 200) {
+      print(response.body);
       List<dynamic> jsonList = jsonDecode(response.body)['value'];
       List<BusStop> busStops =
           jsonList.map((json) => BusStop.fromJson(json)).toList();
@@ -40,23 +42,20 @@ class ApiCalls {
   // Refer to 2.1 Bus Arrival
   Future<List<BusArrival>> fetchBusArrivals(
       String busStopCode, ServiceNo) async {
-    busStopCode = "83139";
-    ServiceNo = "15";
-    //http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=83139&ServiceNo=15
     String baseURL =
         'http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=$busStopCode&ServiceNo=$ServiceNo'; //Jason this has 2 pramas
 
     /*//TODO Add query parameters
     Map<String, String> queryParams = {};*/
-    print("BusArrivalsURL");
-    print(baseURL);
+
     final response =
         await http.get(Uri.parse(baseURL), headers: requestHeaders);
+
     if (response.statusCode == 200) {
-      print(response.body);
       List<dynamic> jsonList = jsonDecode(response.body)['Services'];
       List<BusArrival> busArrivals =
           jsonList.map((json) => BusArrival.fromJson(json)).toList();
+
       return busArrivals;
     } else {
       throw Exception('Failed to load bus arrivals');
