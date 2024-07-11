@@ -310,38 +310,36 @@ class BusArrivalTile extends StatelessWidget {
                       children: [
                         Column(
                           children: [
-                            loadIcon(busArrival.nextBus.load),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.accessible,
-                                color: busArrival.nextBus.feature == "WAB"
-                                    ? Colors.green
-                                    : Colors.red,
-                                size: 30,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
                             Text('Bus No: ${busArrival.serviceNo}',
                                 style: kBusTitle),
                             Text(
                                 arriveTime(busArrival.nextBus.estimatedArrival),
                                 style: kInfo),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.accessible,
+                                  color: busArrival.nextBus.feature == "WAB"
+                                      ? Colors.green
+                                      : Colors.red,
+                                  size: 40,
+                                ),
+                                SizedBox(width: 10),
+                                Container(
+                                  height: 50,
+                                  child: loadImageWithGradient(
+                                    "images/${BusType(busArrival)}.png",
+                                    busArrival.nextBus.load,
+                                  ),
+                                ),
+                                SizedBox(width: 40),
+                              ],
+                            ),
                             Text(
                               busArrival.nextBus.feature == "WAB"
                                   ? "Wheelchair Accessible"
                                   : "Wheelchair Inaccessible",
                               style: kAccessible,
-                            ),
-                            Container(
-                              height: 50,
-                              child: loadImageWithGradient(
-                                "images/${BusType(busArrival)}.png",
-                                busArrival.nextBus.load,
-                              ),
                             ),
                           ],
                         ),
@@ -384,7 +382,7 @@ class BusArrivalTile extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           stops: [3 / 5, 3 / 9, 1],
-          colors: [Colors.white, Colors.green, Colors.green],
+          colors: [Colors.white, Colors.green, Color(0xFF008000)],
         );
       case 'SDA':
         return LinearGradient(
