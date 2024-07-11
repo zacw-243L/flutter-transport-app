@@ -131,11 +131,38 @@ class _TaxiScreenState extends State<TaxiScreen> {
                 ),
               ),
               SizedBox(height: 20), // Add a 20 pixel high empty space
-              Text(
-                'Total Fare: \$${_totalFare.toStringAsFixed(2)}',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Total spent to date:',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(2.0, 2.0),
+                            blurRadius: 3.0,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ],
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' -\$${_totalFare.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 18,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(2.0, 2.0),
+                            blurRadius: 3.0,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 20), // Add another 20 pixel high empty space
@@ -219,9 +246,9 @@ class _TaxiScreenState extends State<TaxiScreen> {
                               ),
                             ),
                             trailing: Text(
-                              '\$$fare',
+                              '-\$$fare',
                               style: TextStyle(
-                                color: Colors.white70,
+                                color: Colors.red[900], // Deep red color
                                 fontSize: 18, // Bigger font size
                                 shadows: [
                                   Shadow(
