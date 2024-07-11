@@ -48,7 +48,12 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: Text(message),
+            content: RichText(
+              text: TextSpan(
+                text: message,
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -68,7 +73,12 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Success'),
-            content: Text(message),
+            content: RichText(
+              text: TextSpan(
+                text: message,
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
