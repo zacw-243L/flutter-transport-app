@@ -47,7 +47,17 @@ const TextStyle ksmallerinfo = TextStyle(
     ),
   ],
 );
-
+const TextStyle kShadow = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  shadows: [
+    Shadow(
+      offset: Offset(2.0, 2.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ],
+);
 const TextStyle kAccessible = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.bold,

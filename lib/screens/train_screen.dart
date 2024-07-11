@@ -572,6 +572,10 @@ class _TrainScreenState extends State<TrainScreen> {
                   style: TextStyle(
                       fontSize: 18, color: _getCrowdLevelColor(CrowdedInfo)),
                 ),
+                RichText(
+                  text: TextSpan(
+                      text: _selectedTrainStation.stnCode, style: kShadow),
+                ),
                 Expanded(
                   child: Container(
                     height: 410,
