@@ -287,6 +287,17 @@ class BusArrivalTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String arrivalInfo = arriveTime(busArrival.nextBus.estimatedArrival);
+    Color arrivalColor;
+
+    if (arrivalInfo == 'Arrived') {
+      arrivalColor = Colors.green;
+    } else if (arrivalInfo == 'Departed') {
+      arrivalColor = Colors.red;
+    } else {
+      arrivalColor = kbiggertimer.color ?? Colors.white;
+    }
+
     return ListTile(
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,15 +324,18 @@ class BusArrivalTile extends StatelessWidget {
                             Text('Bus No: ${busArrival.serviceNo}',
                                 style: kBusTitle),
                             Text(
-                                arriveTime(busArrival.nextBus.estimatedArrival),
-                                style: kbiggertimer),
+                              arrivalInfo,
+                              style: kbiggertimer.copyWith(color: arrivalColor),
+                            ),
+                            SizedBox(height: 2),
                             Container(
-                              height: 50,
+                              height: 55,
                               child: loadImageWithGradient(
                                 "images/${BusType(busArrival)}.png",
                                 busArrival.nextBus.load,
                               ),
                             ),
+                            SizedBox(height: 2),
                             Text(
                               busArrival.nextBus.feature == "WAB"
                                   ? "Wheelchair Accessible"

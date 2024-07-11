@@ -23,7 +23,7 @@ const TextStyle kInfo = TextStyle(
 );
 
 const TextStyle kbiggertimer = TextStyle(
-  fontSize: 18,
+  fontSize: 16,
   fontWeight: FontWeight.bold,
   color: kWhiteColor,
   shadows: [
