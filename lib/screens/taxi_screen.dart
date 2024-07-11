@@ -313,34 +313,3 @@ class ShowMapButton extends StatelessWidget {
     );
   }
 }
-
-class AddTaxiFareButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200, // Set the width of the button
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 40)),
-        onPressed: () {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: const AddTaxiScreen(),
-                ),
-              );
-            },
-          );
-        },
-        child: const Text(
-          'Add Taxi Fare',
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
-    );
-  }
-}

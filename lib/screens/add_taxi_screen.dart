@@ -25,9 +25,9 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
   Future<void> _addfares(TaxiFare taxiFare) async {
     try {
       await faresCollection.add(taxiFare.toMap());
-      print("Taxi fare added");
+      throw ("Taxi fare added");
     } catch (e) {
-      print("Failed to add taxi fare: $e");
+      throw ("Failed to add taxi fare: $e");
     }
   }
 

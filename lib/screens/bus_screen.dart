@@ -482,14 +482,20 @@ class BusArrivalTile extends StatelessWidget {
                 "Next Buses",
                 style: kInfo,
               ),
-              buildRow(
+              if (busArrival.nextBus2!.estimatedArrival
+                  .isNotEmpty) // Check if nextBus3 is not null
+                buildRow(
                   Icons.directions_bus,
-                  arriveTime(busArrival.nextBus2.estimatedArrival),
-                  busArrival.nextBus2.load),
-              buildRow(
+                  arriveTime(busArrival.nextBus2!.estimatedArrival),
+                  busArrival.nextBus2!.load,
+                ),
+              if (busArrival.nextBus3!.estimatedArrival
+                  .isNotEmpty) // Check if nextBus3 is not null
+                buildRow(
                   Icons.directions_bus,
-                  arriveTime(busArrival.nextBus3.estimatedArrival),
-                  busArrival.nextBus3.load),
+                  arriveTime(busArrival.nextBus3!.estimatedArrival),
+                  busArrival.nextBus3!.load,
+                ),
             ],
           ),
         ),
