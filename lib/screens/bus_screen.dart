@@ -384,21 +384,21 @@ class BusArrivalTile extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           stops: [3 / 5, 3 / 9, 1],
-          colors: [Colors.grey, Colors.green, Colors.green],
+          colors: [Colors.white, Colors.green, Colors.green],
         );
       case 'SDA':
         return LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           stops: [3 / 8, 3 / 9, 1],
-          colors: [Colors.grey, Colors.orange, Colors.orange],
+          colors: [Colors.white, Colors.orange, Colors.orange],
         );
       default:
         return LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           stops: [0, 1, 1],
-          colors: [Colors.grey, Colors.grey, Colors.grey],
+          colors: [Colors.white, Colors.white, Colors.grey],
         );
     }
   }
