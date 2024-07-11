@@ -140,7 +140,7 @@ class _BusScreenState extends State<BusScreen> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'images/bus.png', // Replace with your image asset path
+              'images/bus.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -208,10 +208,10 @@ class _BusScreenState extends State<BusScreen> {
                   itemBuilder: (context, index) {
                     BusArrival busArrival = _busArrivals[index];
                     return BusArrivalTile(
-                      busArrival: busArrival,
-                      BusType: BusType,
-                      arriveTime: arriveTime,
-                    );
+                        busArrival: busArrival,
+                        BusType: BusType,
+                        arriveTime: arriveTime,
+                        image: Image.asset('${BusType}.png'));
                   },
                 ),
               ),
@@ -276,11 +276,13 @@ class BusArrivalTile extends StatelessWidget {
   final BusArrival busArrival;
   final String Function(BusArrival) BusType;
   final String Function(String) arriveTime;
+  final Image image;
 
   BusArrivalTile({
     required this.busArrival,
     required this.BusType,
     required this.arriveTime,
+    required this.image,
   });
 
   @override
@@ -308,7 +310,6 @@ class BusArrivalTile extends StatelessWidget {
                       children: [
                         Column(
                           children: [
-                            // Use the loadIcon function here
                             loadIcon(busArrival.nextBus.load),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -338,6 +339,10 @@ class BusArrivalTile extends StatelessWidget {
                             Center(
                               child: Text(BusType(busArrival), style: kInfo),
                             ),
+                            Container(
+                                height: 50,
+                                child: Image.asset(
+                                    "images/${BusType(busArrival)}.png"))
                           ],
                         ),
                       ],
@@ -430,7 +435,7 @@ class BusArrivalTile extends StatelessWidget {
   Widget buildInfoCard() {
     return Container(
       width: 550, // Example width
-      height: 145, // Example height
+      height: 210, // Example height
       child: Card(
         color: Color(0xFF3E80CE).withOpacity(0.65),
         shape: RoundedRectangleBorder(
