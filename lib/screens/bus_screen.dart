@@ -336,13 +336,13 @@ class BusArrivalTile extends StatelessWidget {
                                   : "Wheelchair Inaccessible",
                               style: kAccessible,
                             ),
-                            Center(
-                              child: Text(BusType(busArrival), style: kInfo),
-                            ),
                             Container(
-                                height: 50,
-                                child: Image.asset(
-                                    "images/${BusType(busArrival)}.png"))
+                              height: 50,
+                              child: loadImageWithGradient(
+                                "images/${BusType(busArrival)}.png",
+                                busArrival.nextBus.load,
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -355,6 +355,52 @@ class BusArrivalTile extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget loadImageWithGradient(String imagePath, String load) {
+    return ShaderMask(
+      shaderCallback: (Rect rect) {
+        return getGradient(load).createShader(rect);
+      },
+      child: Image.asset(
+        imagePath,
+        color: Colors.white,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  LinearGradient getGradient(String load) {
+    switch (load.toUpperCase()) {
+      case 'LSD':
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0, 1, 1],
+          colors: [Colors.red, Colors.red, Colors.red],
+        );
+      case 'SEA':
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [3 / 5, 3 / 9, 1],
+          colors: [Colors.grey, Colors.green, Colors.green],
+        );
+      case 'SDA':
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [3 / 8, 3 / 9, 1],
+          colors: [Colors.grey, Colors.orange, Colors.orange],
+        );
+      default:
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0, 1, 1],
+          colors: [Colors.grey, Colors.grey, Colors.grey],
+        );
+    }
   }
 
   Widget loadIcon(String load) {
@@ -435,7 +481,7 @@ class BusArrivalTile extends StatelessWidget {
   Widget buildInfoCard() {
     return Container(
       width: 550, // Example width
-      height: 210, // Example height
+      height: 180, // Example height
       child: Card(
         color: Color(0xFF3E80CE).withOpacity(0.65),
         shape: RoundedRectangleBorder(
