@@ -314,7 +314,7 @@ class BusArrivalTile extends StatelessWidget {
                                 style: kBusTitle),
                             Text(
                                 arriveTime(busArrival.nextBus.estimatedArrival),
-                                style: kInfo),
+                                style: kbiggertimer),
                             Container(
                               height: 50,
                               child: loadImageWithGradient(
@@ -482,20 +482,28 @@ class BusArrivalTile extends StatelessWidget {
                 "Next Buses",
                 style: kInfo,
               ),
-              if (busArrival.nextBus2!.estimatedArrival
-                  .isNotEmpty) // Check if nextBus3 is not null
+              if (busArrival.nextBus2 != null &&
+                  busArrival.nextBus2!.estimatedArrival
+                      .isNotEmpty) // Check if nextBus2 is not null and has an estimated arrival time
                 buildRow(
                   Icons.directions_bus,
                   arriveTime(busArrival.nextBus2!.estimatedArrival),
                   busArrival.nextBus2!.load,
                 ),
-              if (busArrival.nextBus3!.estimatedArrival
-                  .isNotEmpty) // Check if nextBus3 is not null
+              if (busArrival.nextBus3 != null &&
+                  busArrival.nextBus3!.estimatedArrival
+                      .isNotEmpty) // Check if nextBus3 is not null and has an estimated arrival time
                 buildRow(
                   Icons.directions_bus,
                   arriveTime(busArrival.nextBus3!.estimatedArrival),
                   busArrival.nextBus3!.load,
                 ),
+              if ((busArrival.nextBus2 == null ||
+                      busArrival.nextBus2!.estimatedArrival.isEmpty) &&
+                  (busArrival.nextBus3 == null ||
+                      busArrival.nextBus3!.estimatedArrival
+                          .isEmpty)) // Check if both nextBus2 and nextBus3 are null or have no estimated arrival time
+                buildErrorRow("No buses"),
             ],
           ),
         ),
@@ -510,12 +518,25 @@ class BusArrivalTile extends StatelessWidget {
         SizedBox(width: 10),
         Text(
           text,
-          style: kInfo,
+          style: ksmallerinfo,
         ),
         SizedBox(width: 10),
       ],
     );
   }
+}
+
+Widget buildErrorRow(String errorMessage) {
+  return Row(
+    children: [
+      Icon(Icons.error, color: Colors.red),
+      SizedBox(width: 10),
+      Text(
+        errorMessage,
+        style: TextStyle(color: Colors.red, fontSize: 16),
+      ),
+    ],
+  );
 }
 
 Widget loadIcon(String load) {
