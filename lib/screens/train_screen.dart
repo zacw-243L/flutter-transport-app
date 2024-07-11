@@ -164,6 +164,12 @@ class _TrainScreenState extends State<TrainScreen> {
                         hintText: 'Enter train station', // hint text
                         hintStyle: kInfo,
                         prefixIcon: Icon(Icons.search, color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.black.withOpacity(0.6),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: BorderSide.none, // No border side
+                        ),
                       ),
                     );
                   },
