@@ -430,7 +430,7 @@ class BusArrivalTile extends StatelessWidget {
   Widget buildInfoCard() {
     return Container(
       width: 550, // Example width
-      height: 155, // Example height
+      height: 145, // Example height
       child: Card(
         color: Color(0xFF3E80CE).withOpacity(0.65),
         shape: RoundedRectangleBorder(
