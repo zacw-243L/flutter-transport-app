@@ -22,12 +22,17 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
   final TextEditingController fareController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
 
-  Future<void> _addfares(TaxiFare taxiFare) async {
+  Future<void> _addFares(TaxiFare taxiFare) async {
     try {
       await faresCollection.add(taxiFare.toMap());
-      print("Taxi fare added");
+
+      // Clear the text fields after successful addition
+      originController.clear();
+      destController.clear();
+      fareController.clear();
+      dateController.clear();
     } catch (e) {
-      print("Failed to add taxi fare: $e");
+      throw ("Failed to add taxi fare: $e");
     }
   }
 
@@ -37,28 +42,71 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
     double fare;
     DateTime date;
 
+    void showErrorDialog(String message) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: RichText(
+              text: TextSpan(
+                text: message,
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    void showSuccessDialog(String message) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Success'),
+            content: RichText(
+              text: TextSpan(
+                text: message,
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     if (origin.isEmpty ||
         dest.isEmpty ||
         fareController.text.isEmpty ||
         dateController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all fields')),
-      );
+      showErrorDialog('Please fill in all fields');
       return;
     }
 
     if (origin.contains(RegExp(r'[0-9]')) || dest.contains(RegExp(r'[0-9]'))) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Origin and Destination should not contain numbers')),
-      );
+      showErrorDialog('Origin and Destination should not contain numbers');
       return;
     }
 
     if (!fareController.text.contains(RegExp(r'^[0-9\.]+$'))) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Fare should only contain numbers')),
-      );
+      showErrorDialog('Fare should only contain numbers');
       return;
     }
 
@@ -66,21 +114,15 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
 
     String dateInput = dateController.text;
     if (!dateInput.contains(RegExp(r'^\d{4}-\d{2}-\d{2}$'))) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Invalid input. Enter a valid date in YYYY-MM-DD format.')),
-      );
+      showErrorDialog(
+          'Invalid input. Enter a valid date in YYYY-MM-DD format.');
       return;
     }
 
     List<String> dateParts = dateInput.split('-');
     if (dateParts.length != 3) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Invalid input. Enter a valid date in YYYY-MM-DD format.')),
-      );
+      showErrorDialog(
+          'Invalid input. Enter a valid date in YYYY-MM-DD format.');
       return;
     }
 
@@ -89,9 +131,7 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
     int day = int.parse(dateParts[2]);
 
     if (!(1 <= month && month <= 12) || !(1 <= day && day <= 31)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid input. Invalid date.')),
-      );
+      showErrorDialog('Invalid input. Invalid date.');
       return;
     }
 
@@ -109,12 +149,12 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
     );
     // Add the taxiFare to your database or perform any other operation
 
-    _addfares(taxiFare).then((_) {
-      // Clear the text fields after successful addition
-      originController.clear();
-      destController.clear();
-      fareController.clear();
-      dateController.clear();
+    _addFares(taxiFare).then((_) {
+      // Show success message
+      showSuccessDialog('Taxi fare added successfully');
+    }).catchError((e) {
+      // Show error message
+      showErrorDialog(e.toString());
     });
   }
 

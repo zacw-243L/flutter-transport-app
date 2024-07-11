@@ -110,7 +110,7 @@ class _BusScreenState extends State<BusScreen> {
     } else if (minutes <= 1) {
       return 'Arrived';
     }
-    return 'Arriving in $minutes min';
+    return 'ETA: $minutes min';
   }
 
   @override
@@ -140,7 +140,7 @@ class _BusScreenState extends State<BusScreen> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'images/bus.png', // Replace with your image asset path
+              'images/bus.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -208,10 +208,10 @@ class _BusScreenState extends State<BusScreen> {
                   itemBuilder: (context, index) {
                     BusArrival busArrival = _busArrivals[index];
                     return BusArrivalTile(
-                      busArrival: busArrival,
-                      BusType: BusType,
-                      arriveTime: arriveTime,
-                    );
+                        busArrival: busArrival,
+                        BusType: BusType,
+                        arriveTime: arriveTime,
+                        image: Image.asset('${BusType}.png'));
                   },
                 ),
               ),
@@ -276,15 +276,28 @@ class BusArrivalTile extends StatelessWidget {
   final BusArrival busArrival;
   final String Function(BusArrival) BusType;
   final String Function(String) arriveTime;
+  final Image image;
 
   BusArrivalTile({
     required this.busArrival,
     required this.BusType,
     required this.arriveTime,
+    required this.image,
   });
 
   @override
   Widget build(BuildContext context) {
+    String arrivalInfo = arriveTime(busArrival.nextBus.estimatedArrival);
+    Color arrivalColor;
+
+    if (arrivalInfo == 'Arrived') {
+      arrivalColor = Colors.green;
+    } else if (arrivalInfo == 'Departed') {
+      arrivalColor = Colors.red;
+    } else {
+      arrivalColor = kbiggertimer.color ?? Colors.white;
+    }
+
     return ListTile(
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,7 +309,7 @@ class BusArrivalTile extends StatelessWidget {
                 child: buildInfoCard(),
               ),
               Transform.translate(
-                offset: Offset(120.0, 30.0),
+                offset: Offset(170.0, 30.0),
                 child: Card(
                   color: Color(0xFF5E60CE).withOpacity(0.80),
                   shape: RoundedRectangleBorder(
@@ -308,35 +321,26 @@ class BusArrivalTile extends StatelessWidget {
                       children: [
                         Column(
                           children: [
-                            // Use the loadIcon function here
-                            loadIcon(busArrival.nextBus.load),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.accessible,
-                                color: busArrival.nextBus.feature == "WAB"
-                                    ? Colors.green
-                                    : Colors.red,
-                                size: 30,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
                             Text('Bus No: ${busArrival.serviceNo}',
                                 style: kBusTitle),
                             Text(
-                                arriveTime(busArrival.nextBus.estimatedArrival),
-                                style: kInfo),
+                              arrivalInfo,
+                              style: kbiggertimer.copyWith(color: arrivalColor),
+                            ),
+                            SizedBox(height: 2),
+                            Container(
+                              height: 55,
+                              child: loadImageWithGradient(
+                                "images/${BusType(busArrival)}.png",
+                                busArrival.nextBus.load,
+                              ),
+                            ),
+                            SizedBox(height: 2),
                             Text(
                               busArrival.nextBus.feature == "WAB"
                                   ? "Wheelchair Accessible"
                                   : "Wheelchair Inaccessible",
                               style: kAccessible,
-                            ),
-                            Center(
-                              child: Text(BusType(busArrival), style: kInfo),
                             ),
                           ],
                         ),
@@ -352,85 +356,56 @@ class BusArrivalTile extends StatelessWidget {
     );
   }
 
-  Widget loadIcon(String load) {
-    return Stack(
-      children: [
-        Icon(
-          Icons.directions_bus,
-          color: Colors.grey, // default color
-          size: 30,
-        ),
-        load.toUpperCase() == 'LSD'
-            ? ShaderMask(
-                shaderCallback: (Rect rect) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0, 1, 1],
-                    colors: [Colors.red, Colors.red, Colors.red],
-                  ).createShader(rect);
-                },
-                child: Icon(
-                  Icons.directions_bus,
-                  color: Colors.white, // color of the shader
-                  size: 30,
-                ),
-              )
-            : load.toUpperCase() == 'SEA'
-                ? ShaderMask(
-                    shaderCallback: (Rect rect) {
-                      return LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [3 / 5, 3 / 9, 1],
-                        colors: [Colors.grey, Colors.green, Color(0xFF006400)],
-                      ).createShader(rect);
-                    },
-                    child: Icon(
-                      Icons.directions_bus,
-                      color: Colors.white, // color of the shader
-                      size: 30,
-                    ),
-                  )
-                : load.toUpperCase() == 'SDA'
-                    ? ShaderMask(
-                        shaderCallback: (Rect rect) {
-                          return LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            stops: [3 / 8, 3 / 9, 1],
-                            colors: [Colors.grey, Colors.orange, Colors.orange],
-                          ).createShader(rect);
-                        },
-                        child: Icon(
-                          Icons.directions_bus,
-                          color: Colors.white, // color of the shader
-                          size: 30,
-                        ),
-                      )
-                    : ShaderMask(
-                        shaderCallback: (Rect rect) {
-                          return LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            stops: [0, 1, 1],
-                            colors: [Colors.grey, Colors.grey, Colors.grey],
-                          ).createShader(rect);
-                        },
-                        child: Icon(
-                          Icons.directions_bus,
-                          color: Colors.white, // color of the shader
-                          size: 30,
-                        ),
-                      ),
-      ],
+  Widget loadImageWithGradient(String imagePath, String load) {
+    return ShaderMask(
+      shaderCallback: (Rect rect) {
+        return getGradient(load).createShader(rect);
+      },
+      child: Image.asset(
+        imagePath,
+        color: Colors.white,
+        fit: BoxFit.cover,
+      ),
     );
+  }
+
+  LinearGradient getGradient(String load) {
+    switch (load.toUpperCase()) {
+      case 'LSD':
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0, 1, 1],
+          colors: [Colors.red, Colors.red, Colors.red],
+        );
+      case 'SEA':
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [3 / 5, 3 / 9, 1],
+          colors: [Colors.white, Colors.green, Color(0xFF008000)],
+        );
+      case 'SDA':
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [3 / 8, 3 / 9, 1],
+          colors: [Colors.white, Colors.orange, Colors.orange],
+        );
+      default:
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0, 1, 1],
+          colors: [Colors.white, Colors.white, Colors.grey],
+        );
+    }
   }
 
   Widget buildInfoCard() {
     return Container(
       width: 550, // Example width
-      height: 145, // Example height
+      height: 180, // Example height
       child: Card(
         color: Color(0xFF3E80CE).withOpacity(0.65),
         shape: RoundedRectangleBorder(
@@ -442,9 +417,32 @@ class BusArrivalTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildRow(Icons.directions_bus, " 5 min :", Colors.yellow),
-              buildRow(Icons.directions_bus, " 5 min :", Colors.green),
-              buildRow(Icons.directions_bus, " 5 min :", Colors.red),
+              Text(
+                "Next Buses",
+                style: kInfo,
+              ),
+              if (busArrival.nextBus2 != null &&
+                  busArrival.nextBus2!.estimatedArrival
+                      .isNotEmpty) // Check if nextBus2 is not null and has an estimated arrival time
+                buildRow(
+                  Icons.directions_bus,
+                  arriveTime(busArrival.nextBus2!.estimatedArrival),
+                  busArrival.nextBus2!.load,
+                ),
+              if (busArrival.nextBus3 != null &&
+                  busArrival.nextBus3!.estimatedArrival
+                      .isNotEmpty) // Check if nextBus3 is not null and has an estimated arrival time
+                buildRow(
+                  Icons.directions_bus,
+                  arriveTime(busArrival.nextBus3!.estimatedArrival),
+                  busArrival.nextBus3!.load,
+                ),
+              if ((busArrival.nextBus2 == null ||
+                      busArrival.nextBus2!.estimatedArrival.isEmpty) &&
+                  (busArrival.nextBus3 == null ||
+                      busArrival.nextBus3!.estimatedArrival
+                          .isEmpty)) // Check if both nextBus2 and nextBus3 are null or have no estimated arrival time
+                buildErrorRow("No buses"),
             ],
           ),
         ),
@@ -452,18 +450,105 @@ class BusArrivalTile extends StatelessWidget {
     );
   }
 
-  Widget buildRow(IconData icon, String text, Color color) {
+  Widget buildRow(IconData icon, String text, String load) {
     return Row(
       children: [
+        loadIcon(load),
+        SizedBox(width: 10),
         Text(
           text,
-          style: kInfo,
+          style: ksmallerinfo,
         ),
-        Icon(
-          icon,
-          color: color,
-        ),
+        SizedBox(width: 10),
       ],
     );
   }
+}
+
+Widget buildErrorRow(String errorMessage) {
+  return Row(
+    children: [
+      Icon(Icons.error, color: Colors.red),
+      SizedBox(width: 10),
+      Text(
+        errorMessage,
+        style: TextStyle(color: Colors.red, fontSize: 16),
+      ),
+    ],
+  );
+}
+
+Widget loadIcon(String load) {
+  return Stack(
+    children: [
+      Icon(
+        Icons.directions_bus,
+        color: Colors.grey, // default color
+        size: 30,
+      ),
+      load.toUpperCase() == 'LSD'
+          ? ShaderMask(
+              shaderCallback: (Rect rect) {
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0, 1, 1],
+                  colors: [Colors.red, Colors.red, Colors.red],
+                ).createShader(rect);
+              },
+              child: Icon(
+                Icons.directions_bus,
+                color: Colors.white, // color of the shader
+                size: 30,
+              ),
+            )
+          : load.toUpperCase() == 'SEA'
+              ? ShaderMask(
+                  shaderCallback: (Rect rect) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [3 / 5, 3 / 9, 1],
+                      colors: [Colors.grey, Colors.green, Color(0xFF006400)],
+                    ).createShader(rect);
+                  },
+                  child: Icon(
+                    Icons.directions_bus,
+                    color: Colors.white, // color of the shader
+                    size: 30,
+                  ),
+                )
+              : load.toUpperCase() == 'SDA'
+                  ? ShaderMask(
+                      shaderCallback: (Rect rect) {
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [3 / 8, 3 / 9, 1],
+                          colors: [Colors.grey, Colors.orange, Colors.orange],
+                        ).createShader(rect);
+                      },
+                      child: Icon(
+                        Icons.directions_bus,
+                        color: Colors.white, // color of the shader
+                        size: 30,
+                      ),
+                    )
+                  : ShaderMask(
+                      shaderCallback: (Rect rect) {
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0, 1, 1],
+                          colors: [Colors.grey, Colors.grey, Colors.grey],
+                        ).createShader(rect);
+                      },
+                      child: Icon(
+                        Icons.directions_bus,
+                        color: Colors.white, // color of the shader
+                        size: 30,
+                      ),
+                    ),
+    ],
+  );
 }

@@ -20,6 +20,7 @@ class TaxiScreen extends StatefulWidget {
 
 class _TaxiScreenState extends State<TaxiScreen> {
   List<TaxiStand> _alltaxiStands = [];
+  double _totalFare = 0.0;
 
   TaxiStand _selectedTaxiStand = TaxiStand(
     latitude: 0,
@@ -40,7 +41,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
         _alltaxiStands = taxistands;
       });
     } catch (error) {
-      print('Error fetching taxi stands $error');
+      print('Error fetching taxi stands: $error');
       // Handle error (e.g., show error message)
     }
   }
@@ -118,6 +119,67 @@ class _TaxiScreenState extends State<TaxiScreen> {
                 ),
               ),
               SizedBox(height: 20), // Add a 20 pixel high empty space
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('fares')
+                    .where('userid',
+                        isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Text('Total spent to date: -\$0.00');
+                  }
+
+                  double totalFare = snapshot.data!.docs.fold(0.0, (sum, doc) {
+                    double fare = (doc['fare'] != null)
+                        ? double.parse(doc['fare'].toString())
+                        : 0.0;
+                    return sum + fare;
+                  });
+
+                  return RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Total spent to date: ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(2.0, 2.0),
+                                blurRadius: 3.0,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                            ],
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' -\$${totalFare.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 18,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(2.0, 2.0),
+                                blurRadius: 3.0,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 20), // Add another 20 pixel high empty space
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
@@ -198,9 +260,9 @@ class _TaxiScreenState extends State<TaxiScreen> {
                               ),
                             ),
                             trailing: Text(
-                              '\$$fare',
+                              '-\$$fare',
                               style: TextStyle(
-                                color: Colors.white70,
+                                color: Colors.red[900], // Deep red color
                                 fontSize: 18, // Bigger font size
                                 shadows: [
                                   Shadow(
@@ -308,37 +370,6 @@ class ShowMapButton extends StatelessWidget {
             ),
             Icon(Icons.location_on)
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class AddTaxiFareButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200, // Set the width of the button
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 40)),
-        onPressed: () {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: const AddTaxiScreen(),
-                ),
-              );
-            },
-          );
-        },
-        child: const Text(
-          'Add Taxi Fare',
-          style: TextStyle(fontSize: 20),
         ),
       ),
     );

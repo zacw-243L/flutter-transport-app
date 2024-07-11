@@ -13,17 +13,44 @@ const TextStyle kAppName = TextStyle(
 
 const TextStyle kWelcomeUser = TextStyle(
   fontSize: 18,
-  fontWeight: FontWeight.normal,
   color: kWhiteColor,
 );
 
 const TextStyle kInfo = TextStyle(
-  fontSize: 16,
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
   color: kWhiteColor,
 );
 
-const TextStyle kAccessible = TextStyle(
+const TextStyle kbiggertimer = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
+  color: kWhiteColor,
+  shadows: [
+    Shadow(
+      offset: Offset(2.0, 2.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ],
+);
+
+const TextStyle ksmallerinfo = TextStyle(
   fontSize: 14,
+  fontWeight: FontWeight.bold,
+  color: Colors.white70,
+  shadows: [
+    Shadow(
+      offset: Offset(2.0, 2.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ],
+);
+
+const TextStyle kAccessible = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
   color: kWhiteColor,
 );
 
