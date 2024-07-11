@@ -20,6 +20,7 @@ class TaxiScreen extends StatefulWidget {
 
 class _TaxiScreenState extends State<TaxiScreen> {
   List<TaxiStand> _alltaxiStands = [];
+  double _totalFare = 0.0;
 
   TaxiStand _selectedTaxiStand = TaxiStand(
     latitude: 0,
@@ -36,11 +37,23 @@ class _TaxiScreenState extends State<TaxiScreen> {
   Future<void> fetchTaxiStands() async {
     try {
       List<TaxiStand> taxistands = await ApiCalls().fetchTaxiStands();
+      QuerySnapshot fareSnapshot = await FirebaseFirestore.instance
+          .collection('fares')
+          .where('userid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .get();
+
+      double totalFare = fareSnapshot.docs.fold(0.0, (sum, doc) {
+        double fare =
+            (doc['fare'] != null) ? double.parse(doc['fare'].toString()) : 0.0;
+        return sum + fare;
+      });
+
       setState(() {
         _alltaxiStands = taxistands;
+        _totalFare = totalFare;
       });
     } catch (error) {
-      print('Error fetching taxi stands $error');
+      print('Error fetching taxi stands or fares: $error');
       // Handle error (e.g., show error message)
     }
   }
@@ -118,6 +131,14 @@ class _TaxiScreenState extends State<TaxiScreen> {
                 ),
               ),
               SizedBox(height: 20), // Add a 20 pixel high empty space
+              Text(
+                'Total Fare: \$${_totalFare.toStringAsFixed(2)}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(height: 20), // Add another 20 pixel high empty space
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
