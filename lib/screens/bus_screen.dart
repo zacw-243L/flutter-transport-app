@@ -382,8 +382,8 @@ class BusArrivalTile extends StatelessWidget {
                       return LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        stops: [0, 1 / 3, 1],
-                        colors: [Colors.grey, Colors.grey, Colors.green],
+                        stops: [3 / 5, 3 / 9, 1],
+                        colors: [Colors.grey, Colors.green, Color(0xFF006400)],
                       ).createShader(rect);
                     },
                     child: Icon(
@@ -398,7 +398,7 @@ class BusArrivalTile extends StatelessWidget {
                           return LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-                            stops: [0, 1 / 2, 1],
+                            stops: [3 / 8, 3 / 9, 1],
                             colors: [Colors.grey, Colors.orange, Colors.orange],
                           ).createShader(rect);
                         },
