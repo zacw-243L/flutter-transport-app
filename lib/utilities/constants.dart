@@ -13,17 +13,19 @@ const TextStyle kAppName = TextStyle(
 
 const TextStyle kWelcomeUser = TextStyle(
   fontSize: 18,
-  fontWeight: FontWeight.normal,
+  fontWeight: FontWeight.bold,
   color: kWhiteColor,
 );
 
 const TextStyle kInfo = TextStyle(
-  fontSize: 16,
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
   color: kWhiteColor,
 );
 
 const TextStyle kAccessible = TextStyle(
-  fontSize: 14,
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
   color: kWhiteColor,
 );
 

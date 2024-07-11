@@ -1,16 +1,22 @@
 class BusArrival {
   String serviceNo;
   NextBus nextBus;
+  NextBus nextBus2;
+  NextBus nextBus3;
 
   BusArrival({
     required this.serviceNo,
     required this.nextBus,
+    required this.nextBus2,
+    required this.nextBus3,
   });
 
   factory BusArrival.fromJson(Map<String, dynamic> json) {
     return BusArrival(
       serviceNo: json['ServiceNo'],
       nextBus: NextBus.fromJson(json['NextBus']),
+      nextBus2: NextBus.fromJson(json['NextBus2']),
+      nextBus3: NextBus.fromJson(json['NextBus3']),
     );
   }
 }

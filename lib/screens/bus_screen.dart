@@ -110,7 +110,7 @@ class _BusScreenState extends State<BusScreen> {
     } else if (minutes <= 1) {
       return 'Arrived';
     }
-    return 'Arriving in $minutes min';
+    return 'ETA: $minutes min';
   }
 
   @override
@@ -298,7 +298,7 @@ class BusArrivalTile extends StatelessWidget {
                 child: buildInfoCard(),
               ),
               Transform.translate(
-                offset: Offset(120.0, 30.0),
+                offset: Offset(170.0, 30.0),
                 child: Card(
                   color: Color(0xFF5E60CE).withOpacity(0.80),
                   shape: RoundedRectangleBorder(
@@ -315,25 +315,12 @@ class BusArrivalTile extends StatelessWidget {
                             Text(
                                 arriveTime(busArrival.nextBus.estimatedArrival),
                                 style: kInfo),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.accessible,
-                                  color: busArrival.nextBus.feature == "WAB"
-                                      ? Colors.green
-                                      : Colors.red,
-                                  size: 40,
-                                ),
-                                SizedBox(width: 10),
-                                Container(
-                                  height: 50,
-                                  child: loadImageWithGradient(
-                                    "images/${BusType(busArrival)}.png",
-                                    busArrival.nextBus.load,
-                                  ),
-                                ),
-                                SizedBox(width: 40),
-                              ],
+                            Container(
+                              height: 50,
+                              child: loadImageWithGradient(
+                                "images/${BusType(busArrival)}.png",
+                                busArrival.nextBus.load,
+                              ),
                             ),
                             Text(
                               busArrival.nextBus.feature == "WAB"
@@ -491,9 +478,18 @@ class BusArrivalTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildRow(Icons.directions_bus, " 5 min :", Colors.yellow),
-              buildRow(Icons.directions_bus, " 5 min :", Colors.green),
-              buildRow(Icons.directions_bus, " 5 min :", Colors.red),
+              Text(
+                "Next Buses",
+                style: kInfo,
+              ),
+              buildRow(
+                  Icons.directions_bus,
+                  arriveTime(busArrival.nextBus2.estimatedArrival),
+                  busArrival.nextBus2.load),
+              buildRow(
+                  Icons.directions_bus,
+                  arriveTime(busArrival.nextBus3.estimatedArrival),
+                  busArrival.nextBus3.load),
             ],
           ),
         ),
@@ -501,18 +497,92 @@ class BusArrivalTile extends StatelessWidget {
     );
   }
 
-  Widget buildRow(IconData icon, String text, Color color) {
+  Widget buildRow(IconData icon, String text, String load) {
     return Row(
       children: [
+        loadIcon(load),
+        SizedBox(width: 10),
         Text(
           text,
           style: kInfo,
         ),
-        Icon(
-          icon,
-          color: color,
-        ),
+        SizedBox(width: 10),
       ],
     );
   }
+}
+
+Widget loadIcon(String load) {
+  return Stack(
+    children: [
+      Icon(
+        Icons.directions_bus,
+        color: Colors.grey, // default color
+        size: 30,
+      ),
+      load.toUpperCase() == 'LSD'
+          ? ShaderMask(
+              shaderCallback: (Rect rect) {
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0, 1, 1],
+                  colors: [Colors.red, Colors.red, Colors.red],
+                ).createShader(rect);
+              },
+              child: Icon(
+                Icons.directions_bus,
+                color: Colors.white, // color of the shader
+                size: 30,
+              ),
+            )
+          : load.toUpperCase() == 'SEA'
+              ? ShaderMask(
+                  shaderCallback: (Rect rect) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [3 / 5, 3 / 9, 1],
+                      colors: [Colors.grey, Colors.green, Color(0xFF006400)],
+                    ).createShader(rect);
+                  },
+                  child: Icon(
+                    Icons.directions_bus,
+                    color: Colors.white, // color of the shader
+                    size: 30,
+                  ),
+                )
+              : load.toUpperCase() == 'SDA'
+                  ? ShaderMask(
+                      shaderCallback: (Rect rect) {
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [3 / 8, 3 / 9, 1],
+                          colors: [Colors.grey, Colors.orange, Colors.orange],
+                        ).createShader(rect);
+                      },
+                      child: Icon(
+                        Icons.directions_bus,
+                        color: Colors.white, // color of the shader
+                        size: 30,
+                      ),
+                    )
+                  : ShaderMask(
+                      shaderCallback: (Rect rect) {
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0, 1, 1],
+                          colors: [Colors.grey, Colors.grey, Colors.grey],
+                        ).createShader(rect);
+                      },
+                      child: Icon(
+                        Icons.directions_bus,
+                        color: Colors.white, // color of the shader
+                        size: 30,
+                      ),
+                    ),
+    ],
+  );
 }
