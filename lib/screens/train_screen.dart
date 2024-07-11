@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-
 import '../utilities/api_calls.dart';
-
 import '../models/train_stations_repository.dart';
 import '../models/train_crowd_density.dart';
 import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
 import '../widgets/navigation_bar.dart';
 
-String currentStation = ""; //_selectedTrainStation.stnName
-String currentLine = "NSL"; // Default line
+String currentStation = "Bedok"; //_selectedTrainStation.stnName
+String currentLine = "EWL";
 String CrowdedInfo = "Moderate";
 
 List<String> EWLBranchStationsList = [
@@ -75,7 +73,6 @@ List<String> PLRTBranchStationsList = [
   "Sumang",
   "Soo Teck",
 ];
-
 List<String> NSLStationsList = [
   "Jurong East",
   "Bukit Batok",
@@ -259,28 +256,33 @@ List<Station> generateLineStations(String line, List<String> stationList) {
       stationInfo: "",
       stationIcon: (currentStationIndex - 1 >= 0) ? Icons.circle : null,
     ),
-    Station(
-      stationName: currentStation,
-      isMainStation: true,
-      stationInfo: CrowdedInfo,
-      stationIcon: Icons.train,
-    ),
-    Station(
-      stationName: (currentStationIndex + 1 < stationList.length)
-          ? stationList[currentStationIndex + 1]
-          : "",
-      stationInfo: "",
-      stationIcon:
-          (currentStationIndex + 1 < stationList.length) ? Icons.circle : null,
-    ),
-    Station(
-      stationName: (currentStationIndex + 2 < stationList.length)
-          ? stationList[currentStationIndex + 2]
-          : "",
-      stationInfo: "",
-      stationIcon:
-          (currentStationIndex + 2 < stationList.length) ? Icons.circle : null,
-    ),
+    if (currentStation.isNotEmpty)
+      Station(
+        stationName: currentStation,
+        isMainStation: true,
+        stationInfo: CrowdedInfo,
+        stationIcon: Icons.train,
+      ),
+    if (currentStation.isNotEmpty)
+      Station(
+        stationName: (currentStationIndex + 1 <= stationList.length)
+            ? stationList[currentStationIndex + 1]
+            : "",
+        stationInfo: "",
+        stationIcon: (currentStationIndex + 1 < stationList.length)
+            ? Icons.circle
+            : null,
+      ),
+    if (currentStation.isNotEmpty)
+      Station(
+        stationName: (currentStationIndex + 2 <= stationList.length)
+            ? stationList[currentStationIndex + 2]
+            : "",
+        stationInfo: "",
+        stationIcon: (currentStationIndex + 2 < stationList.length)
+            ? Icons.circle
+            : null,
+      ),
   ];
   return stationsz;
 }
@@ -329,6 +331,7 @@ class _TrainScreenState extends State<TrainScreen> {
   }
 
   void switchLine(String line) {
+    //exists for junctions , so user not forced to look at wrong line
     setState(() {
       currentLine = line;
       stationsz = lineStations[currentLine] ?? [];
@@ -424,31 +427,12 @@ class _TrainScreenState extends State<TrainScreen> {
     }
   }
 
-  Color _getTrainLineColor(String trainLineCode) {
-    switch (trainLineCode) {
-      case 'EWL':
-        return Colors.green;
-      case 'EWLB':
-        return Colors.green;
-      case 'CCL':
-        return Colors.orange;
-      case 'NSL':
-        return Colors.red;
-      case 'NEL':
-        return Colors.purple;
-      case 'DTL':
-        return Colors.blue;
-      default:
-        return Colors.white; // Default color if train line code doesn't match
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    String crowdLevel = _getCrowdLevelForStation();
+    String CrowdedInfo = _getCrowdLevelForStation();
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF5E60CE).withOpacity(0.85),
+        backgroundColor: const Color(0xFF5E60CE).withOpacity(0.85),
         title: Text(
           "LionTransport".toUpperCase(),
           style: kAppName,
@@ -457,7 +441,7 @@ class _TrainScreenState extends State<TrainScreen> {
           PopupMenuButton<String>(
             onSelected: switchLine,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'NSL',
                 child: Text('NSL'),
               ),
@@ -481,7 +465,30 @@ class _TrainScreenState extends State<TrainScreen> {
                 value: 'DTL',
                 child: Text('DTL'),
               ),
-              // Add more lines as needed
+              PopupMenuItem<String>(
+                value: 'BPL',
+                child: Text('BPL'),
+              ),
+              PopupMenuItem<String>(
+                value: 'BPLB',
+                child: Text('BPLB'),
+              ),
+              PopupMenuItem<String>(
+                value: 'SLRT',
+                child: Text('SLRT'),
+              ),
+              PopupMenuItem<String>(
+                value: 'SLRTB',
+                child: Text('SLRTB'),
+              ),
+              PopupMenuItem<String>(
+                value: 'PLRT',
+                child: Text('PLRT'),
+              ),
+              PopupMenuItem<String>(
+                value: 'PLRTB',
+                child: Text('PLRTB'),
+              ),
             ],
           ),
           IconButton(
@@ -527,8 +534,8 @@ class _TrainScreenState extends State<TrainScreen> {
                     onSelected: (TrainStation station) async {
                       setState(() {
                         _selectedTrainStation = station;
-                        print(_selectedTrainStation);
-                        print(stationsz);
+                        currentStation = _selectedTrainStation.stnName;
+                        CrowdedInfo = _getCrowdLevelForStation();
                       });
                       await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
                     },
@@ -556,13 +563,24 @@ class _TrainScreenState extends State<TrainScreen> {
                     },
                   ),
                 ),
-                Container(
-                  height: 410,
-                  child: TrainSchedule(
-                    currentStationIndex: find(currentStation),
-                    currentLine: currentLine,
-                    stationsz: stationsz,
-                    lineColors: lineColors, // Pass lineColors here
+                Text(
+                  'Selected Station: ${_selectedTrainStation.stnName}',
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'Crowd Level: $CrowdedInfo',
+                  style: TextStyle(
+                      fontSize: 18, color: _getCrowdLevelColor(CrowdedInfo)),
+                ),
+                Expanded(
+                  child: Container(
+                    height: 410,
+                    child: TrainSchedule(
+                      currentStationIndex: find(currentStation),
+                      currentLine: currentLine,
+                      stationsz: stationsz,
+                      lineColors: lineColors, // Pass lineColors here
+                    ),
                   ),
                 )
               ],
@@ -766,11 +784,10 @@ class StationItem extends StatelessWidget {
           _buildTimeline(),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 4),
                   Text(stationName, style: kInfo),
                   Text(stationInfo, style: kInfo),
                 ],
