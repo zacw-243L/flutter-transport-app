@@ -8,9 +8,73 @@ import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
 import '../widgets/navigation_bar.dart';
 
-String currentStation = "Yew Tee"; //_selectedTrainStation.stnName
+String currentStation = ""; //_selectedTrainStation.stnName
 String currentLine = "NSL"; // Default line
 String CrowdedInfo = "Moderate";
+
+List<String> EWLBranchStationsList = [
+  "Tanah Merah",
+  "Expo",
+  "Changi Airport",
+];
+List<String> BPLBranchStationsList = [
+  "Phoenix",
+  "Ten Mile Junction",
+  "Bukit Panjang",
+];
+List<String> BPLStationsList = [
+  "Choa Chu Kang",
+  "South View",
+  "Keat Hong",
+  "Teck Whye",
+  "Phoenix",
+  "Bukit Panjang",
+  "Petir",
+  "Pending",
+  "Bangkit",
+  "Fajar",
+  "Segar",
+  "Jelapang",
+  "Senja",
+];
+List<String> SLRTStationsList = [
+  "Sengkang",
+  "Compassvale",
+  "Rumbia",
+  "Bakau",
+  "Kangkar",
+  "Ranggung",
+];
+List<String> SLRTBranchStationsList = [
+  "Sengkang",
+  "Cheng Lim",
+  "Farmway",
+  "Kupang",
+  "Thanggam",
+  "Fernvale",
+  "Layar",
+  "Tongkang",
+  "Renjong",
+];
+List<String> PLRTStationsList = [
+  "Punggol",
+  "Cove",
+  "Meridian",
+  "Coral Edge",
+  "Riviera",
+  "Kadaloor",
+  "Oasis",
+  "Damai",
+];
+List<String> PLRTBranchStationsList = [
+  "Punggol",
+  "Sam Kee",
+  "Punggol Point",
+  "Samudera",
+  "Nibong",
+  "Sumang",
+  "Soo Teck",
+];
 
 List<String> NSLStationsList = [
   "Jurong East",
@@ -105,6 +169,8 @@ List<String> CCLStationsList = [
   "Labrador Park",
   "Telok Blangah",
   "HarbourFront",
+  "Marina Bay",
+  "Bayfront",
 ];
 List<String> NELStationsList = [
   "HarbourFront",
@@ -155,11 +221,20 @@ List<String> DTLStationsList = [
   "Bedok North",
   "Bedok Reservoir",
   "Tampines West",
+  "Tampines",
   "Tampines East",
   "Upper Changi",
+  "Expo",
 ];
 
 Map<String, List<Station>> lineStations = {
+  "EWLB": generateLineStations("EWLB", EWLBranchStationsList),
+  "BPL": generateLineStations("BPL", BPLStationsList),
+  "BPLB": generateLineStations("BPLB", BPLBranchStationsList),
+  "SLRT": generateLineStations("SLRT", SLRTStationsList),
+  "SLRTB": generateLineStations("SLRTB", SLRTBranchStationsList),
+  "PLRT": generateLineStations("PLRT", PLRTStationsList),
+  "PLRTB": generateLineStations("PLRTB", PLRTBranchStationsList),
   "NSL": generateLineStations("NSL", NSLStationsList),
   "EWL": generateLineStations("EWL", EWLStationsList),
   "CCL": generateLineStations("CCL", CCLStationsList),
@@ -213,9 +288,16 @@ List<Station> generateLineStations(String line, List<String> stationList) {
 Map<String, Color> lineColors = {
   "NSL": Colors.red,
   "EWL": Colors.green,
+  "EWLB": Colors.green,
   "CCL": Colors.orange,
   "NEL": Colors.purple,
   "DTL": Colors.blue,
+  "BPL": Colors.grey,
+  "BPLB": Colors.grey,
+  "SLRT": Colors.grey,
+  "SLRTB": Colors.grey,
+  "PLRT": Colors.grey,
+  "PLRTB": Colors.grey,
 };
 
 class TrainScreen extends StatefulWidget {
@@ -266,6 +348,31 @@ class _TrainScreenState extends State<TrainScreen> {
     }
     if (index == -1) {
       index = DTLStationsList.indexWhere((station) => station == stationName);
+    }
+    if (index == -1) {
+      index =
+          EWLBranchStationsList.indexWhere((station) => station == stationName);
+    }
+    if (index == -1) {
+      index = BPLStationsList.indexWhere((station) => station == stationName);
+    }
+    if (index == -1) {
+      index =
+          BPLBranchStationsList.indexWhere((station) => station == stationName);
+    }
+    if (index == -1) {
+      index = SLRTStationsList.indexWhere((station) => station == stationName);
+    }
+    if (index == -1) {
+      index = SLRTBranchStationsList.indexWhere(
+          (station) => station == stationName);
+    }
+    if (index == -1) {
+      index = PLRTStationsList.indexWhere((station) => station == stationName);
+    }
+    if (index == -1) {
+      index = PLRTBranchStationsList.indexWhere(
+          (station) => station == stationName);
     }
     return index;
   }
@@ -321,6 +428,8 @@ class _TrainScreenState extends State<TrainScreen> {
     switch (trainLineCode) {
       case 'EWL':
         return Colors.green;
+      case 'EWLB':
+        return Colors.green;
       case 'CCL':
         return Colors.orange;
       case 'NSL':
@@ -355,6 +464,10 @@ class _TrainScreenState extends State<TrainScreen> {
               PopupMenuItem<String>(
                 value: 'EWL',
                 child: Text('EWL'),
+              ),
+              PopupMenuItem<String>(
+                value: 'EWLB',
+                child: Text('EWLB'),
               ),
               PopupMenuItem<String>(
                 value: 'CCL',
@@ -414,6 +527,8 @@ class _TrainScreenState extends State<TrainScreen> {
                     onSelected: (TrainStation station) async {
                       setState(() {
                         _selectedTrainStation = station;
+                        print(_selectedTrainStation);
+                        print(stationsz);
                       });
                       await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
                     },
