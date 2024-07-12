@@ -529,15 +529,11 @@ class _TrainScreenState extends State<TrainScreen> {
                     onSelected: (TrainStation station) async {
                       setState(() {
                         _selectedTrainStation = station;
-                        currentStation = _selectedTrainStation.stnName;
                         CrowdedInfo = _getCrowdLevelForStation();
-                        print("sadsadads");
-                        print(currentLine);
-                        print(currentStation);
-                        print(EWLBranchStationsList);
-
                         stationsz = generateLineStations(
-                            currentLine, currentStation, EWLBranchStationsList);
+                            _selectedTrainStation.trainLineCode,
+                            _selectedTrainStation.stnName,
+                            NELStationsList);
 
                         print("Station 2");
                         if (stationsz.isNotEmpty) {
