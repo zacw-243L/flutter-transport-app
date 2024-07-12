@@ -327,29 +327,29 @@ List<Station> generateLineStations(String line, String currentStation,
           stationCode: StationCode),
     if (currentStation.isNotEmpty)
       Station(
-        stationName: (currentStationIndex + 1 <= stationList.length)
+        stationName: (currentStationIndex + 1 <= stationList.length - 1)
             ? stationList[currentStationIndex + 1]
             : "",
         isMainStation: false,
         stationInfo: "",
-        stationIcon: (currentStationIndex + 1 < stationList.length)
+        stationIcon: (currentStationIndex + 1 < stationList.length - 1)
             ? Icons.circle
             : null,
-        stationCode: (currentStationIndex + 1 < stationList.length)
+        stationCode: (currentStationIndex + 1 < stationList.length - 1)
             ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 1)}"
             : "",
       ),
     if (currentStation.isNotEmpty)
       Station(
-        stationName: (currentStationIndex + 2 <= stationList.length)
+        stationName: (currentStationIndex + 2 <= stationList.length - 1)
             ? stationList[currentStationIndex + 2]
             : "",
         isMainStation: false,
         stationInfo: "",
-        stationIcon: (currentStationIndex + 2 < stationList.length)
+        stationIcon: (currentStationIndex + 2 < stationList.length - 1)
             ? Icons.circle
             : null,
-        stationCode: (currentStationIndex + 2 < stationList.length)
+        stationCode: (currentStationIndex + 2 < stationList.length - 1)
             ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 2)}"
             : "",
       ),
