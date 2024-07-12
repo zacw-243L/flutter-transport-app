@@ -53,7 +53,7 @@ const TextStyle ksmallerinfo = TextStyle(
   ],
 );
 const TextStyle kShadowRed = TextStyle(
-  color: Color(0xFFB81111), // A deep red color
+  color: Color(0xFFC60B0B), // A deep red color
   fontSize: 18, // Bigger font size
   shadows: [
     Shadow(

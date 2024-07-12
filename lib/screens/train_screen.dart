@@ -446,56 +446,27 @@ class _TrainScreenState extends State<TrainScreen> {
           PopupMenuButton<String>(
             icon: Icon(Icons.swap_horiz),
             onSelected: switchLine,
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'NSL',
-                child: Text('NSL'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'EWL',
-                child: Text('EWL'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'EWLB',
-                child: Text('EWLB'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'CCL',
-                child: Text('CCL'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'NEL',
-                child: Text('NEL'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'DTL',
-                child: Text('DTL'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'BPL',
-                child: Text('BPL'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'BPLB',
-                child: Text('BPLB'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'SLRT',
-                child: Text('SLRT'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'SLRTB',
-                child: Text('SLRTB'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'PLRT',
-                child: Text('PLRT'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'PLRTB',
-                child: Text('PLRTB'),
-              ),
-            ],
+            itemBuilder: (BuildContext context) {
+              return {
+                'NSL',
+                'EWL',
+                'EWLB',
+                'CCL',
+                'NEL',
+                'DTL',
+                'BPL',
+                'BPLB',
+                'SLRT',
+                'SLRTB',
+                'PLRT',
+                'PLRTB'
+              }.map((String value) {
+                return PopupMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList();
+            },
           ),
           IconButton(
             onPressed: () {
