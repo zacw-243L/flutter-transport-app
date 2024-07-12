@@ -37,14 +37,6 @@ List<String> BPLStationsList = [
 ];
 List<String> SLRTStationsList = [
   "Sengkang",
-  "Compassvale",
-  "Rumbia",
-  "Bakau",
-  "Kangkar",
-  "Ranggung",
-];
-List<String> SLRTBranchStationsList = [
-  "Sengkang",
   "Cheng Lim",
   "Farmway",
   "Kupang",
@@ -53,6 +45,13 @@ List<String> SLRTBranchStationsList = [
   "Layar",
   "Tongkang",
   "Renjong",
+  "Sengkang",
+  "Compassvale",
+  "Rumbia",
+  "Bakau",
+  "Kangkar",
+  "Ranggung",
+  "Sengkang",
 ];
 List<String> PLRTStationsList = [
   "Punggol",
@@ -63,8 +62,6 @@ List<String> PLRTStationsList = [
   "Kadaloor",
   "Oasis",
   "Damai",
-];
-List<String> PLRTBranchStationsList = [
   "Punggol",
   "Sam Kee",
   "Punggol Point",
@@ -72,6 +69,7 @@ List<String> PLRTBranchStationsList = [
   "Nibong",
   "Sumang",
   "Soo Teck",
+  "Punggol",
 ];
 List<String> NSLStationsList = [
   "Jurong East",
@@ -246,12 +244,8 @@ Map<String, List<Station>> lineStations = {
       "BPL", currentStation, BPLStationsList, CrowdedInfo, StationCode),
   "SLRT": generateLineStations(
       "SLRT", currentStation, SLRTStationsList, CrowdedInfo, StationCode),
-  "SLRTB": generateLineStations("SLRTB", currentStation, SLRTBranchStationsList,
-      CrowdedInfo, StationCode),
   "PLRT": generateLineStations(
       "PLRT", currentStation, PLRTStationsList, CrowdedInfo, StationCode),
-  "PLRTB": generateLineStations("PLRTB", currentStation, PLRTBranchStationsList,
-      CrowdedInfo, StationCode),
   "NSL": generateLineStations(
       "NSL", currentStation, NSLStationsList, CrowdedInfo, StationCode),
   "EWL": generateLineStations(
@@ -273,11 +267,8 @@ Map<String, Color> lineColors = {
   "NEL": Colors.purple,
   "DTL": Colors.blue,
   "BPL": Colors.grey,
-  "BPLB": Colors.grey,
   "SLRT": Colors.grey,
-  "SLRTB": Colors.grey,
   "PLRT": Colors.grey,
-  "PLRTB": Colors.grey,
 };
 
 class TrainScreen extends StatefulWidget {
@@ -296,28 +287,30 @@ List<Station> generateLineStations(String line, String currentStation,
         RegExp(r'\d'), ''); // Extract the alphabetic part
   }
   List<Station> stationsz = [
-    Station(
-      stationName: (currentStationIndex - 2 >= 0)
-          ? stationList[currentStationIndex - 2]
-          : "",
-      isMainStation: false,
-      stationInfo: "",
-      stationIcon: (currentStationIndex - 2 >= 0) ? Icons.circle : null,
-      stationCode: (currentStationIndex - 2 >= 0)
-          ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 2)}"
-          : "",
-    ),
-    Station(
-      stationName: (currentStationIndex - 1 >= 0)
-          ? stationList[currentStationIndex - 1]
-          : "",
-      isMainStation: false,
-      stationInfo: "",
-      stationIcon: (currentStationIndex - 1 >= 0) ? Icons.circle : null,
-      stationCode: (currentStationIndex - 1 >= 0)
-          ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 1)}"
-          : "",
-    ),
+    if (currentStation.isNotEmpty && ((currentStationIndex - 2) >= 0))
+      Station(
+        stationName: (currentStationIndex - 2 >= 0)
+            ? stationList[currentStationIndex - 2]
+            : "",
+        isMainStation: false,
+        stationInfo: "",
+        stationIcon: (currentStationIndex - 2 >= 0) ? Icons.circle : null,
+        stationCode: (currentStationIndex - 2 >= 0)
+            ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 2)}"
+            : "",
+      ),
+    if (currentStation.isNotEmpty && ((currentStationIndex - 1) >= 0))
+      Station(
+        stationName: (currentStationIndex - 1 >= 0)
+            ? stationList[currentStationIndex - 1]
+            : "",
+        isMainStation: false,
+        stationInfo: "",
+        stationIcon: (currentStationIndex - 1 >= 0) ? Icons.circle : null,
+        stationCode: (currentStationIndex - 1 >= 0)
+            ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 1)}"
+            : "",
+      ),
     if (currentStation.isNotEmpty)
       Station(
           stationName: currentStation,
@@ -422,15 +415,7 @@ class _TrainScreenState extends State<TrainScreen> {
       index = SLRTStationsList.indexWhere((station) => station == stationName);
     }
     if (index == -1) {
-      index = SLRTBranchStationsList.indexWhere(
-          (station) => station == stationName);
-    }
-    if (index == -1) {
       index = PLRTStationsList.indexWhere((station) => station == stationName);
-    }
-    if (index == -1) {
-      index = PLRTBranchStationsList.indexWhere(
-          (station) => station == stationName);
     }
     return index;
   }
@@ -489,16 +474,14 @@ class _TrainScreenState extends State<TrainScreen> {
               return {
                 'NSL',
                 'EWL',
-                'EWLB',
+                'CEL',
+                'CGL',
                 'CCL',
                 'NEL',
                 'DTL',
                 'BPL',
-                'BPLB',
                 'SLRT',
-                'SLRTB',
                 'PLRT',
-                'PLRTB'
               }.map((String value) {
                 return PopupMenuItem<String>(
                   value: value,
@@ -534,7 +517,7 @@ class _TrainScreenState extends State<TrainScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(50, 10, 50, 20),
+                  padding: const EdgeInsets.fromLTRB(50, 15, 50, 15),
                   child: Autocomplete<TrainStation>(
                     optionsBuilder: (TextEditingValue textEditingValue) {
                       if (textEditingValue.text.isEmpty) {
@@ -580,14 +563,8 @@ class _TrainScreenState extends State<TrainScreen> {
                             'SLRT') {
                           lineCOD = SLRTStationsList;
                         } else if (_selectedTrainStation.trainLineCode ==
-                            'SLRTB') {
-                          lineCOD = SLRTBranchStationsList;
-                        } else if (_selectedTrainStation.trainLineCode ==
                             'PLRT') {
                           lineCOD = PLRTStationsList;
-                        } else if (_selectedTrainStation.trainLineCode ==
-                            'PLRTB') {
-                          lineCOD = PLRTBranchStationsList;
                         }
                       });
                       await _fetchCrowdDensity();
