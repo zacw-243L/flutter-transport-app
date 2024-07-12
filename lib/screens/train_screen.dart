@@ -6,9 +6,9 @@ import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
 import '../widgets/navigation_bar.dart';
 
-String currentStation = "Bedok"; //_selectedTrainStation.stnName
-String currentLine = "EWL";
-String CrowdedInfo = "Moderate";
+String currentStation = ""; //_selectedTrainStation.stnName
+String currentLine = "";
+String CrowdedInfo = "";
 
 List<String> EWLBranchStationsList = [
   "Tanah Merah",
@@ -439,54 +439,53 @@ class _TrainScreenState extends State<TrainScreen> {
         ),
         actions: [
           PopupMenuButton<String>(
-            icon: Icon(Icons.swap_vert),
             onSelected: switchLine,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
                 value: 'NSL',
                 child: Text('NSL'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'EWL',
                 child: Text('EWL'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'EWLB',
                 child: Text('EWLB'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'CCL',
                 child: Text('CCL'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'NEL',
                 child: Text('NEL'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'DTL',
                 child: Text('DTL'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'BPL',
                 child: Text('BPL'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'BPLB',
                 child: Text('BPLB'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'SLRT',
                 child: Text('SLRT'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'SLRTB',
                 child: Text('SLRTB'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'PLRT',
                 child: Text('PLRT'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'PLRTB',
                 child: Text('PLRTB'),
               ),
