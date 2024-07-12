@@ -190,6 +190,19 @@ class _TrainScreenState extends State<TrainScreen> {
     CrowdedInfo = _getCrowdLevelForStation();
   }
 
+/*  void switchLine(String line, String currentStation) {
+    if (lineStations.containsKey(line) &&
+        lineStations[line]!
+            .any((station) => station.stationName == currentStation)) {
+      setState(() {
+        currentLine = line;
+        CrowdedInfo = _getCrowdLevelForStation();
+      });
+    } else {
+      throw Exception('Station not found in the selected line');
+    }
+  }*/
+
   int find(String stationName) {
     int index = NSLStationsList.indexWhere((station) => station == stationName);
     if (index == -1) {
@@ -412,17 +425,21 @@ class _TrainScreenState extends State<TrainScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(50, 15, 50, 15),
-                  child: Autocomplete<String>(
+                  child: Autocomplete<TrainStation>(
                     optionsBuilder: (TextEditingValue textEditingValue) {
                       if (textEditingValue.text.isEmpty) {
-                        return const Iterable<String>.empty();
+                        return const Iterable<TrainStation>.empty();
                       }
-                      _updateList(textEditingValue.text);
-                      return currentList;
+                      return _allTrainStations.where(
+                          (station) => station.stnName.toLowerCase().contains(
+                                textEditingValue.text.toLowerCase(),
+                              ));
                     },
-                    onSelected: (String station) async {
+                    displayStringForOption: (TrainStation option) =>
+                        option.stnName,
+                    onSelected: (TrainStation station) async {
                       setState(() {
-                        _selectedTrainStation = _getStationDetails(station);
+                        _selectedTrainStation = station;
                         if (_selectedTrainStation.trainLineCode == 'NEL') {
                           lineCOD = NELStationsList;
                         } else if (_selectedTrainStation.trainLineCode ==
