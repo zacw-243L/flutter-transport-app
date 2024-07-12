@@ -6,8 +6,8 @@ import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
 import '../widgets/navigation_bar.dart';
 
-String currentStation = ""; //_selectedTrainStation.stnName
-String currentLine = "";
+String currentStation = "Stadium"; //_selectedTrainStation.stnName
+String currentLine = "CCL";
 String CrowdedInfo = "";
 
 List<String> EWLBranchStationsList = [
@@ -225,21 +225,46 @@ List<String> DTLStationsList = [
 ];
 
 Map<String, List<Station>> lineStations = {
-  "EWLB": generateLineStations("EWLB", EWLBranchStationsList),
-  "BPL": generateLineStations("BPL", BPLStationsList),
-  "BPLB": generateLineStations("BPLB", BPLBranchStationsList),
-  "SLRT": generateLineStations("SLRT", SLRTStationsList),
-  "SLRTB": generateLineStations("SLRTB", SLRTBranchStationsList),
-  "PLRT": generateLineStations("PLRT", PLRTStationsList),
-  "PLRTB": generateLineStations("PLRTB", PLRTBranchStationsList),
-  "NSL": generateLineStations("NSL", NSLStationsList),
-  "EWL": generateLineStations("EWL", EWLStationsList),
-  "CCL": generateLineStations("CCL", CCLStationsList),
-  "NEL": generateLineStations("NEL", NELStationsList),
-  "DTL": generateLineStations("DTL", DTLStationsList),
+  "EWLB": generateLineStations("EWLB", currentStation, EWLBranchStationsList),
+  "BPL": generateLineStations("BPL", currentStation, BPLStationsList),
+  "BPLB": generateLineStations("BPLB", currentStation, BPLBranchStationsList),
+  "SLRT": generateLineStations("SLRT", currentStation, SLRTStationsList),
+  "SLRTB":
+      generateLineStations("SLRTB", currentStation, SLRTBranchStationsList),
+  "PLRT": generateLineStations("PLRT", currentStation, PLRTStationsList),
+  "PLRTB":
+      generateLineStations("PLRTB", currentStation, PLRTBranchStationsList),
+  "NSL": generateLineStations("NSL", currentStation, NSLStationsList),
+  "EWL": generateLineStations("EWL", currentStation, EWLStationsList),
+  "CCL": generateLineStations("CCL", currentStation, CCLStationsList),
+  "NEL": generateLineStations("NEL", currentStation, NELStationsList),
+  "DTL": generateLineStations("DTL", currentStation, DTLStationsList),
 };
 
-List<Station> generateLineStations(String line, List<String> stationList) {
+Map<String, Color> lineColors = {
+  "NSL": Colors.red,
+  "EWL": Colors.green,
+  "EWLB": Colors.green,
+  "CCL": Colors.orange,
+  "NEL": Colors.purple,
+  "DTL": Colors.blue,
+  "BPL": Colors.grey,
+  "BPLB": Colors.grey,
+  "SLRT": Colors.grey,
+  "SLRTB": Colors.grey,
+  "PLRT": Colors.grey,
+  "PLRTB": Colors.grey,
+};
+
+class TrainScreen extends StatefulWidget {
+  late List<Station> stationsz;
+
+  @override
+  State<TrainScreen> createState() => _TrainScreenState();
+}
+
+List<Station> generateLineStations(
+    String line, String currentStation, List<String> stationList) {
   int currentStationIndex = stationList.indexOf(currentStation);
   List<Station> stationsz = [
     Station(
@@ -287,28 +312,6 @@ List<Station> generateLineStations(String line, List<String> stationList) {
   return stationsz;
 }
 
-Map<String, Color> lineColors = {
-  "NSL": Colors.red,
-  "EWL": Colors.green,
-  "EWLB": Colors.green,
-  "CCL": Colors.orange,
-  "NEL": Colors.purple,
-  "DTL": Colors.blue,
-  "BPL": Colors.grey,
-  "BPLB": Colors.grey,
-  "SLRT": Colors.grey,
-  "SLRTB": Colors.grey,
-  "PLRT": Colors.grey,
-  "PLRTB": Colors.grey,
-};
-
-class TrainScreen extends StatefulWidget {
-  late List<Station> stationsz;
-
-  @override
-  State<TrainScreen> createState() => _TrainScreenState();
-}
-
 class _TrainScreenState extends State<TrainScreen> {
   List<Station> stationsz = []; // Initialize the stationsz list
   TrainStation _selectedTrainStation = TrainStation(
@@ -330,16 +333,23 @@ class _TrainScreenState extends State<TrainScreen> {
     stationsz = lineStations[currentLine] ?? [];
   }
 
-  void switchLine(String line) {
-    if (lineStations[line] != null &&
+  void switchLine(String line, String currentStation) {
+    print("Running switchLine");
+    if (lineStations.containsKey(line) &&
         lineStations[line]!
             .any((station) => station.stationName == currentStation)) {
       setState(() {
         currentLine = line;
-        stationsz = lineStations[currentLine] ?? [];
+        if (currentLine == "EWLB") {
+          stationsz = generateLineStations(
+              currentLine, currentStation, EWLBranchStationsList);
+        } else if (currentLine == "NEL") {
+          stationsz = generateLineStations(
+              currentLine, currentStation, NELStationsList);
+        }
       });
     } else {
-      throw ('Station not found in the selected line');
+      throw Exception('Station not found in the selected line');
     }
   }
 
@@ -445,7 +455,10 @@ class _TrainScreenState extends State<TrainScreen> {
         actions: [
           PopupMenuButton<String>(
             icon: Icon(Icons.swap_horiz),
-            onSelected: switchLine,
+            onSelected: (String line) {
+              switchLine(line,
+                  currentStation); // Replace `currentStation` with your actual station variable
+            },
             itemBuilder: (BuildContext context) {
               return {
                 'NSL',
@@ -501,6 +514,11 @@ class _TrainScreenState extends State<TrainScreen> {
                       if (textEditingValue.text.isEmpty) {
                         return const Iterable<TrainStation>.empty();
                       }
+                      print("_allTrainStations");
+                      print(_allTrainStations.where(
+                          (station) => station.stnName.toLowerCase().contains(
+                                textEditingValue.text.toLowerCase(),
+                              )));
                       return _allTrainStations.where(
                           (station) => station.stnName.toLowerCase().contains(
                                 textEditingValue.text.toLowerCase(),
@@ -513,6 +531,26 @@ class _TrainScreenState extends State<TrainScreen> {
                         _selectedTrainStation = station;
                         currentStation = _selectedTrainStation.stnName;
                         CrowdedInfo = _getCrowdLevelForStation();
+                        print("sadsadads");
+                        print(currentLine);
+                        print(currentStation);
+                        print(EWLBranchStationsList);
+
+                        stationsz = generateLineStations(
+                            currentLine, currentStation, EWLBranchStationsList);
+
+                        print("Station 2");
+                        if (stationsz.isNotEmpty) {
+                          for (var station in stationsz) {
+                            print("Station 1");
+                            print(station
+                                .stationName); // Ensure correct station names are printed
+                          }
+                        } else {
+                          print(
+                              "stationsz is empty or not populated correctly.");
+                        }
+                        print("Station 3");
                       });
                       await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
                     },
@@ -556,7 +594,7 @@ class _TrainScreenState extends State<TrainScreen> {
                   child: Container(
                     height: 410,
                     child: TrainSchedule(
-                      currentStationIndex: find(currentStation),
+                      currentStationIndex: find(_selectedTrainStation.stnName),
                       currentLine: currentLine,
                       stationsz: stationsz,
                       lineColors: lineColors, // Pass lineColors here
@@ -565,12 +603,6 @@ class _TrainScreenState extends State<TrainScreen> {
                 )
               ],
             ),
-          ),
-          Column(
-            children: [],
-          ),
-          Stack(
-            children: [],
           ),
         ],
       ),
@@ -599,9 +631,9 @@ class TrainSchedule extends StatelessWidget {
         return StationItem(
           stationName: stationsz[index].stationName,
           isMainStation: index == currentStationIndex,
-          lineColor: lineColors[currentLine]!, // Access line color from the map
+          lineColor: lineColors[currentLine]!,
           stationInfo: stationsz[index].stationInfo,
-          stationIcon: stationsz[index].stationIcon, // Pass stationIcon here
+          stationIcon: stationsz[index].stationIcon,
         );
       },
     );
