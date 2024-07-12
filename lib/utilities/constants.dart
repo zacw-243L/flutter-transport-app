@@ -235,6 +235,23 @@ const TextStyle kInfo = TextStyle(
   fontWeight: FontWeight.bold,
   color: kWhiteColor,
 );
+const TextStyle ktrainInfo = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: kWhiteColor,
+);
+const TextStyle ksmallertraininfo = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
+  color: Colors.white70,
+  shadows: [
+    Shadow(
+      offset: Offset(2.0, 2.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ],
+);
 
 const TextStyle kbiggertimer = TextStyle(
   fontSize: 16,

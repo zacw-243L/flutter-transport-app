@@ -510,16 +510,50 @@ class StationItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(stationName, style: kInfo),
+                  Text(stationName, style: ktrainInfo),
                   Text(
                     stationCode,
-                    style: kbiggertimer,
+                    style: ksmallertraininfo,
                   ),
                   if (stationInfo.isNotEmpty)
-                    Text(
-                      "Crowd Level: $stationInfo",
-                      style: TextStyle(color: _getCrowdLevelColor(stationInfo)),
-                    ),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Crowd Level: ",
+                            style: TextStyle(
+                              fontSize:
+                                  20.0, // Set font size for "Crowd Level: "
+                              color: Colors.white, // Color for "Crowd Level: "
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(1.0, 1.0),
+                                  blurRadius: 3.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              ],
+                            ),
+                          ),
+                          TextSpan(
+                            text: "$stationInfo",
+                            style: TextStyle(
+                              fontSize: 20.0, // Set font size for $stationInfo
+                              color: _getCrowdLevelColor(
+                                  stationInfo), // Color for $stationInfo
+                              fontWeight:
+                                  FontWeight.bold, // Bold for $stationInfo
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(1.0, 1.0),
+                                  blurRadius: 3.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                 ],
               ),
             ),
@@ -531,21 +565,21 @@ class StationItem extends StatelessWidget {
 
   Widget _buildTimeline() {
     return Container(
-      width: 50,
+      width: 60,
       child: Column(
         children: [
           if (stationIcon != null)
             Container(
-              width: 2,
-              height: 30,
+              width: 3,
+              height: 50,
               color: lineColor,
             ),
           if (stationIcon != null)
             Icon(stationIcon, color: lineColor, size: 24),
           if (stationIcon != null)
             Container(
-              width: 2,
-              height: 30,
+              width: 3,
+              height: 50,
               color: lineColor,
             ),
         ],
