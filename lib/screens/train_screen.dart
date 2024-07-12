@@ -173,6 +173,9 @@ class _TrainScreenState extends State<TrainScreen> {
     trainLineCode: '',
   );
 
+  late List<String> currentList;
+  String currentCategory = 'NSL';
+
   List<CrowdDensity> _crowdDensities = [];
   final TrainStationsRepository _trainStationsRepository =
       TrainStationsRepository();
@@ -181,22 +184,10 @@ class _TrainScreenState extends State<TrainScreen> {
   @override
   void initState() {
     super.initState();
+    currentList = NSLStationsList; // Initialize with fruits
     _allTrainStations = _trainStationsRepository.allTrainStations.toList();
     stationsz = lineStations[currentLine] ?? [];
     CrowdedInfo = _getCrowdLevelForStation();
-  }
-
-  void switchLine(String line, String currentStation) {
-    if (lineStations.containsKey(line) &&
-        lineStations[line]!
-            .any((station) => station.stationName == currentStation)) {
-      setState(() {
-        currentLine = line;
-        CrowdedInfo = _getCrowdLevelForStation();
-      });
-    } else {
-      throw Exception('Station not found in the selected line');
-    }
   }
 
   int find(String stationName) {
@@ -263,6 +254,102 @@ class _TrainScreenState extends State<TrainScreen> {
     return '';
   }
 
+  void _updateList(String value) {
+    setState(() {
+      switch (currentCategory) {
+        case 'CEL':
+          currentList = CELStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+        case 'CGL':
+          currentList = CGLStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+        case 'BPL':
+          currentList = BPLStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+        case 'SLRT':
+          currentList = SLRTStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+        case 'PLRT':
+          currentList = PLRTStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+        case 'NSL':
+          currentList = NSLStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+        case 'EWL':
+          currentList = EWLStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+        case 'CCL':
+          currentList = CCLStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+        case 'NEL':
+          currentList = NELStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+        case 'DTL':
+          currentList = DTLStationsList.where((station) =>
+              station.toLowerCase().contains(value.toLowerCase())).toList();
+          break;
+      }
+    });
+  }
+
+  void _updateCategory(String category) {
+    setState(() {
+      currentCategory = category;
+      switch (category) {
+        case 'CEL':
+          currentList = CELStationsList;
+          break;
+        case 'CGL':
+          currentList = CGLStationsList;
+          break;
+        case 'BPL':
+          currentList = BPLStationsList;
+          break;
+        case 'SLRT':
+          currentList = SLRTStationsList;
+          break;
+        case 'PLRT':
+          currentList = PLRTStationsList;
+          break;
+        case 'NSL':
+          currentList = NSLStationsList;
+          break;
+        case 'EWL':
+          currentList = EWLStationsList;
+          break;
+        case 'CCL':
+          currentList = CCLStationsList;
+          break;
+        case 'NEL':
+          currentList = NELStationsList;
+          break;
+        case 'DTL':
+          currentList = DTLStationsList;
+          break;
+      }
+    });
+  }
+
+  TrainStation _getStationDetails(String stationName) {
+    return _trainStationsRepository.allTrainStations.firstWhere(
+        (station) => station.stnName.toLowerCase() == stationName.toLowerCase(),
+        orElse: () => TrainStation(
+              stnCode: '',
+              stnName: '',
+              trainLine: '',
+              trainLineCode: '',
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     CrowdedInfo = _getCrowdLevelForStation();
@@ -276,9 +363,7 @@ class _TrainScreenState extends State<TrainScreen> {
         actions: [
           PopupMenuButton<String>(
             icon: Icon(Icons.swap_horiz),
-            onSelected: (String line) {
-              switchLine(line, currentStation);
-            },
+            onSelected: _updateCategory,
             itemBuilder: (BuildContext context) {
               return {
                 'NSL',
@@ -291,10 +376,10 @@ class _TrainScreenState extends State<TrainScreen> {
                 'BPL',
                 'SLRT',
                 'PLRT',
-              }.map((String value) {
+              }.map((String choice) {
                 return PopupMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+                  value: choice,
+                  child: Text(choice),
                 );
               }).toList();
             },
@@ -327,21 +412,17 @@ class _TrainScreenState extends State<TrainScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(50, 15, 50, 15),
-                  child: Autocomplete<TrainStation>(
+                  child: Autocomplete<String>(
                     optionsBuilder: (TextEditingValue textEditingValue) {
                       if (textEditingValue.text.isEmpty) {
-                        return const Iterable<TrainStation>.empty();
+                        return const Iterable<String>.empty();
                       }
-                      return _allTrainStations.where(
-                          (station) => station.stnName.toLowerCase().contains(
-                                textEditingValue.text.toLowerCase(),
-                              ));
+                      _updateList(textEditingValue.text);
+                      return currentList;
                     },
-                    displayStringForOption: (TrainStation option) =>
-                        option.stnName,
-                    onSelected: (TrainStation station) async {
+                    onSelected: (String station) async {
                       setState(() {
-                        _selectedTrainStation = station;
+                        _selectedTrainStation = _getStationDetails(station);
                         if (_selectedTrainStation.trainLineCode == 'NEL') {
                           lineCOD = NELStationsList;
                         } else if (_selectedTrainStation.trainLineCode ==
@@ -386,7 +467,7 @@ class _TrainScreenState extends State<TrainScreen> {
                             lineCOD,
                             CrowdedInfo,
                             _selectedTrainStation.stnCode);
-                      } // Fetch crowd density after selecting a station
+                      }
                     },
                     fieldViewBuilder: (BuildContext context,
                         TextEditingController textEditingController,
