@@ -6,19 +6,17 @@ import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
 import '../widgets/navigation_bar.dart';
 
-String currentStation = "Stadium"; //_selectedTrainStation.stnName
-String currentLine = "CCL";
+String currentStation = ""; //_selectedTrainStation.stnName
+String currentLine = "";
 String CrowdedInfo = "";
-
-List<String> EWLBranchStationsList = [
+List<String> CELStationsList = [
+  "Bayfront",
+  "Marina Bay",
+];
+List<String> CGLStationsList = [
   "Tanah Merah",
   "Expo",
   "Changi Airport",
-];
-List<String> BPLBranchStationsList = [
-  "Phoenix",
-  "Ten Mile Junction",
-  "Bukit Panjang",
 ];
 List<String> BPLStationsList = [
   "Choa Chu Kang",
@@ -225,9 +223,9 @@ List<String> DTLStationsList = [
 ];
 
 Map<String, List<Station>> lineStations = {
-  "EWLB": generateLineStations("EWLB", currentStation, EWLBranchStationsList),
+  "CEL": generateLineStations("CEL", currentStation, CELStationsList),
+  "CGL": generateLineStations("CGL", currentStation, CGLStationsList),
   "BPL": generateLineStations("BPL", currentStation, BPLStationsList),
-  "BPLB": generateLineStations("BPLB", currentStation, BPLBranchStationsList),
   "SLRT": generateLineStations("SLRT", currentStation, SLRTStationsList),
   "SLRTB":
       generateLineStations("SLRTB", currentStation, SLRTBranchStationsList),
@@ -244,8 +242,9 @@ Map<String, List<Station>> lineStations = {
 Map<String, Color> lineColors = {
   "NSL": Colors.red,
   "EWL": Colors.green,
-  "EWLB": Colors.green,
+  "CGL": Colors.green,
   "CCL": Colors.orange,
+  "CEL": Colors.orange,
   "NEL": Colors.purple,
   "DTL": Colors.blue,
   "BPL": Colors.grey,
@@ -340,13 +339,6 @@ class _TrainScreenState extends State<TrainScreen> {
             .any((station) => station.stationName == currentStation)) {
       setState(() {
         currentLine = line;
-        if (currentLine == "EWLB") {
-          stationsz = generateLineStations(
-              currentLine, currentStation, EWLBranchStationsList);
-        } else if (currentLine == "NEL") {
-          stationsz = generateLineStations(
-              currentLine, currentStation, NELStationsList);
-        }
       });
     } else {
       throw Exception('Station not found in the selected line');
@@ -368,15 +360,13 @@ class _TrainScreenState extends State<TrainScreen> {
       index = DTLStationsList.indexWhere((station) => station == stationName);
     }
     if (index == -1) {
-      index =
-          EWLBranchStationsList.indexWhere((station) => station == stationName);
+      index = CELStationsList.indexWhere((station) => station == stationName);
+    }
+    if (index == -1) {
+      index = CGLStationsList.indexWhere((station) => station == stationName);
     }
     if (index == -1) {
       index = BPLStationsList.indexWhere((station) => station == stationName);
-    }
-    if (index == -1) {
-      index =
-          BPLBranchStationsList.indexWhere((station) => station == stationName);
     }
     if (index == -1) {
       index = SLRTStationsList.indexWhere((station) => station == stationName);
@@ -528,25 +518,55 @@ class _TrainScreenState extends State<TrainScreen> {
                         option.stnName,
                     onSelected: (TrainStation station) async {
                       setState(() {
+                        List<String> lineCOD = [];
                         _selectedTrainStation = station;
                         CrowdedInfo = _getCrowdLevelForStation();
-                        stationsz = generateLineStations(
+                        if (_selectedTrainStation.trainLineCode == 'NEL') {
+                          lineCOD = NELStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'NSL') {
+                          lineCOD = NSLStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'EWL') {
+                          lineCOD = EWLStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'CCL') {
+                          lineCOD = CCLStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'NEL') {
+                          lineCOD = NELStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'CEL') {
+                          lineCOD = CELStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'CGL') {
+                          lineCOD = CGLStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'DTL') {
+                          lineCOD = DTLStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'BPL') {
+                          lineCOD = BPLStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'SLRT') {
+                          lineCOD = SLRTStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'SLRTB') {
+                          lineCOD = SLRTBranchStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'PLRT') {
+                          lineCOD = PLRTStationsList;
+                        } else if (_selectedTrainStation.trainLineCode ==
+                            'PLRTB') {
+                          lineCOD = PLRTBranchStationsList;
+                        }
+                        if (lineCOD.isNotEmpty) {
+                          stationsz = generateLineStations(
                             _selectedTrainStation.trainLineCode,
                             _selectedTrainStation.stnName,
-                            NELStationsList);
-
-                        print("Station 2");
-                        if (stationsz.isNotEmpty) {
-                          for (var station in stationsz) {
-                            print("Station 1");
-                            print(station
-                                .stationName); // Ensure correct station names are printed
-                          }
-                        } else {
-                          print(
-                              "stationsz is empty or not populated correctly.");
+                            lineCOD,
+                          );
                         }
-                        print("Station 3");
                       });
                       await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
                     },
