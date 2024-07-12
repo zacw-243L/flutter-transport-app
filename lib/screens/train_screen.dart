@@ -325,31 +325,33 @@ List<Station> generateLineStations(String line, String currentStation,
           stationInfo: CrowdedInfo,
           stationIcon: Icons.train,
           stationCode: StationCode),
-    if (currentStation.isNotEmpty)
+    if (currentStation.isNotEmpty &&
+        ((currentStationIndex + 1) <= (stationList.length - 1)))
       Station(
-        stationName: (currentStationIndex + 1 <= stationList.length - 1)
+        stationName: (currentStationIndex + 1 <= stationList.length)
             ? stationList[currentStationIndex + 1]
             : "",
         isMainStation: false,
         stationInfo: "",
-        stationIcon: (currentStationIndex + 1 < stationList.length - 1)
+        stationIcon: (currentStationIndex + 1 < stationList.length)
             ? Icons.circle
             : null,
-        stationCode: (currentStationIndex + 1 < stationList.length - 1)
+        stationCode: (currentStationIndex + 1 < stationList.length)
             ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 1)}"
             : "",
       ),
-    if (currentStation.isNotEmpty)
+    if (currentStation.isNotEmpty &&
+        ((currentStationIndex + 2) <= (stationList.length - 1)))
       Station(
-        stationName: (currentStationIndex + 2 <= stationList.length - 1)
+        stationName: (currentStationIndex + 2 <= stationList.length)
             ? stationList[currentStationIndex + 2]
             : "",
         isMainStation: false,
         stationInfo: "",
-        stationIcon: (currentStationIndex + 2 < stationList.length - 1)
+        stationIcon: (currentStationIndex + 2 < stationList.length)
             ? Icons.circle
             : null,
-        stationCode: (currentStationIndex + 2 < stationList.length - 1)
+        stationCode: (currentStationIndex + 2 < stationList.length)
             ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 2)}"
             : "",
       ),
