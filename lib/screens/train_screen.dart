@@ -438,7 +438,7 @@ class _TrainScreenState extends State<TrainScreen> {
           style: kAppName,
         ),
         actions: [
-          PopupMenuButton<String>(
+/*          PopupMenuButton<String>(
             onSelected: switchLine,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
@@ -490,7 +490,7 @@ class _TrainScreenState extends State<TrainScreen> {
                 child: Text('PLRTB'),
               ),
             ],
-          ),
+          ),*/
           IconButton(
             onPressed: () {
               auth.signOut();
@@ -591,125 +591,7 @@ class _TrainScreenState extends State<TrainScreen> {
             ),
           ),
           Column(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.all(20),
-              //   padding: EdgeInsets.all(
-              //       30), // Add some padding to make the container bigger
-              //   decoration: BoxDecoration(
-              //     color: Colors.deepPurple.withOpacity(
-              //         0.65), // 30% opacity deep purple background
-              //     borderRadius: BorderRadius.all(
-              //         Radius.circular(23)), // Round the corners
-              //   ),
-              //   child: Column(
-              //     children: [
-              //       RichText(
-              //         text: TextSpan(
-              //           text: 'Selected Station: ', // Bold the text
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 22,
-              //             shadows: [
-              //               Shadow(
-              //                 offset: Offset(2.0, 2.0),
-              //                 blurRadius: 3.0,
-              //                 color: Color.fromARGB(255, 0, 0, 0),
-              //               ),
-              //             ],
-              //           ),
-              //           children: <TextSpan>[
-              //             TextSpan(
-              //               text: _selectedTrainStation.stnName,
-              //               style: TextStyle(
-              //                 color: Colors.white70,
-              //                 fontSize: 20,
-              //                 fontWeight: FontWeight.bold,
-              //                 shadows: [
-              //                   Shadow(
-              //                     offset: Offset(2.0, 2.0),
-              //                     blurRadius: 3.0,
-              //                     color: Color.fromARGB(255, 0, 0, 0),
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //       SizedBox(height: 20),
-              //       RichText(
-              //         text: TextSpan(
-              //           text: 'Station Code: ', // Bold the text
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 22,
-              //             shadows: [
-              //               Shadow(
-              //                 offset: Offset(2.0, 2.0),
-              //                 blurRadius: 3.0,
-              //                 color: Color.fromARGB(255, 0, 0, 0),
-              //               ),
-              //             ],
-              //           ),
-              //           children: <TextSpan>[
-              //             TextSpan(
-              //               text: _selectedTrainStation.stnCode,
-              //               style: TextStyle(
-              //                 color: _getTrainLineColor(
-              //                     _selectedTrainStation.trainLineCode),
-              //                 fontSize: 20,
-              //                 fontWeight: FontWeight.bold,
-              //                 shadows: [
-              //                   Shadow(
-              //                     offset: Offset(2.0, 2.0),
-              //                     blurRadius: 3.0,
-              //                     color: Color.fromARGB(255, 0, 0, 0),
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //       SizedBox(height: 20),
-              //       RichText(
-              //         text: TextSpan(
-              //           text: 'Crowd Level: ', // Bold the text
-              //           style: TextStyle(
-              //             fontSize: 22,
-              //             color: Colors.white,
-              //             shadows: [
-              //               Shadow(
-              //                 offset: Offset(2.0, 2.0),
-              //                 blurRadius: 3.0,
-              //                 color: Color.fromARGB(255, 0, 0, 0),
-              //               ),
-              //             ],
-              //           ),
-              //           children: [
-              //             TextSpan(
-              //               text: crowdLevel,
-              //               style: TextStyle(
-              //                 color: _getCrowdLevelColor(crowdLevel),
-              //                 fontSize: 20,
-              //                 fontWeight: FontWeight.bold,
-              //                 shadows: [
-              //                   Shadow(
-              //                     offset: Offset(2.0, 2.0),
-              //                     blurRadius: 3.0,
-              //                     color: Color.fromARGB(255, 0, 0, 0),
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-            ],
+            children: [],
           ),
           Stack(
             children: [],
