@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-
 import '../utilities/api_calls.dart';
 import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
@@ -20,7 +19,6 @@ class TaxiScreen extends StatefulWidget {
 
 class _TaxiScreenState extends State<TaxiScreen> {
   List<TaxiStand> _alltaxiStands = [];
-  double _totalFare = 0.0;
 
   TaxiStand _selectedTaxiStand = TaxiStand(
     latitude: 0,
@@ -41,8 +39,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
         _alltaxiStands = taxistands;
       });
     } catch (error) {
-      print('Error fetching taxi stands: $error');
-      // Handle error (e.g., show error message)
+      throw ('Error fetching taxi stands: $error');
     }
   }
 
@@ -63,7 +60,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
             },
             icon: Icon(
               Icons.logout,
-              color: Colors.black, // Set the color of the logout icon to black
+              color: Colors.black,
             ),
           ),
         ],
@@ -73,7 +70,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'images/taxikun.png', // Replace with your image asset path
+              'images/taxikun.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -123,7 +120,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 20), // Add a 20 pixel high empty space
+              SizedBox(height: 20),
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('fares')
@@ -176,8 +173,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
                   );
                 },
               ),
-
-              SizedBox(height: 20), // Add another 20 pixel high empty space
+              SizedBox(height: 20),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
@@ -312,13 +308,10 @@ class ShowMapButton extends StatelessWidget {
                 selectedTaxiStand.longitude,
               );
             } catch (e) {
-              print('Error opening map: $e');
-              // Handle error (e.g., show error message)
+              throw ('Error opening map: $e');
             }
           } else {
-            print(
-                'Invalid coordinates: ${selectedTaxiStand.latitude}, ${selectedTaxiStand.longitude}');
-            // Handle invalid coordinates (e.g., show message to user)
+            throw ('Invalid coordinates: ${selectedTaxiStand.latitude}, ${selectedTaxiStand.longitude}');
           }
         },
         child: Row(

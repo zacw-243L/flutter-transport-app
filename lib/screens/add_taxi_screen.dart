@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../models/taxi_fare.dart';
-import '../utilities/firebase_calls.dart';
 
 class AddTaxiScreen extends StatefulWidget {
   const AddTaxiScreen({Key? key}) : super(key: key);
@@ -25,8 +23,6 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
   Future<void> _addFares(TaxiFare taxiFare) async {
     try {
       await faresCollection.add(taxiFare.toMap());
-
-      // Clear the text fields after successful addition
       originController.clear();
       destController.clear();
       fareController.clear();
@@ -137,23 +133,19 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
 
     date = DateTime(year, month, day);
 
-    // Convert the DateTime to a Timestamp
     Timestamp timestamp = Timestamp.fromDate(date);
 
     TaxiFare taxiFare = TaxiFare(
       origin: origin,
       dest: dest,
       fare: fare.toString(),
-      date: timestamp, // Use the timestamp here
+      date: timestamp,
       userid: auth.currentUser?.uid ?? '', // Ensure non-null value for userid
     );
-    // Add the taxiFare to your database or perform any other operation
 
     _addFares(taxiFare).then((_) {
-      // Show success message
       showSuccessDialog('Taxi fare added successfully');
     }).catchError((e) {
-      // Show error message
       showErrorDialog(e.toString());
     });
   }
@@ -185,7 +177,7 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
             decoration: const InputDecoration(labelText: 'Date (YYYY-MM-DD)'),
             controller: dateController,
           ),
-          SizedBox(height: 20), // Add some space before the button
+          SizedBox(height: 20),
           ElevatedButton(
             onPressed: _handleAdd,
             child: const Text('Add'),

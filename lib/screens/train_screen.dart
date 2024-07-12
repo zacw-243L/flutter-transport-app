@@ -12,216 +12,6 @@ String CrowdedInfo = "";
 String StationCode = "";
 List<String> lineCOD = [];
 
-List<String> CELStationsList = [
-  "Bayfront",
-  "Marina Bay",
-];
-List<String> CGLStationsList = [
-  "Expo",
-  "Changi Airport",
-];
-List<String> BPLStationsList = [
-  "Choa Chu Kang",
-  "South View",
-  "Keat Hong",
-  "Teck Whye",
-  "Phoenix",
-  "Bukit Panjang",
-  "Petir",
-  "Pending",
-  "Bangkit",
-  "Fajar",
-  "Segar",
-  "Jelapang",
-  "Senja",
-];
-List<String> SLRTStationsList = [
-  "Sengkang",
-  "Cheng Lim",
-  "Farmway",
-  "Kupang",
-  "Thanggam",
-  "Fernvale",
-  "Layar",
-  "Tongkang",
-  "Renjong",
-  "Sengkang",
-  "Compassvale",
-  "Rumbia",
-  "Bakau",
-  "Kangkar",
-  "Ranggung",
-  "Sengkang",
-];
-List<String> PLRTStationsList = [
-  "Punggol",
-  "Cove",
-  "Meridian",
-  "Coral Edge",
-  "Riviera",
-  "Kadaloor",
-  "Oasis",
-  "Damai",
-  "Punggol",
-  "Sam Kee",
-  "Punggol Point",
-  "Samudera",
-  "Nibong",
-  "Sumang",
-  "Soo Teck",
-  "Punggol",
-];
-List<String> NSLStationsList = [
-  "Jurong East",
-  "Bukit Batok",
-  "Bukit Gombak",
-  "Choa Chu Kang",
-  "Yew Tee",
-  "Kranji",
-  "Marsiling",
-  "Woodlands",
-  "Admiralty",
-  "Sembawang",
-  "Canberra",
-  "Yishun",
-  "Khatib",
-  "Yio Chu Kang",
-  "Ang Mo Kio",
-  "Bishan",
-  "Braddell",
-  "Toa Payoh",
-  "Novena",
-  "Newton",
-  "Orchard",
-  "Somerset",
-  "Dhoby Ghaut",
-  "City Hall",
-  "Raffles Place",
-  "Marina Bay",
-  "Marina South Pier",
-];
-List<String> EWLStationsList = [
-  "Pasir Ris",
-  "Tampines",
-  "Simei",
-  "Tanah Merah",
-  "Bedok",
-  "Kembangan",
-  "Eunos",
-  "Paya Lebar",
-  "Aljunied",
-  "Kallang",
-  "Lavender",
-  "Bugis",
-  "City Hall",
-  "Raffles Place",
-  "Tanjong Pagar",
-  "Outram Park",
-  "Tiong Bahru",
-  "Redhill",
-  "Queenstown",
-  "Commonwealth",
-  "Buona Vista",
-  "Dover",
-  "Clementi",
-  "Jurong East",
-  "Chinese Garden",
-  "Lakeside",
-  "Boon Lay",
-  "Pioneer",
-  "Joo Koon",
-  "Gul Circle",
-  "Tuas Crescent",
-  "Tuas West Road",
-  "Tuas Link",
-];
-List<String> CCLStationsList = [
-  "Dhoby Ghaut",
-  "Bras Basah",
-  "Esplanade",
-  "Promenade",
-  "Nicoll Highway",
-  "Stadium",
-  "Mountbatten",
-  "Dakota",
-  "Paya Lebar",
-  "MacPherson",
-  "Tai Seng",
-  "Bartley",
-  "Serangoon",
-  "Lorong Chuan",
-  "Bishan",
-  "Marymount",
-  "Caldecott",
-  "Botanic Gardens",
-  "Farrer Road",
-  "Holland Village",
-  "Buona Vista",
-  "one-north",
-  "Kent Ridge",
-  "Haw Par Villa",
-  "Pasir Panjang",
-  "Labrador Park",
-  "Telok Blangah",
-  "HarbourFront",
-  "Marina Bay",
-  "Bayfront",
-];
-List<String> NELStationsList = [
-  "HarbourFront",
-  "Outram Park",
-  "Chinatown",
-  "Clarke Quay",
-  "Dhoby Ghaut",
-  "Little India",
-  "Farrer Park",
-  "Boon Keng",
-  "Potong Pasir",
-  "Woodleigh",
-  "Serangoon",
-  "Kovan",
-  "Hougang",
-  "Buangkok",
-  "Sengkang",
-  "Punggol",
-];
-List<String> DTLStationsList = [
-  "Bukit Panjang",
-  "Cashew",
-  "Hillview",
-  "Beauty World",
-  "King Albert Park",
-  "Sixth Avenue",
-  "Tan Kah Kee",
-  "Botanic Gardens",
-  "Stevens",
-  "Newton",
-  "Little India",
-  "Rochor",
-  "Bugis",
-  "Promenade",
-  "Bayfront",
-  "Downtown",
-  "Telok Ayer",
-  "Chinatown",
-  "Fort Canning",
-  "Bencoolen",
-  "Jalan Besar",
-  "Bendemeer",
-  "Geylang Bahru",
-  "Mattar",
-  "MacPherson",
-  "Ubi",
-  "Kaki Bukit",
-  "Bedok North",
-  "Bedok Reservoir",
-  "Tampines West",
-  "Tampines",
-  "Tampines East",
-  "Upper Changi",
-  "Expo",
-];
-
 Color _getCrowdLevelColor(String crowdLevel) {
   switch (crowdLevel) {
     case 'Low':
@@ -375,7 +165,7 @@ List<Station> generateLineStations(String line, String currentStation,
 }
 
 class _TrainScreenState extends State<TrainScreen> {
-  List<Station> stationsz = []; // Initialize the stationsz list
+  List<Station> stationsz = [];
   TrainStation _selectedTrainStation = TrainStation(
     stnCode: '',
     stnName: '',
@@ -397,7 +187,6 @@ class _TrainScreenState extends State<TrainScreen> {
   }
 
   void switchLine(String line, String currentStation) {
-    print("Running switchLine");
     if (lineStations.containsKey(line) &&
         lineStations[line]!
             .any((station) => station.stationName == currentStation)) {
@@ -453,7 +242,6 @@ class _TrainScreenState extends State<TrainScreen> {
       });
     } catch (error) {
       throw ('Error fetching crowd density: $error');
-      // Handle error (e.g., show error message)
     }
   }
 
@@ -489,8 +277,7 @@ class _TrainScreenState extends State<TrainScreen> {
           PopupMenuButton<String>(
             icon: Icon(Icons.swap_horiz),
             onSelected: (String line) {
-              switchLine(line,
-                  currentStation); // Replace `currentStation` with your actual station variable
+              switchLine(line, currentStation);
             },
             itemBuilder: (BuildContext context) {
               return {
@@ -519,7 +306,7 @@ class _TrainScreenState extends State<TrainScreen> {
             },
             icon: Icon(
               Icons.logout,
-              color: Colors.black, // Set the color of the logout icon to black
+              color: Colors.black,
             ),
           ),
         ],
@@ -610,7 +397,7 @@ class _TrainScreenState extends State<TrainScreen> {
                         focusNode: focusNode,
                         style: kInfo, // user input text color
                         decoration: InputDecoration(
-                          hintText: 'Enter train station', // hint text
+                          hintText: 'Enter train station',
                           hintStyle: kInfo,
                           prefixIcon: Icon(Icons.search, color: Colors.white),
                           filled: true,
@@ -632,7 +419,7 @@ class _TrainScreenState extends State<TrainScreen> {
                             find(_selectedTrainStation.stnName),
                         currentLine: currentLine,
                         stationsz: stationsz,
-                        lineColors: lineColors, // Pass lineColors here
+                        lineColors: lineColors,
                         stationCode: _selectedTrainStation.stnCode),
                   ),
                 )
@@ -657,7 +444,7 @@ class TrainSchedule extends StatelessWidget {
     required this.currentStationIndex,
     required this.currentLine,
     required this.stationCode,
-    required this.lineColors, // Include lineColors as a required parameter
+    required this.lineColors,
   });
 
   @override
