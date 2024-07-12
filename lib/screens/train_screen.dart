@@ -331,11 +331,16 @@ class _TrainScreenState extends State<TrainScreen> {
   }
 
   void switchLine(String line) {
-    //exists for junctions , so user not forced to look at wrong line
-    setState(() {
-      currentLine = line;
-      stationsz = lineStations[currentLine] ?? [];
-    });
+    if (lineStations[line] != null &&
+        lineStations[line]!
+            .any((station) => station.stationName == currentStation)) {
+      setState(() {
+        currentLine = line;
+        stationsz = lineStations[currentLine] ?? [];
+      });
+    } else {
+      throw ('Station not found in the selected line');
+    }
   }
 
   int find(String stationName) {
@@ -439,6 +444,7 @@ class _TrainScreenState extends State<TrainScreen> {
         ),
         actions: [
           PopupMenuButton<String>(
+            icon: Icon(Icons.swap_horiz),
             onSelected: switchLine,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
