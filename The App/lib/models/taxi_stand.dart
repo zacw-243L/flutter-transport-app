@@ -9,7 +9,6 @@ class TaxiStand {
     required this.longitude,
   });
 
-  // TODO implement TaxiStand.fromJson
   factory TaxiStand.fromJson(Map<String, dynamic> json) {
     return TaxiStand(
       name: json['Name'],

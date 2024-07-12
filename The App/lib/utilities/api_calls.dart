@@ -8,8 +8,6 @@ import '../models/train_crowd_density.dart';
 import '../models/taxi_stand.dart';
 
 class ApiCalls {
-  // String strTrainLine = 'EWL';
-
   Map<String, String> requestHeaders = {
     'Accept': 'application/json',
     'AccountKey': 'mxj5m356TyWIdVUsvXlWqg==',
@@ -34,21 +32,11 @@ class ApiCalls {
     }
   }
 
-/*  // Refer to 2.1 Bus Arrival needs param
-  void fetchBusArrival() async {
-    // TODO return List<BusArrival>
-  }*/
-/*  String busStopCode = "83139";
-  String ServiceNo = "15";*/
-
   // Refer to 2.1 Bus Arrival
   Future<List<BusArrival>> fetchBusArrivals(
       String busStopCode, ServiceNo) async {
     String baseURL =
         'http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=$busStopCode&ServiceNo=$ServiceNo'; //Jason this has 2 pramas
-
-    /*//TODO Add query parameters
-    Map<String, String> queryParams = {};*/
 
     final response =
         await http.get(Uri.parse(baseURL), headers: requestHeaders);
@@ -70,17 +58,7 @@ class ApiCalls {
     // TODO return List<CrowdDensity>
     String baseURL =
         'http://datamall2.mytransport.sg/ltaodataservice/PCDRealTime?TrainLine=$TrainLine';
-/*    String baseURL =
-        'http://datamall2.mytransport.sg/ltaodataservice/PCDRealTime?TrainLine=EWL';*/
 
-    //TODO Add query parameters
-/*    Map<String, String> queryParams = {
-      "TrainLine": TrainLine,
-    };*/
-
-/*    String queryString = Uri(queryParameters: queryParams).query;*/
-/*    final response = await http.get(Uri.parse(baseURL + queryString),
-        headers: requestHeaders);*/
     final response =
         await http.get(Uri.parse(baseURL), headers: requestHeaders);
     if (response.statusCode == 200) {

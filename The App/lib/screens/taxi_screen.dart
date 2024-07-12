@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-
 import '../utilities/api_calls.dart';
 import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
@@ -20,7 +19,6 @@ class TaxiScreen extends StatefulWidget {
 
 class _TaxiScreenState extends State<TaxiScreen> {
   List<TaxiStand> _alltaxiStands = [];
-  double _totalFare = 0.0;
 
   TaxiStand _selectedTaxiStand = TaxiStand(
     latitude: 0,
@@ -41,8 +39,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
         _alltaxiStands = taxistands;
       });
     } catch (error) {
-      print('Error fetching taxi stands: $error');
-      // Handle error (e.g., show error message)
+      throw ('Error fetching taxi stands: $error');
     }
   }
 
@@ -63,7 +60,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
             },
             icon: Icon(
               Icons.logout,
-              color: Colors.black, // Set the color of the logout icon to black
+              color: Colors.black,
             ),
           ),
         ],
@@ -73,7 +70,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'images/taxikun.png', // Replace with your image asset path
+              'images/taxikun.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -107,18 +104,23 @@ class _TaxiScreenState extends State<TaxiScreen> {
                     return TextField(
                       controller: textEditingController,
                       focusNode: focusNode,
-                      style: TextStyle(
-                          color: Colors.white), // user input text color
+                      style: kInfo, // user input text color
                       decoration: InputDecoration(
                         hintText: 'Enter taxi stand name', // hint text
                         hintStyle: kInfo,
                         prefixIcon: Icon(Icons.search, color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.black.withOpacity(0.6),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: BorderSide.none, // No border side
+                        ),
                       ),
                     );
                   },
                 ),
               ),
-              SizedBox(height: 20), // Add a 20 pixel high empty space
+              SizedBox(height: 20),
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('fares')
@@ -130,10 +132,26 @@ class _TaxiScreenState extends State<TaxiScreen> {
                     return CircularProgressIndicator();
                   }
                   if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                    return RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(text: 'Error: ', style: kShadow),
+                          TextSpan(
+                              text: '${snapshot.error}', style: kShadowRed2),
+                        ],
+                      ),
+                    );
                   }
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return Text('Total spent to date: -\$0.00');
+                    return RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                              text: 'Total spent to date: ', style: kShadow),
+                          TextSpan(text: '-\$0.00', style: kShadowRed2),
+                        ],
+                      ),
+                    );
                   }
 
                   double totalFare = snapshot.data!.docs.fold(0.0, (sum, doc) {
@@ -146,40 +164,16 @@ class _TaxiScreenState extends State<TaxiScreen> {
                   return RichText(
                     text: TextSpan(
                       children: [
+                        TextSpan(text: 'Total spent to date: ', style: kShadow),
                         TextSpan(
-                          text: 'Total spent to date: ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            shadows: [
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' -\$${totalFare.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 18,
-                            shadows: [
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ],
-                          ),
-                        ),
+                            text: '-\$${totalFare.toStringAsFixed(2)}',
+                            style: kShadowRed2),
                       ],
                     ),
                   );
                 },
               ),
-              SizedBox(height: 20), // Add another 20 pixel high empty space
+              SizedBox(height: 20),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
@@ -193,13 +187,12 @@ class _TaxiScreenState extends State<TaxiScreen> {
                     }
                     if (snapshot.hasError) {
                       return Center(
-                          child: Text('Error: ${snapshot.error}',
-                              style: TextStyle(color: Colors.white70)));
+                          child:
+                              Text('Error: ${snapshot.error}', style: kInfo));
                     }
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                       return Center(
-                          child: Text('No fares found',
-                              style: TextStyle(color: Colors.white60)));
+                          child: Text('No fares found', style: kInfo));
                     }
                     return SingleChildScrollView(
                       child: Column(
@@ -231,48 +224,10 @@ class _TaxiScreenState extends State<TaxiScreen> {
                               DateFormat('yyyy-MM-dd').format(date);
 
                           return ListTile(
-                            title: Text(
-                              '$origin > $destination',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20, // Bigger font size
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(2.0, 2.0),
-                                    blurRadius: 3.0,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            subtitle: Text(
-                              formattedDate,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18, // Bigger font size
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(2.0, 2.0),
-                                    blurRadius: 3.0,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            trailing: Text(
-                              '-\$$fare',
-                              style: TextStyle(
-                                color: Colors.red[900], // Deep red color
-                                fontSize: 18, // Bigger font size
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(2.0, 2.0),
-                                    blurRadius: 3.0,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            title:
+                                Text('$origin > $destination', style: kShadow),
+                            subtitle: Text(formattedDate, style: kShadow2),
+                            trailing: Text('-\$$fare', style: kShadowRed),
                           );
                         }).toList(),
                       ),
@@ -353,20 +308,17 @@ class ShowMapButton extends StatelessWidget {
                 selectedTaxiStand.longitude,
               );
             } catch (e) {
-              print('Error opening map: $e');
-              // Handle error (e.g., show error message)
+              throw ('Error opening map: $e');
             }
           } else {
-            print(
-                'Invalid coordinates: ${selectedTaxiStand.latitude}, ${selectedTaxiStand.longitude}');
-            // Handle invalid coordinates (e.g., show message to user)
+            throw ('Invalid coordinates: ${selectedTaxiStand.latitude}, ${selectedTaxiStand.longitude}');
           }
         },
         child: Row(
           children: [
             const Text(
               'Show Map',
-              style: TextStyle(fontSize: 20),
+              style: kShowMap,
             ),
             Icon(Icons.location_on)
           ],

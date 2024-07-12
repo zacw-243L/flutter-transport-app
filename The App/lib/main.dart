@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'firebase_options.dart';
-
 import '../screens/login_screen.dart';
 import '../screens/bus_screen.dart';
 import '../screens/train_screen.dart';
@@ -27,11 +25,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginScreen(),
         '/bus': (context) => const BusScreen(),
-        '/train': (context) => const TrainScreen(),
+        '/train': (context) => TrainScreen(),
         '/taxi': (context) => const TaxiScreen(),
       },
     );
   }
 }
-
-// hello world

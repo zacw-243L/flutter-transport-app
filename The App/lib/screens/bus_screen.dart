@@ -41,10 +41,7 @@ class _BusScreenState extends State<BusScreen> {
     final greetings = [
       'Hello',
       'Welcome',
-      'Hi there',
       'Greetings',
-      'Salutations',
-      'Howdy',
       'Hey',
     ];
     final random = Random();
@@ -130,7 +127,7 @@ class _BusScreenState extends State<BusScreen> {
             },
             icon: Icon(
               Icons.logout,
-              color: Colors.black, // Set the color of the logout icon to black
+              color: Colors.black,
             ),
           ),
         ],
@@ -190,13 +187,17 @@ class _BusScreenState extends State<BusScreen> {
                     return TextField(
                       controller: textEditingController,
                       focusNode: focusNode,
-                      style: TextStyle(
-                          color:
-                              Colors.white), // Change the text color to white
+                      style: kInfo, // Change the text color to white
                       decoration: InputDecoration(
                         hintText: 'Enter bus stop',
                         hintStyle: kInfo,
                         prefixIcon: Icon(Icons.search, color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.black.withOpacity(0.6),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: BorderSide.none, // No border side
+                        ),
                       ),
                     );
                   },
@@ -240,9 +241,6 @@ class ShowMap extends StatelessWidget {
     return SizedBox(
       width: 180,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          minimumSize: Size(double.infinity, 40),
-        ),
         onPressed: () async {
           if (_selectedBusStop.latitude != 0 &&
               _selectedBusStop.longitude != 0) {
@@ -260,10 +258,7 @@ class ShowMap extends StatelessWidget {
         },
         child: Row(
           children: [
-            const Text(
-              'Show Map',
-              style: TextStyle(fontSize: 20),
-            ),
+            const Text('Show Map', style: kShowMap),
             Icon(Icons.location_on)
           ],
         ),
@@ -290,13 +285,12 @@ class BusArrivalTile extends StatelessWidget {
     String arrivalInfo = arriveTime(busArrival.nextBus.estimatedArrival);
     Color arrivalColor;
 
-    if (arrivalInfo == 'Arrived') {
+    if (arrivalInfo == 'Arrived')
       arrivalColor = Colors.green;
-    } else if (arrivalInfo == 'Departed') {
+    else if (arrivalInfo == 'Departed')
       arrivalColor = Colors.red;
-    } else {
+    else
       arrivalColor = kbiggertimer.color ?? Colors.white;
-    }
 
     return ListTile(
       subtitle: Column(
@@ -327,7 +321,6 @@ class BusArrivalTile extends StatelessWidget {
                               arrivalInfo,
                               style: kbiggertimer.copyWith(color: arrivalColor),
                             ),
-                            SizedBox(height: 2),
                             Container(
                               height: 55,
                               child: loadImageWithGradient(
@@ -335,7 +328,6 @@ class BusArrivalTile extends StatelessWidget {
                                 busArrival.nextBus.load,
                               ),
                             ),
-                            SizedBox(height: 2),
                             Text(
                               busArrival.nextBus.feature == "WAB"
                                   ? "Wheelchair Accessible"
@@ -483,7 +475,7 @@ Widget loadIcon(String load) {
     children: [
       Icon(
         Icons.directions_bus,
-        color: Colors.grey, // default color
+        color: Colors.grey,
         size: 30,
       ),
       load.toUpperCase() == 'LSD'
@@ -498,7 +490,7 @@ Widget loadIcon(String load) {
               },
               child: Icon(
                 Icons.directions_bus,
-                color: Colors.white, // color of the shader
+                color: Colors.white, // shader colour
                 size: 30,
               ),
             )
@@ -514,7 +506,7 @@ Widget loadIcon(String load) {
                   },
                   child: Icon(
                     Icons.directions_bus,
-                    color: Colors.white, // color of the shader
+                    color: Colors.white, // shader colour
                     size: 30,
                   ),
                 )
@@ -530,7 +522,7 @@ Widget loadIcon(String load) {
                       },
                       child: Icon(
                         Icons.directions_bus,
-                        color: Colors.white, // color of the shader
+                        color: Colors.white, // shader colour
                         size: 30,
                       ),
                     )
