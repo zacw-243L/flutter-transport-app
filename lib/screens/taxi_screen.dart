@@ -135,10 +135,26 @@ class _TaxiScreenState extends State<TaxiScreen> {
                     return CircularProgressIndicator();
                   }
                   if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                    return RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(text: 'Error: ', style: kShadow),
+                          TextSpan(
+                              text: '${snapshot.error}', style: kShadowRed2),
+                        ],
+                      ),
+                    );
                   }
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return Text('Total spent to date: -\$0.00');
+                    return RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                              text: 'Total spent to date: ', style: kShadow),
+                          TextSpan(text: '-\$0.00', style: kShadowRed2),
+                        ],
+                      ),
+                    );
                   }
 
                   double totalFare = snapshot.data!.docs.fold(0.0, (sum, doc) {
@@ -153,13 +169,14 @@ class _TaxiScreenState extends State<TaxiScreen> {
                       children: [
                         TextSpan(text: 'Total spent to date: ', style: kShadow),
                         TextSpan(
-                            text: ' -\$${totalFare.toStringAsFixed(2)}',
+                            text: '-\$${totalFare.toStringAsFixed(2)}',
                             style: kShadowRed2),
                       ],
                     ),
                   );
                 },
               ),
+
               SizedBox(height: 20), // Add another 20 pixel high empty space
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
