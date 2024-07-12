@@ -154,7 +154,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
                         TextSpan(text: 'Total spent to date: ', style: kShadow),
                         TextSpan(
                             text: ' -\$${totalFare.toStringAsFixed(2)}',
-                            style: kShadowRed),
+                            style: kShadowRed2),
                       ],
                     ),
                   );
@@ -213,7 +213,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
                           return ListTile(
                             title:
                                 Text('$origin > $destination', style: kShadow),
-                            subtitle: Text(formattedDate, style: kShadow),
+                            subtitle: Text(formattedDate, style: kShadow2),
                             trailing: Text('-\$$fare', style: kShadowRed),
                           );
                         }).toList(),

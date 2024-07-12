@@ -53,8 +53,20 @@ const TextStyle ksmallerinfo = TextStyle(
   ],
 );
 const TextStyle kShadowRed = TextStyle(
-  color: Colors.red, // Deep red color
+  color: Color(0xFFB81111), // A deep red color
   fontSize: 18, // Bigger font size
+  shadows: [
+    Shadow(
+      offset: Offset(2.0, 2.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ],
+);
+const TextStyle kShadowRed2 = TextStyle(
+  color: Color(0xFFFF0000), // Deep red color
+  fontSize: 20, // Bigger font size
+  fontWeight: FontWeight.bold,
   shadows: [
     Shadow(
       offset: Offset(2.0, 2.0),
@@ -66,8 +78,19 @@ const TextStyle kShadowRed = TextStyle(
 
 const TextStyle kShadow = TextStyle(
   color: Colors.white,
-  fontSize: 20,
+  fontSize: 22,
   fontWeight: FontWeight.bold,
+  shadows: [
+    Shadow(
+      offset: Offset(2.0, 2.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ],
+);
+const TextStyle kShadow2 = TextStyle(
+  color: Colors.white,
+  fontSize: 16,
   shadows: [
     Shadow(
       offset: Offset(2.0, 2.0),
