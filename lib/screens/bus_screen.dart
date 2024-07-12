@@ -190,9 +190,7 @@ class _BusScreenState extends State<BusScreen> {
                     return TextField(
                       controller: textEditingController,
                       focusNode: focusNode,
-                      style: TextStyle(
-                          color:
-                              Colors.white), // Change the text color to white
+                      style: kInfo, // Change the text color to white
                       decoration: InputDecoration(
                         hintText: 'Enter bus stop',
                         hintStyle: kInfo,
@@ -268,7 +266,7 @@ class ShowMap extends StatelessWidget {
           children: [
             const Text(
               'Show Map',
-              style: TextStyle(fontSize: 20),
+              style: kShowMap,
             ),
             Icon(Icons.location_on)
           ],

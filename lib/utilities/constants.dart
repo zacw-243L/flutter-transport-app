@@ -10,6 +10,11 @@ const TextStyle kAppName = TextStyle(
   fontWeight: FontWeight.bold,
   color: kWhiteColor,
 );
+const TextStyle kShowMap = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: kPrimaryColor,
+);
 
 const TextStyle kWelcomeUser = TextStyle(
   fontSize: 18,
@@ -47,7 +52,20 @@ const TextStyle ksmallerinfo = TextStyle(
     ),
   ],
 );
+const TextStyle kShadowRed = TextStyle(
+  color: Colors.red, // Deep red color
+  fontSize: 18, // Bigger font size
+  shadows: [
+    Shadow(
+      offset: Offset(2.0, 2.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ],
+);
+
 const TextStyle kShadow = TextStyle(
+  color: Colors.white,
   fontSize: 20,
   fontWeight: FontWeight.bold,
   shadows: [

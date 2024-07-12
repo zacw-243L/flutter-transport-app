@@ -438,7 +438,8 @@ class _TrainScreenState extends State<TrainScreen> {
           style: kAppName,
         ),
         actions: [
-/*          PopupMenuButton<String>(
+          PopupMenuButton<String>(
+            icon: Icon(Icons.swap_vert),
             onSelected: switchLine,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
@@ -490,7 +491,7 @@ class _TrainScreenState extends State<TrainScreen> {
                 child: Text('PLRTB'),
               ),
             ],
-          ),*/
+          ),
           IconButton(
             onPressed: () {
               auth.signOut();
@@ -546,8 +547,7 @@ class _TrainScreenState extends State<TrainScreen> {
                       return TextField(
                         controller: textEditingController,
                         focusNode: focusNode,
-                        style: TextStyle(
-                            color: Colors.white), // user input text color
+                        style: kInfo, // user input text color
                         decoration: InputDecoration(
                           hintText: 'Enter train station', // hint text
                           hintStyle: kInfo,
@@ -565,7 +565,7 @@ class _TrainScreenState extends State<TrainScreen> {
                 ),
                 Text(
                   'Selected Station: ${_selectedTrainStation.stnName}',
-                  style: TextStyle(fontSize: 18),
+                  style: kInfo,
                 ),
                 Text(
                   'Crowd Level: $CrowdedInfo',

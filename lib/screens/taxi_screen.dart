@@ -107,8 +107,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
                     return TextField(
                       controller: textEditingController,
                       focusNode: focusNode,
-                      style: TextStyle(
-                          color: Colors.white), // user input text color
+                      style: kInfo, // user input text color
                       decoration: InputDecoration(
                         hintText: 'Enter taxi stand name', // hint text
                         hintStyle: kInfo,
@@ -152,34 +151,10 @@ class _TaxiScreenState extends State<TaxiScreen> {
                   return RichText(
                     text: TextSpan(
                       children: [
+                        TextSpan(text: 'Total spent to date: ', style: kShadow),
                         TextSpan(
-                          text: 'Total spent to date: ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            shadows: [
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' -\$${totalFare.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 18,
-                            shadows: [
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ],
-                          ),
-                        ),
+                            text: ' -\$${totalFare.toStringAsFixed(2)}',
+                            style: kShadowRed),
                       ],
                     ),
                   );
@@ -199,13 +174,12 @@ class _TaxiScreenState extends State<TaxiScreen> {
                     }
                     if (snapshot.hasError) {
                       return Center(
-                          child: Text('Error: ${snapshot.error}',
-                              style: TextStyle(color: Colors.white70)));
+                          child:
+                              Text('Error: ${snapshot.error}', style: kInfo));
                     }
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                       return Center(
-                          child: Text('No fares found',
-                              style: TextStyle(color: Colors.white60)));
+                          child: Text('No fares found', style: kInfo));
                     }
                     return SingleChildScrollView(
                       child: Column(
@@ -237,48 +211,10 @@ class _TaxiScreenState extends State<TaxiScreen> {
                               DateFormat('yyyy-MM-dd').format(date);
 
                           return ListTile(
-                            title: Text(
-                              '$origin > $destination',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20, // Bigger font size
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(2.0, 2.0),
-                                    blurRadius: 3.0,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            subtitle: Text(
-                              formattedDate,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18, // Bigger font size
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(2.0, 2.0),
-                                    blurRadius: 3.0,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            trailing: Text(
-                              '-\$$fare',
-                              style: TextStyle(
-                                color: Colors.red[900], // Deep red color
-                                fontSize: 18, // Bigger font size
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(2.0, 2.0),
-                                    blurRadius: 3.0,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            title:
+                                Text('$origin > $destination', style: kShadow),
+                            subtitle: Text(formattedDate, style: kShadow),
+                            trailing: Text('-\$$fare', style: kShadowRed),
                           );
                         }).toList(),
                       ),
@@ -372,7 +308,7 @@ class ShowMapButton extends StatelessWidget {
           children: [
             const Text(
               'Show Map',
-              style: TextStyle(fontSize: 20),
+              style: kShowMap,
             ),
             Icon(Icons.location_on)
           ],
