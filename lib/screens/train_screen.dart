@@ -281,11 +281,29 @@ class TrainScreen extends StatefulWidget {
 List<Station> generateLineStations(String line, String currentStation,
     List<String> stationList, String CrowdedInfo, String StationCode) {
   int currentStationIndex = stationList.indexOf(currentStation);
+  String prefixes = "";
+  String lastChar = "";
   String prefix = "";
+  bool FlipEW = false;
+
   if (StationCode.isNotEmpty) {
-    prefix = StationCode.replaceAll(
+    prefixes = StationCode.replaceAll(
         RegExp(r'\d'), ''); // Extract the alphabetic part
+    prefix = prefixes.substring(0, prefixes.length - 1);
+    lastChar = prefixes.substring(prefixes.length - 1);
   }
+
+  if (lastChar == 'W' &&
+      (int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 1) < 1) {
+    prefix += "E";
+    FlipEW = true;
+  } else if (lastChar == 'E' &&
+      (int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 1) < 1) {
+    prefix += "W";
+    FlipEW = true;
+  } else
+    prefix += lastChar;
+
   List<Station> stationsz = [
     if (currentStation.isNotEmpty && ((currentStationIndex - 2) >= 0))
       Station(
@@ -295,9 +313,11 @@ List<Station> generateLineStations(String line, String currentStation,
         isMainStation: false,
         stationInfo: "",
         stationIcon: (currentStationIndex - 2 >= 0) ? Icons.circle : null,
-        stationCode: (currentStationIndex - 2 >= 0)
-            ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 2)}"
-            : "",
+        stationCode: FlipEW
+            ? "${prefix}1"
+            : (currentStationIndex - 2 >= 0)
+                ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 2)}"
+                : "",
       ),
     if (currentStation.isNotEmpty && ((currentStationIndex - 1) >= 0))
       Station(
@@ -307,9 +327,11 @@ List<Station> generateLineStations(String line, String currentStation,
         isMainStation: false,
         stationInfo: "",
         stationIcon: (currentStationIndex - 1 >= 0) ? Icons.circle : null,
-        stationCode: (currentStationIndex - 1 >= 0)
-            ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 1)}"
-            : "",
+        stationCode: FlipEW
+            ? "Junction"
+            : (currentStationIndex - 1 >= 0)
+                ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 1)}"
+                : "",
       ),
     if (currentStation.isNotEmpty)
       Station(
@@ -330,7 +352,7 @@ List<Station> generateLineStations(String line, String currentStation,
             ? Icons.circle
             : null,
         stationCode: (currentStationIndex + 1 < stationList.length)
-            ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 1)}"
+            ? "$prefixes${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 1)}"
             : "",
       ),
     if (currentStation.isNotEmpty &&
@@ -345,7 +367,7 @@ List<Station> generateLineStations(String line, String currentStation,
             ? Icons.circle
             : null,
         stationCode: (currentStationIndex + 2 < stationList.length)
-            ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 2)}"
+            ? "$prefixes${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 2)}"
             : "",
       ),
   ];
