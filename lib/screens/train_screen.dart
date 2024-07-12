@@ -6,7 +6,7 @@ import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
 import '../widgets/navigation_bar.dart';
 
-String currentStation = ""; //_selectedTrainStation.stnName
+String currentStation = "";
 String currentLine = "";
 String CrowdedInfo = "";
 List<String> CELStationsList = [
@@ -14,7 +14,6 @@ List<String> CELStationsList = [
   "Marina Bay",
 ];
 List<String> CGLStationsList = [
-  "Tanah Merah",
   "Expo",
   "Changi Airport",
 ];
@@ -222,21 +221,44 @@ List<String> DTLStationsList = [
   "Expo",
 ];
 
+Color _getCrowdLevelColor(String crowdLevel) {
+  switch (crowdLevel) {
+    case 'Low':
+      return Colors.green;
+    case 'Moderate':
+      return Colors.orange;
+    case 'High':
+      return Colors.red;
+    default:
+      return Colors.white; // Default color for 'Unknown' or 'No data available'
+  }
+}
+
 Map<String, List<Station>> lineStations = {
-  "CEL": generateLineStations("CEL", currentStation, CELStationsList),
-  "CGL": generateLineStations("CGL", currentStation, CGLStationsList),
-  "BPL": generateLineStations("BPL", currentStation, BPLStationsList),
-  "SLRT": generateLineStations("SLRT", currentStation, SLRTStationsList),
-  "SLRTB":
-      generateLineStations("SLRTB", currentStation, SLRTBranchStationsList),
-  "PLRT": generateLineStations("PLRT", currentStation, PLRTStationsList),
-  "PLRTB":
-      generateLineStations("PLRTB", currentStation, PLRTBranchStationsList),
-  "NSL": generateLineStations("NSL", currentStation, NSLStationsList),
-  "EWL": generateLineStations("EWL", currentStation, EWLStationsList),
-  "CCL": generateLineStations("CCL", currentStation, CCLStationsList),
-  "NEL": generateLineStations("NEL", currentStation, NELStationsList),
-  "DTL": generateLineStations("DTL", currentStation, DTLStationsList),
+  "CEL":
+      generateLineStations("CEL", currentStation, CELStationsList, CrowdedInfo),
+  "CGL":
+      generateLineStations("CGL", currentStation, CGLStationsList, CrowdedInfo),
+  "BPL":
+      generateLineStations("BPL", currentStation, BPLStationsList, CrowdedInfo),
+  "SLRT": generateLineStations(
+      "SLRT", currentStation, SLRTStationsList, CrowdedInfo),
+  "SLRTB": generateLineStations(
+      "SLRTB", currentStation, SLRTBranchStationsList, CrowdedInfo),
+  "PLRT": generateLineStations(
+      "PLRT", currentStation, PLRTStationsList, CrowdedInfo),
+  "PLRTB": generateLineStations(
+      "PLRTB", currentStation, PLRTBranchStationsList, CrowdedInfo),
+  "NSL":
+      generateLineStations("NSL", currentStation, NSLStationsList, CrowdedInfo),
+  "EWL":
+      generateLineStations("EWL", currentStation, EWLStationsList, CrowdedInfo),
+  "CCL":
+      generateLineStations("CCL", currentStation, CCLStationsList, CrowdedInfo),
+  "NEL":
+      generateLineStations("NEL", currentStation, NELStationsList, CrowdedInfo),
+  "DTL":
+      generateLineStations("DTL", currentStation, DTLStationsList, CrowdedInfo),
 };
 
 Map<String, Color> lineColors = {
@@ -262,8 +284,8 @@ class TrainScreen extends StatefulWidget {
   State<TrainScreen> createState() => _TrainScreenState();
 }
 
-List<Station> generateLineStations(
-    String line, String currentStation, List<String> stationList) {
+List<Station> generateLineStations(String line, String currentStation,
+    List<String> stationList, String CrowdedInfo) {
   int currentStationIndex = stationList.indexOf(currentStation);
   List<Station> stationsz = [
     Station(
@@ -328,6 +350,7 @@ class _TrainScreenState extends State<TrainScreen> {
   @override
   void initState() {
     super.initState();
+    CrowdedInfo = _getCrowdLevelForStation();
     _allTrainStations = _trainStationsRepository.allTrainStations.toList();
     stationsz = lineStations[currentLine] ?? [];
   }
@@ -416,20 +439,6 @@ class _TrainScreenState extends State<TrainScreen> {
       }
     }
     return '';
-  }
-
-  Color _getCrowdLevelColor(String crowdLevel) {
-    switch (crowdLevel) {
-      case 'Low':
-        return Colors.green;
-      case 'Moderate':
-        return Colors.orange;
-      case 'High':
-        return Colors.red;
-      default:
-        return Colors
-            .black; // Default color for 'Unknown' or 'No data available'
-    }
   }
 
   @override
@@ -521,6 +530,8 @@ class _TrainScreenState extends State<TrainScreen> {
                         List<String> lineCOD = [];
                         _selectedTrainStation = station;
                         CrowdedInfo = _getCrowdLevelForStation();
+                        print("_selectedTrainStation.trainLineCode");
+                        print(_selectedTrainStation.trainLineCode);
                         if (_selectedTrainStation.trainLineCode == 'NEL') {
                           lineCOD = NELStationsList;
                         } else if (_selectedTrainStation.trainLineCode ==
@@ -565,6 +576,7 @@ class _TrainScreenState extends State<TrainScreen> {
                             _selectedTrainStation.trainLineCode,
                             _selectedTrainStation.stnName,
                             lineCOD,
+                            CrowdedInfo,
                           );
                         }
                       });
@@ -592,10 +604,6 @@ class _TrainScreenState extends State<TrainScreen> {
                       );
                     },
                   ),
-                ),
-                Text(
-                  'Selected Station: ${_selectedTrainStation.stnName}',
-                  style: kInfo,
                 ),
                 Text(
                   'Crowd Level: $CrowdedInfo',
@@ -699,7 +707,9 @@ class StationItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(stationName, style: kInfo),
-                  Text(stationInfo, style: kInfo),
+                  Text("Crowd Level : $stationInfo",
+                      style:
+                          TextStyle(color: _getCrowdLevelColor(stationInfo))),
                 ],
               ),
             ),
