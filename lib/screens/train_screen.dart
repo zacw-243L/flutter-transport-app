@@ -300,6 +300,7 @@ List<Station> generateLineStations(String line, String currentStation,
       stationName: (currentStationIndex - 2 >= 0)
           ? stationList[currentStationIndex - 2]
           : "",
+      isMainStation: false,
       stationInfo: "",
       stationIcon: (currentStationIndex - 2 >= 0) ? Icons.circle : null,
       stationCode: (currentStationIndex - 2 >= 0)
@@ -310,6 +311,7 @@ List<Station> generateLineStations(String line, String currentStation,
       stationName: (currentStationIndex - 1 >= 0)
           ? stationList[currentStationIndex - 1]
           : "",
+      isMainStation: false,
       stationInfo: "",
       stationIcon: (currentStationIndex - 1 >= 0) ? Icons.circle : null,
       stationCode: (currentStationIndex - 1 >= 0)
@@ -328,6 +330,7 @@ List<Station> generateLineStations(String line, String currentStation,
         stationName: (currentStationIndex + 1 <= stationList.length)
             ? stationList[currentStationIndex + 1]
             : "",
+        isMainStation: false,
         stationInfo: "",
         stationIcon: (currentStationIndex + 1 < stationList.length)
             ? Icons.circle
@@ -341,6 +344,7 @@ List<Station> generateLineStations(String line, String currentStation,
         stationName: (currentStationIndex + 2 <= stationList.length)
             ? stationList[currentStationIndex + 2]
             : "",
+        isMainStation: false,
         stationInfo: "",
         stationIcon: (currentStationIndex + 2 < stationList.length)
             ? Icons.circle
@@ -586,8 +590,8 @@ class _TrainScreenState extends State<TrainScreen> {
                       });
                       await _fetchCrowdDensity();
                       CrowdedInfo = _getCrowdLevelForStation();
-                      print("CrowdDSFA$CrowdedInfo");
                       if (lineCOD.isNotEmpty) {
+                        print("CrowdDSFA$CrowdedInfo");
                         stationsz = generateLineStations(
                             _selectedTrainStation.trainLineCode,
                             _selectedTrainStation.stnName,
@@ -682,7 +686,7 @@ class Station {
 
   Station(
       {required this.stationName,
-      this.isMainStation = false,
+      required this.isMainStation,
       required this.stationInfo,
       this.stationIcon, // Change to IconData type
       required this.stationCode});
@@ -700,7 +704,7 @@ class StationItem extends StatelessWidget {
     required this.stationCode,
     required this.stationName,
     required this.stationInfo,
-    this.isMainStation = false,
+    required this.isMainStation,
     this.stationIcon, // Change to IconData type
     required this.lineColor,
   });
@@ -723,9 +727,11 @@ class StationItem extends StatelessWidget {
                     stationCode,
                     style: kbiggertimer,
                   ),
-                  Text("Crowd Level : $stationInfo",
-                      style:
-                          TextStyle(color: _getCrowdLevelColor(stationInfo))),
+                  if (stationInfo.isNotEmpty)
+                    Text(
+                      "Crowd Level: $stationInfo",
+                      style: TextStyle(color: _getCrowdLevelColor(stationInfo)),
+                    ),
                 ],
               ),
             ),
