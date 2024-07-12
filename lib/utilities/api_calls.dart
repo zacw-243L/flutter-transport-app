@@ -12,6 +12,7 @@ class ApiCalls {
 
   Map<String, String> requestHeaders = {
     'Accept': 'application/json',
+
     //TODO
   };
 
