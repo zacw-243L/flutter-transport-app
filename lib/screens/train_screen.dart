@@ -10,6 +10,7 @@ String currentStation = "";
 String currentLine = "";
 String CrowdedInfo = "";
 String StationCode = "";
+List<String> lineCOD = [];
 
 List<String> CELStationsList = [
   "Bayfront",
@@ -381,6 +382,7 @@ class _TrainScreenState extends State<TrainScreen> {
             .any((station) => station.stationName == currentStation)) {
       setState(() {
         currentLine = line;
+        CrowdedInfo = _getCrowdLevelForStation();
       });
     } else {
       throw Exception('Station not found in the selected line');
@@ -462,7 +464,7 @@ class _TrainScreenState extends State<TrainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String CrowdedInfo = _getCrowdLevelForStation();
+    CrowdedInfo = _getCrowdLevelForStation();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF5E60CE).withOpacity(0.85),
@@ -541,9 +543,7 @@ class _TrainScreenState extends State<TrainScreen> {
                         option.stnName,
                     onSelected: (TrainStation station) async {
                       setState(() {
-                        List<String> lineCOD = [];
                         _selectedTrainStation = station;
-                        CrowdedInfo = _getCrowdLevelForStation();
                         if (_selectedTrainStation.trainLineCode == 'NEL') {
                           lineCOD = NELStationsList;
                         } else if (_selectedTrainStation.trainLineCode ==
@@ -583,16 +583,18 @@ class _TrainScreenState extends State<TrainScreen> {
                             'PLRTB') {
                           lineCOD = PLRTBranchStationsList;
                         }
-                        if (lineCOD.isNotEmpty) {
-                          stationsz = generateLineStations(
-                              _selectedTrainStation.trainLineCode,
-                              _selectedTrainStation.stnName,
-                              lineCOD,
-                              CrowdedInfo,
-                              _selectedTrainStation.stnCode);
-                        }
                       });
-                      await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
+                      await _fetchCrowdDensity();
+                      CrowdedInfo = _getCrowdLevelForStation();
+                      print("CrowdDSFA$CrowdedInfo");
+                      if (lineCOD.isNotEmpty) {
+                        stationsz = generateLineStations(
+                            _selectedTrainStation.trainLineCode,
+                            _selectedTrainStation.stnName,
+                            lineCOD,
+                            CrowdedInfo,
+                            _selectedTrainStation.stnCode);
+                      } // Fetch crowd density after selecting a station
                     },
                     fieldViewBuilder: (BuildContext context,
                         TextEditingController textEditingController,
