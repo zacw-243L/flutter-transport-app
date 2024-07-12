@@ -9,6 +9,8 @@ import '../widgets/navigation_bar.dart';
 String currentStation = "";
 String currentLine = "";
 String CrowdedInfo = "";
+String StationCode = "";
+
 List<String> CELStationsList = [
   "Bayfront",
   "Marina Bay",
@@ -235,30 +237,30 @@ Color _getCrowdLevelColor(String crowdLevel) {
 }
 
 Map<String, List<Station>> lineStations = {
-  "CEL":
-      generateLineStations("CEL", currentStation, CELStationsList, CrowdedInfo),
-  "CGL":
-      generateLineStations("CGL", currentStation, CGLStationsList, CrowdedInfo),
-  "BPL":
-      generateLineStations("BPL", currentStation, BPLStationsList, CrowdedInfo),
+  "CEL": generateLineStations(
+      "CEL", currentStation, CELStationsList, CrowdedInfo, StationCode),
+  "CGL": generateLineStations(
+      "CGL", currentStation, CGLStationsList, CrowdedInfo, StationCode),
+  "BPL": generateLineStations(
+      "BPL", currentStation, BPLStationsList, CrowdedInfo, StationCode),
   "SLRT": generateLineStations(
-      "SLRT", currentStation, SLRTStationsList, CrowdedInfo),
-  "SLRTB": generateLineStations(
-      "SLRTB", currentStation, SLRTBranchStationsList, CrowdedInfo),
+      "SLRT", currentStation, SLRTStationsList, CrowdedInfo, StationCode),
+  "SLRTB": generateLineStations("SLRTB", currentStation, SLRTBranchStationsList,
+      CrowdedInfo, StationCode),
   "PLRT": generateLineStations(
-      "PLRT", currentStation, PLRTStationsList, CrowdedInfo),
-  "PLRTB": generateLineStations(
-      "PLRTB", currentStation, PLRTBranchStationsList, CrowdedInfo),
-  "NSL":
-      generateLineStations("NSL", currentStation, NSLStationsList, CrowdedInfo),
-  "EWL":
-      generateLineStations("EWL", currentStation, EWLStationsList, CrowdedInfo),
-  "CCL":
-      generateLineStations("CCL", currentStation, CCLStationsList, CrowdedInfo),
-  "NEL":
-      generateLineStations("NEL", currentStation, NELStationsList, CrowdedInfo),
-  "DTL":
-      generateLineStations("DTL", currentStation, DTLStationsList, CrowdedInfo),
+      "PLRT", currentStation, PLRTStationsList, CrowdedInfo, StationCode),
+  "PLRTB": generateLineStations("PLRTB", currentStation, PLRTBranchStationsList,
+      CrowdedInfo, StationCode),
+  "NSL": generateLineStations(
+      "NSL", currentStation, NSLStationsList, CrowdedInfo, StationCode),
+  "EWL": generateLineStations(
+      "EWL", currentStation, EWLStationsList, CrowdedInfo, StationCode),
+  "CCL": generateLineStations(
+      "CCL", currentStation, CCLStationsList, CrowdedInfo, StationCode),
+  "NEL": generateLineStations(
+      "NEL", currentStation, NELStationsList, CrowdedInfo, StationCode),
+  "DTL": generateLineStations(
+      "DTL", currentStation, DTLStationsList, CrowdedInfo, StationCode),
 };
 
 Map<String, Color> lineColors = {
@@ -285,8 +287,13 @@ class TrainScreen extends StatefulWidget {
 }
 
 List<Station> generateLineStations(String line, String currentStation,
-    List<String> stationList, String CrowdedInfo) {
+    List<String> stationList, String CrowdedInfo, String StationCode) {
   int currentStationIndex = stationList.indexOf(currentStation);
+  String prefix = "";
+  if (StationCode.isNotEmpty) {
+    prefix = StationCode.replaceAll(
+        RegExp(r'\d'), ''); // Extract the alphabetic part
+  }
   List<Station> stationsz = [
     Station(
       stationName: (currentStationIndex - 2 >= 0)
@@ -294,6 +301,9 @@ List<Station> generateLineStations(String line, String currentStation,
           : "",
       stationInfo: "",
       stationIcon: (currentStationIndex - 2 >= 0) ? Icons.circle : null,
+      stationCode: (currentStationIndex - 2 >= 0)
+          ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 2)}"
+          : "",
     ),
     Station(
       stationName: (currentStationIndex - 1 >= 0)
@@ -301,14 +311,17 @@ List<Station> generateLineStations(String line, String currentStation,
           : "",
       stationInfo: "",
       stationIcon: (currentStationIndex - 1 >= 0) ? Icons.circle : null,
+      stationCode: (currentStationIndex - 1 >= 0)
+          ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) - 1)}"
+          : "",
     ),
     if (currentStation.isNotEmpty)
       Station(
-        stationName: currentStation,
-        isMainStation: true,
-        stationInfo: CrowdedInfo,
-        stationIcon: Icons.train,
-      ),
+          stationName: currentStation,
+          isMainStation: true,
+          stationInfo: CrowdedInfo,
+          stationIcon: Icons.train,
+          stationCode: StationCode),
     if (currentStation.isNotEmpty)
       Station(
         stationName: (currentStationIndex + 1 <= stationList.length)
@@ -318,6 +331,9 @@ List<Station> generateLineStations(String line, String currentStation,
         stationIcon: (currentStationIndex + 1 < stationList.length)
             ? Icons.circle
             : null,
+        stationCode: (currentStationIndex + 1 < stationList.length)
+            ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 1)}"
+            : "",
       ),
     if (currentStation.isNotEmpty)
       Station(
@@ -328,6 +344,9 @@ List<Station> generateLineStations(String line, String currentStation,
         stationIcon: (currentStationIndex + 2 < stationList.length)
             ? Icons.circle
             : null,
+        stationCode: (currentStationIndex + 2 < stationList.length)
+            ? "$prefix${(int.parse(StationCode.replaceAll(RegExp(r'\D'), '')) + 2)}"
+            : "",
       ),
   ];
   return stationsz;
@@ -350,9 +369,9 @@ class _TrainScreenState extends State<TrainScreen> {
   @override
   void initState() {
     super.initState();
-    CrowdedInfo = _getCrowdLevelForStation();
     _allTrainStations = _trainStationsRepository.allTrainStations.toList();
     stationsz = lineStations[currentLine] ?? [];
+    CrowdedInfo = _getCrowdLevelForStation();
   }
 
   void switchLine(String line, String currentStation) {
@@ -513,11 +532,6 @@ class _TrainScreenState extends State<TrainScreen> {
                       if (textEditingValue.text.isEmpty) {
                         return const Iterable<TrainStation>.empty();
                       }
-                      print("_allTrainStations");
-                      print(_allTrainStations.where(
-                          (station) => station.stnName.toLowerCase().contains(
-                                textEditingValue.text.toLowerCase(),
-                              )));
                       return _allTrainStations.where(
                           (station) => station.stnName.toLowerCase().contains(
                                 textEditingValue.text.toLowerCase(),
@@ -530,8 +544,6 @@ class _TrainScreenState extends State<TrainScreen> {
                         List<String> lineCOD = [];
                         _selectedTrainStation = station;
                         CrowdedInfo = _getCrowdLevelForStation();
-                        print("_selectedTrainStation.trainLineCode");
-                        print(_selectedTrainStation.trainLineCode);
                         if (_selectedTrainStation.trainLineCode == 'NEL') {
                           lineCOD = NELStationsList;
                         } else if (_selectedTrainStation.trainLineCode ==
@@ -573,11 +585,11 @@ class _TrainScreenState extends State<TrainScreen> {
                         }
                         if (lineCOD.isNotEmpty) {
                           stationsz = generateLineStations(
-                            _selectedTrainStation.trainLineCode,
-                            _selectedTrainStation.stnName,
-                            lineCOD,
-                            CrowdedInfo,
-                          );
+                              _selectedTrainStation.trainLineCode,
+                              _selectedTrainStation.stnName,
+                              lineCOD,
+                              CrowdedInfo,
+                              _selectedTrainStation.stnCode);
                         }
                       });
                       await _fetchCrowdDensity(); // Fetch crowd density after selecting a station
@@ -605,24 +617,16 @@ class _TrainScreenState extends State<TrainScreen> {
                     },
                   ),
                 ),
-                Text(
-                  'Crowd Level: $CrowdedInfo',
-                  style: TextStyle(
-                      fontSize: 18, color: _getCrowdLevelColor(CrowdedInfo)),
-                ),
-                RichText(
-                  text: TextSpan(
-                      text: _selectedTrainStation.stnCode, style: kShadow),
-                ),
                 Expanded(
                   child: Container(
                     height: 410,
                     child: TrainSchedule(
-                      currentStationIndex: find(_selectedTrainStation.stnName),
-                      currentLine: currentLine,
-                      stationsz: stationsz,
-                      lineColors: lineColors, // Pass lineColors here
-                    ),
+                        currentStationIndex:
+                            find(_selectedTrainStation.stnName),
+                        currentLine: currentLine,
+                        stationsz: stationsz,
+                        lineColors: lineColors, // Pass lineColors here
+                        stationCode: _selectedTrainStation.stnCode),
                   ),
                 )
               ],
@@ -638,12 +642,14 @@ class TrainSchedule extends StatelessWidget {
   final List<Station> stationsz;
   final int currentStationIndex;
   final String currentLine;
+  final String stationCode;
   final Map<String, Color> lineColors;
 
   TrainSchedule({
     required this.stationsz,
     required this.currentStationIndex,
     required this.currentLine,
+    required this.stationCode,
     required this.lineColors, // Include lineColors as a required parameter
   });
 
@@ -653,6 +659,7 @@ class TrainSchedule extends StatelessWidget {
       itemCount: stationsz.length,
       itemBuilder: (context, index) {
         return StationItem(
+          stationCode: stationsz[index].stationCode,
           stationName: stationsz[index].stationName,
           isMainStation: index == currentStationIndex,
           lineColor: lineColors[currentLine]!,
@@ -669,16 +676,18 @@ class Station {
   final bool isMainStation;
   final String stationInfo;
   final IconData? stationIcon; // Change to IconData type
+  final String stationCode;
 
-  Station({
-    required this.stationName,
-    this.isMainStation = false,
-    required this.stationInfo,
-    this.stationIcon, // Change to IconData type
-  });
+  Station(
+      {required this.stationName,
+      this.isMainStation = false,
+      required this.stationInfo,
+      this.stationIcon, // Change to IconData type
+      required this.stationCode});
 }
 
 class StationItem extends StatelessWidget {
+  final String stationCode;
   final String stationName;
   final String stationInfo;
   final bool isMainStation;
@@ -686,6 +695,7 @@ class StationItem extends StatelessWidget {
   final Color lineColor;
 
   StationItem({
+    required this.stationCode,
     required this.stationName,
     required this.stationInfo,
     this.isMainStation = false,
@@ -707,6 +717,10 @@ class StationItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(stationName, style: kInfo),
+                  Text(
+                    stationCode,
+                    style: kbiggertimer,
+                  ),
                   Text("Crowd Level : $stationInfo",
                       style:
                           TextStyle(color: _getCrowdLevelColor(stationInfo))),
