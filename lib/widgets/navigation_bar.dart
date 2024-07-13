@@ -22,6 +22,9 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         case 2:
           Navigator.pushReplacementNamed(context, '/taxi');
           break;
+        case 3:
+          Navigator.pushReplacementNamed(context, '/game');
+          break;
       }
     });
   }
@@ -43,6 +46,10 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
           label: 'Taxi',
           icon: Icon(Icons.directions_car),
         ),
+/*        BottomNavigationBarItem(
+          label: 'Idle',
+          icon: Icon(Icons.games),
+        ),*/
       ],
       currentIndex: widget.selectedIndexNavBar,
       onTap: _onTap,
