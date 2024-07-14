@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/taxi_fare.dart';
+import '../utilities/firebase_calls.dart';
 
 class AddTaxiScreen extends StatefulWidget {
   const AddTaxiScreen({Key? key}) : super(key: key);
@@ -12,25 +13,11 @@ class AddTaxiScreen extends StatefulWidget {
 
 class _AddTaxiScreenState extends State<AddTaxiScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
-  CollectionReference faresCollection =
-      FirebaseFirestore.instance.collection('fares');
 
   final TextEditingController originController = TextEditingController();
   final TextEditingController destController = TextEditingController();
   final TextEditingController fareController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
-
-  Future<void> _addFares(TaxiFare taxiFare) async {
-    try {
-      await faresCollection.add(taxiFare.toMap());
-      originController.clear();
-      destController.clear();
-      fareController.clear();
-      dateController.clear();
-    } catch (e) {
-      throw ("Failed to add taxi fare: $e");
-    }
-  }
 
   void _handleAdd() {
     String origin = originController.text;
@@ -143,8 +130,14 @@ class _AddTaxiScreenState extends State<AddTaxiScreen> {
       userid: auth.currentUser?.uid ?? '', // Ensure non-null value for userid
     );
 
-    _addFares(taxiFare).then((_) {
+    FirebaseCalls firebaseCalls = FirebaseCalls();
+
+    firebaseCalls.addTaxiFare(taxiFare).then((_) {
       showSuccessDialog('Taxi fare added successfully');
+      originController.clear();
+      destController.clear();
+      fareController.clear();
+      dateController.clear();
     }).catchError((e) {
       showErrorDialog(e.toString());
     });

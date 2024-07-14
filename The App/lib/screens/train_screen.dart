@@ -670,7 +670,7 @@ class StationItem extends StatelessWidget {
           if (stationIcon != null)
             Container(
               width: 3,
-              height: 50,
+              height: 49,
               color: lineColor,
             ),
           if (stationIcon != null)
@@ -678,7 +678,7 @@ class StationItem extends StatelessWidget {
           if (stationIcon != null)
             Container(
               width: 3,
-              height: 50,
+              height: 49,
               color: lineColor,
             ),
         ],
