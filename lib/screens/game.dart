@@ -78,9 +78,9 @@ class _GameScreenState extends State<GameScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 3),
       backgroundColor:
           Colors.grey[200], // Set the background color of the Scaffold
+      bottomNavigationBar: MyBottomNavigationBar(selectedIndexNavBar: 3),
       body: Center(
         child: Container(
           height: MediaQuery.of(context).size.height * 0.7,

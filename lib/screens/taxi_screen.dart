@@ -19,12 +19,7 @@ class TaxiScreen extends StatefulWidget {
 
 class _TaxiScreenState extends State<TaxiScreen> {
   List<TaxiStand> _alltaxiStands = [];
-
-  TaxiStand _selectedTaxiStand = TaxiStand(
-    latitude: 0,
-    longitude: 0,
-    name: '',
-  );
+  TaxiStand _selectedTaxiStand = TaxiStand(latitude: 0, longitude: 0, name: '');
 
   @override
   void initState() {
@@ -45,6 +40,8 @@ class _TaxiScreenState extends State<TaxiScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseCalls firebaseCalls = FirebaseCalls();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF5E60CE).withOpacity(0.85),
@@ -55,13 +52,10 @@ class _TaxiScreenState extends State<TaxiScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              auth.signOut();
+              FirebaseAuth.instance.signOut();
               Navigator.pushReplacementNamed(context, '/');
             },
-            icon: Icon(
-              Icons.logout,
-              color: Colors.black,
-            ),
+            icon: Icon(Icons.logout, color: Colors.black),
           ),
         ],
       ),
@@ -122,11 +116,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
               ),
               SizedBox(height: 20),
               StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('fares')
-                    .where('userid',
-                        isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                    .snapshots(),
+                stream: firebaseCalls.getUserFaresStream(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
@@ -176,11 +166,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
               SizedBox(height: 20),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('fares')
-                      .where('userid',
-                          isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                      .snapshots(),
+                  stream: firebaseCalls.getUserFaresStream(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
+  final int selectedIndexNavBar;
+
   MyBottomNavigationBar({super.key, required this.selectedIndexNavBar});
-  int selectedIndexNavBar;
 
   @override
   State<MyBottomNavigationBar> createState() => _MyBottomNavigationBarState();
@@ -10,7 +11,6 @@ class MyBottomNavigationBar extends StatefulWidget {
 
 class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   void _onTap(int index) {
-    widget.selectedIndexNavBar = index;
     setState(() {
       switch (index) {
         case 0:
@@ -48,11 +48,13 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         ),
 /*        BottomNavigationBarItem(
           label: 'Idle',
-          icon: Icon(Icons.games),
+          icon: Icon(Icons.gamepad),
         ),*/
       ],
       currentIndex: widget.selectedIndexNavBar,
       onTap: _onTap,
+/*      selectedItemColor: Colors.purple,
+      unselectedItemColor: Colors.black54,*/
     );
   }
 }

@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         '/bus': (context) => const BusScreen(),
         '/train': (context) => TrainScreen(),
         '/taxi': (context) => const TaxiScreen(),
-        '/game': (context) => GameScreen(),
+        '/game': (context) => const GameScreen(),
       },
     );
   }
