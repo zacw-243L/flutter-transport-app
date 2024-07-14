@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:sgtransport/models/taxi_ava.dart';
 import '../utilities/api_calls.dart';
 import '../utilities/constants.dart';
 import '../utilities/firebase_calls.dart';
@@ -19,12 +20,14 @@ class TaxiScreen extends StatefulWidget {
 
 class _TaxiScreenState extends State<TaxiScreen> {
   List<TaxiStand> _alltaxiStands = [];
+  List<TaxiAVA> _allavataxis = [];
   TaxiStand _selectedTaxiStand = TaxiStand(latitude: 0, longitude: 0, name: '');
 
   @override
   void initState() {
     super.initState();
     fetchTaxiStands();
+    fetchTaxiAVA();
   }
 
   Future<void> fetchTaxiStands() async {
@@ -32,6 +35,17 @@ class _TaxiScreenState extends State<TaxiScreen> {
       List<TaxiStand> taxistands = await ApiCalls().fetchTaxiStands();
       setState(() {
         _alltaxiStands = taxistands;
+      });
+    } catch (error) {
+      throw ('Error fetching taxi stands: $error');
+    }
+  }
+
+  Future<void> fetchTaxiAVA() async {
+    try {
+      List<TaxiAVA> taxiava = await ApiCalls().fetchTaxiAVA();
+      setState(() {
+        _allavataxis = taxiava;
       });
     } catch (error) {
       throw ('Error fetching taxi stands: $error');
