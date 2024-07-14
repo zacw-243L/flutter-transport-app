@@ -20,6 +20,7 @@ class TaxiScreen extends StatefulWidget {
 }
 
 class _TaxiScreenState extends State<TaxiScreen> {
+  bool _isLoading = false;
   List<TaxiStand> _alltaxiStands = [];
   List<TaxiAVA> _allavataxis = [];
   TaxiStand _selectedTaxiStand = TaxiStand(latitude: 0, longitude: 0, name: '');
@@ -28,6 +29,13 @@ class _TaxiScreenState extends State<TaxiScreen> {
     longitude: 0,
   );
 
+  List<String> _loadingBlurbs = [
+    "Finding a taxi...",
+    "Checking for availability...",
+    "Contacting driver",
+    "Almost done..."
+  ];
+  int _currentBlurbIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -55,6 +63,46 @@ class _TaxiScreenState extends State<TaxiScreen> {
     } catch (error) {
       throw ('Error fetching taxi stands: $error');
     }
+  }
+
+  Future<void> _startLoading() async {
+    setState(() {
+      _isLoading = true;
+      _currentBlurbIndex = 0;
+    });
+
+    for (int i = 0; i < _loadingBlurbs.length; i++) {
+      setState(() {
+        _currentBlurbIndex = i;
+      });
+      await Future.delayed(Duration(milliseconds: 1000));
+    }
+
+    await Future.delayed(Duration(milliseconds: 1000)); // simulate loading time
+
+    if (_allavataxis.isNotEmpty) {
+      final random = Random();
+      _selectedTaxilocation = _allavataxis[random.nextInt(_allavataxis.length)];
+      if (_selectedTaxilocation.latitude != 0 &&
+          _selectedTaxilocation.longitude != 0) {
+        try {
+          await openMap(
+            _selectedTaxilocation.latitude,
+            _selectedTaxilocation.longitude,
+          );
+        } catch (e) {
+          throw ('Error opening map: $e');
+        }
+      } else {
+        throw ('Invalid coordinates: ${_selectedTaxilocation.latitude}, ${_selectedTaxilocation.longitude}');
+      }
+    } else {
+      print('No available taxis');
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -247,33 +295,18 @@ class _TaxiScreenState extends State<TaxiScreen> {
                   children: [
                     FloatingActionButton(
                       onPressed: () async {
-                        if (_allavataxis.isNotEmpty) {
-                          final random = Random();
-                          _selectedTaxilocation =
-                              _allavataxis[random.nextInt(_allavataxis.length)];
-                          if (_selectedTaxilocation.latitude != 0 &&
-                              _selectedTaxilocation.longitude != 0) {
-                            try {
-                              await openMap(
-                                _selectedTaxilocation.latitude,
-                                _selectedTaxilocation.longitude,
-                              );
-                            } catch (e) {
-                              throw ('Error opening map: $e');
-                            }
-                          } else {
-                            throw ('Invalid coordinates: ${_selectedTaxilocation.latitude}, ${_selectedTaxilocation.longitude}');
-                          }
-                          ;
-                        } else {
-                          print('No available taxis');
-                        }
+                        await _startLoading();
                       },
-                      child: const Icon(Icons.search),
-                      backgroundColor:
-                          Color(0xFFFF00FF), // Customize the background color
-                      tooltip:
-                          'Search for available taxi', // Optional tooltip for accessibility
+                      child: _isLoading
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(),
+                              ],
+                            )
+                          : Icon(Icons.search),
+                      backgroundColor: Color(0xFFFF00FF),
+                      tooltip: 'Search for available taxi',
                     ),
                     SizedBox(
                       width: 50,
@@ -314,6 +347,20 @@ class _TaxiScreenState extends State<TaxiScreen> {
               ),
             ],
           ),
+          if (_isLoading)
+            Center(
+              child: Container(
+                padding: EdgeInsets.all(25.0),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(13.0),
+                ),
+                child: Text(
+                  _loadingBlurbs[_currentBlurbIndex],
+                  style: TextStyle(color: Colors.white, fontSize: 22.0),
+                ),
+              ),
+            ),
         ],
       ),
     );
