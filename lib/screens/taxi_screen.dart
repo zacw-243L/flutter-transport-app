@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +23,10 @@ class _TaxiScreenState extends State<TaxiScreen> {
   List<TaxiStand> _alltaxiStands = [];
   List<TaxiAVA> _allavataxis = [];
   TaxiStand _selectedTaxiStand = TaxiStand(latitude: 0, longitude: 0, name: '');
+  TaxiAVA _selectedTaxilocation = TaxiAVA(
+    latitude: 0,
+    longitude: 0,
+  );
 
   @override
   void initState() {
@@ -240,6 +245,39 @@ class _TaxiScreenState extends State<TaxiScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    FloatingActionButton(
+                      onPressed: () async {
+                        if (_allavataxis.isNotEmpty) {
+                          final random = Random();
+                          _selectedTaxilocation =
+                              _allavataxis[random.nextInt(_allavataxis.length)];
+                          if (_selectedTaxilocation.latitude != 0 &&
+                              _selectedTaxilocation.longitude != 0) {
+                            try {
+                              await openMap(
+                                _selectedTaxilocation.latitude,
+                                _selectedTaxilocation.longitude,
+                              );
+                            } catch (e) {
+                              throw ('Error opening map: $e');
+                            }
+                          } else {
+                            throw ('Invalid coordinates: ${_selectedTaxilocation.latitude}, ${_selectedTaxilocation.longitude}');
+                          }
+                          ;
+                        } else {
+                          print('No available taxis');
+                        }
+                      },
+                      child: const Icon(Icons.search),
+                      backgroundColor:
+                          Color(0xFFFF00FF), // Customize the background color
+                      tooltip:
+                          'Search for available taxi', // Optional tooltip for accessibility
+                    ),
+                    SizedBox(
+                      width: 50,
+                    ),
                     ShowMapButton(
                       selectedTaxiStand: _selectedTaxiStand,
                       openMap: openMap,
