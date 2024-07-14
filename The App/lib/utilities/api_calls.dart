@@ -6,6 +6,7 @@ import '../models/bus_arrival.dart';
 import '../models/bus_stop.dart';
 import '../models/train_crowd_density.dart';
 import '../models/taxi_stand.dart';
+import '../models/taxi_ava.dart';
 
 class ApiCalls {
   Map<String, String> requestHeaders = {
@@ -87,6 +88,26 @@ class ApiCalls {
       List<TaxiStand> taxistand =
           jsonList.map((json) => TaxiStand.fromJson(json)).toList();
       return taxistand;
+    } else {
+      throw Exception('Failed to load Taxi Stand');
+    }
+  }
+
+  // Refer to 2.9 TAXI AVAILABILITY
+  Future<List<TaxiAVA>> fetchTaxiAVA() async {
+    String baseURL =
+        'http://datamall2.mytransport.sg/ltaodataservice/Taxi-Availability';
+
+    final response =
+        await http.get(Uri.parse(baseURL), headers: requestHeaders);
+
+    if (response.statusCode == 200) {
+      // TODO return List<TaxiAVA>
+      print(response.body);
+      List<dynamic> jsonList = jsonDecode(response.body)['value'];
+      List<TaxiAVA> taxiava =
+          jsonList.map((json) => TaxiAVA.fromJson(json)).toList();
+      return taxiava;
     } else {
       throw Exception('Failed to load Taxi Stand');
     }
