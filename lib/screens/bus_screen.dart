@@ -163,7 +163,10 @@ class _BusScreenState extends State<BusScreen> {
         ),
         actions: [
           PopupMenuButton<String>(
-            icon: Icon(Icons.menu_open),
+            icon: Icon(
+              Icons.swap_horiz_rounded,
+              color: Colors.white,
+            ),
             onSelected: _updateCategory,
             itemBuilder: (BuildContext context) {
               return {

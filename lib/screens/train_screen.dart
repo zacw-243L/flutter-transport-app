@@ -377,7 +377,10 @@ class _TrainScreenState extends State<TrainScreen> {
         ),
         actions: [
           PopupMenuButton<String>(
-            icon: Icon(Icons.swap_horiz),
+            icon: Icon(
+              Icons.filter_list_outlined,
+              color: Colors.white,
+            ),
             onSelected: _updateCategory,
             itemBuilder: (BuildContext context) {
               return {
