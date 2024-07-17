@@ -11,13 +11,13 @@ import '../models/taxi_ava.dart';
 class ApiCalls {
   Map<String, String> requestHeaders = {
     'Accept': 'application/json',
-    'AccountKey': 'mxj5m356TyWIdVUsvXlWqg==',
     //TODO
   };
 
   // Refer to 2.4 Bus Stops
-  Future<List<BusStop>> fetchBusStops() async {
-    String baseURL = 'http://datamall2.mytransport.sg/ltaodataservice/BusStops';
+  Future<List<BusStop>> fetchBusStops(skip) async {
+    String baseURL =
+        'http://datamall2.mytransport.sg/ltaodataservice/BusStops?\$skip=$skip';
 
     final response =
         await http.get(Uri.parse(baseURL), headers: requestHeaders);
