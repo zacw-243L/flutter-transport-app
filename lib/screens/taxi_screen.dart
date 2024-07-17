@@ -291,60 +291,57 @@ class _TaxiScreenState extends State<TaxiScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      FloatingActionButton(
-                        onPressed: () async {
-                          await _startLoading();
-                        },
-                        child: _isLoading
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(),
-                                ],
-                              )
-                            : Icon(Icons.search),
-                        backgroundColor: Color(0xFFB500B5),
-                        tooltip: 'Search for available taxi',
-                      ),
-                      SizedBox(
-                        width: screenSize.width * 0.07,
-                      ),
-                      ShowMapButton(
-                        selectedTaxiStand: _selectedTaxiStand,
-                        openMap: openMap,
-                      ),
-                      SizedBox(width: screenSize.width * 0.07),
-                      FloatingActionButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return SingleChildScrollView(
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                        .viewInsets
-                                        .bottom,
-                                  ),
-                                  child: const AddTaxiScreen(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () async {
+                        await _startLoading();
+                      },
+                      child: _isLoading
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(),
+                              ],
+                            )
+                          : Icon(Icons.search),
+                      backgroundColor: Color(0xFFB500B5),
+                      tooltip: 'Search for available taxi',
+                    ),
+                    SizedBox(
+                      width: screenSize.width * 0.07,
+                    ),
+                    ShowMapButton(
+                      selectedTaxiStand: _selectedTaxiStand,
+                      openMap: openMap,
+                    ),
+                    SizedBox(width: screenSize.width * 0.07),
+                    FloatingActionButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SingleChildScrollView(
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom,
                                 ),
-                              );
-                            },
-                          );
-                        },
-                        child: const Icon(Icons.add),
-                        backgroundColor:
-                            Color(0xFFFFFFFF), // Customize the background color
-                        tooltip:
-                            'Add Taxi Fare', // Optional tooltip for accessibility
-                      ),
-                    ],
-                  ),
+                                child: const AddTaxiScreen(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: const Icon(Icons.add),
+                      backgroundColor:
+                          Color(0xFFFFFFFF), // Customize the background color
+                      tooltip:
+                          'Add Taxi Fare', // Optional tooltip for accessibility
+                    ),
+                  ],
                 ),
               ),
             ],
