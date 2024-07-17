@@ -238,8 +238,9 @@ class ShowMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return SizedBox(
-      width: 180,
+      width: screenSize.width * 0.50,
       child: ElevatedButton(
         onPressed: () async {
           if (_selectedBusStop.latitude != 0 &&
@@ -259,6 +260,9 @@ class ShowMap extends StatelessWidget {
         child: Row(
           children: [
             const Text('Show Map', style: kShowMap),
+            SizedBox(
+              width: screenSize.width * 0.03,
+            ),
             Icon(Icons.location_on)
           ],
         ),

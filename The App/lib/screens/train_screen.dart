@@ -602,7 +602,7 @@ class StationItem extends StatelessWidget {
       color: Colors.black.withOpacity(0.6),
       child: Row(
         children: [
-          _buildTimeline(),
+          _buildTimeline(context),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -662,7 +662,8 @@ class StationItem extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeline() {
+  Widget _buildTimeline(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Container(
       width: 60,
       child: Column(
@@ -670,7 +671,7 @@ class StationItem extends StatelessWidget {
           if (stationIcon != null)
             Container(
               width: 3,
-              height: 49,
+              height: screenSize.height * 0.055,
               color: lineColor,
             ),
           if (stationIcon != null)
@@ -678,7 +679,7 @@ class StationItem extends StatelessWidget {
           if (stationIcon != null)
             Container(
               width: 3,
-              height: 49,
+              height: screenSize.height * 0.055,
               color: lineColor,
             ),
         ],

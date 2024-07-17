@@ -108,6 +108,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
   @override
   Widget build(BuildContext context) {
     FirebaseCalls firebaseCalls = FirebaseCalls();
+    final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -291,7 +292,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FloatingActionButton(
                       onPressed: () async {
@@ -305,19 +306,17 @@ class _TaxiScreenState extends State<TaxiScreen> {
                               ],
                             )
                           : Icon(Icons.search),
-                      backgroundColor: Color(0xFFFF00FF),
+                      backgroundColor: Color(0xFFB500B5),
                       tooltip: 'Search for available taxi',
                     ),
                     SizedBox(
-                      width: 50,
+                      width: screenSize.width * 0.07,
                     ),
                     ShowMapButton(
                       selectedTaxiStand: _selectedTaxiStand,
                       openMap: openMap,
                     ),
-                    SizedBox(
-                      width: 50,
-                    ),
+                    SizedBox(width: screenSize.width * 0.07),
                     FloatingActionButton(
                       onPressed: () {
                         showModalBottomSheet(
@@ -378,8 +377,9 @@ class ShowMapButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return SizedBox(
-      width: 180, // Set the width of the button
+      width: screenSize.width * 0.50,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: Size(double.infinity, 40),
@@ -404,6 +404,9 @@ class ShowMapButton extends StatelessWidget {
             const Text(
               'Show Map',
               style: kShowMap,
+            ),
+            SizedBox(
+              width: screenSize.width * 0.03,
             ),
             Icon(Icons.location_on)
           ],
