@@ -16,6 +16,7 @@ class BusScreen extends StatefulWidget {
 }
 
 class _BusScreenState extends State<BusScreen> {
+  int skip = 0;
   List<BusStop> _allBusStops = [];
   List<BusArrival> _busArrivals = [];
   BusStop _selectedBusStop = BusStop(
@@ -33,7 +34,7 @@ class _BusScreenState extends State<BusScreen> {
     super.initState();
     _setRandomGreeting();
     Future.delayed(Duration.zero, () async {
-      _allBusStops = await ApiCalls().fetchBusStops();
+      _allBusStops = await ApiCalls().fetchBusStops(skip);
     });
   }
 
@@ -50,7 +51,7 @@ class _BusScreenState extends State<BusScreen> {
 
   Future<void> fetchBusStops() async {
     try {
-      List<BusStop> busStops = await ApiCalls().fetchBusStops();
+      List<BusStop> busStops = await ApiCalls().fetchBusStops(skip);
       setState(() {
         _allBusStops = busStops;
       });
@@ -110,6 +111,47 @@ class _BusScreenState extends State<BusScreen> {
     return 'ETA: $minutes min';
   }
 
+  Future<void> _updateCategory(String category) async {
+    setState(() {
+      switch (category) {
+        case 'Page 1':
+          skip = 0;
+          break;
+        case 'Page 2':
+          skip = 500;
+          break;
+        case 'Page 3':
+          skip = 1000;
+          break;
+        case 'Page 4':
+          skip = 1500;
+          break;
+        case 'Page 5':
+          skip = 2000;
+          break;
+        case 'Page 6':
+          skip = 2500;
+          break;
+        case 'Page 7':
+          skip = 3000;
+          break;
+        case 'Page 8':
+          skip = 3500;
+          break;
+        case 'Page 9':
+          skip = 4000;
+          break;
+        case 'Page 10':
+          skip = 4500;
+          break;
+        case 'Page 11':
+          skip = 5000;
+          break;
+      }
+    });
+    await fetchBusStops();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,6 +162,33 @@ class _BusScreenState extends State<BusScreen> {
           style: kAppName,
         ),
         actions: [
+          PopupMenuButton<String>(
+            icon: Icon(
+              Icons.swap_horiz_rounded,
+              color: Colors.white,
+            ),
+            onSelected: _updateCategory,
+            itemBuilder: (BuildContext context) {
+              return {
+                'Page 1',
+                'Page 2',
+                'Page 3',
+                'Page 4',
+                'Page 5',
+                'Page 6',
+                'Page 7',
+                'Page 8',
+                'Page 9',
+                'Page 10',
+                'Page 11',
+              }.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
           IconButton(
             onPressed: () {
               auth.signOut();
