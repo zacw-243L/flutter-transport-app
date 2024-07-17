@@ -108,6 +108,7 @@ class _TaxiScreenState extends State<TaxiScreen> {
   @override
   Widget build(BuildContext context) {
     FirebaseCalls firebaseCalls = FirebaseCalls();
+    final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -290,59 +291,60 @@ class _TaxiScreenState extends State<TaxiScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(
-                      onPressed: () async {
-                        await _startLoading();
-                      },
-                      child: _isLoading
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(),
-                              ],
-                            )
-                          : Icon(Icons.search),
-                      backgroundColor: Color(0xFFFF00FF),
-                      tooltip: 'Search for available taxi',
-                    ),
-                    SizedBox(
-                      width: 50,
-                    ),
-                    ShowMapButton(
-                      selectedTaxiStand: _selectedTaxiStand,
-                      openMap: openMap,
-                    ),
-                    SizedBox(
-                      width: 50,
-                    ),
-                    FloatingActionButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return SingleChildScrollView(
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      FloatingActionButton(
+                        onPressed: () async {
+                          await _startLoading();
+                        },
+                        child: _isLoading
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(),
+                                ],
+                              )
+                            : Icon(Icons.search),
+                        backgroundColor: Color(0xFFB500B5),
+                        tooltip: 'Search for available taxi',
+                      ),
+                      SizedBox(
+                        width: screenSize.width * 0.07,
+                      ),
+                      ShowMapButton(
+                        selectedTaxiStand: _selectedTaxiStand,
+                        openMap: openMap,
+                      ),
+                      SizedBox(width: screenSize.width * 0.07),
+                      FloatingActionButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return SingleChildScrollView(
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context)
+                                        .viewInsets
+                                        .bottom,
+                                  ),
+                                  child: const AddTaxiScreen(),
                                 ),
-                                child: const AddTaxiScreen(),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: const Icon(Icons.add),
-                      backgroundColor:
-                          Color(0xFFFFFFFF), // Customize the background color
-                      tooltip:
-                          'Add Taxi Fare', // Optional tooltip for accessibility
-                    ),
-                  ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Icon(Icons.add),
+                        backgroundColor:
+                            Color(0xFFFFFFFF), // Customize the background color
+                        tooltip:
+                            'Add Taxi Fare', // Optional tooltip for accessibility
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -378,8 +380,9 @@ class ShowMapButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return SizedBox(
-      width: 180, // Set the width of the button
+      width: screenSize.width * 0.50,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: Size(double.infinity, 40),
@@ -404,6 +407,9 @@ class ShowMapButton extends StatelessWidget {
             const Text(
               'Show Map',
               style: kShowMap,
+            ),
+            SizedBox(
+              width: screenSize.width * 0.03,
             ),
             Icon(Icons.location_on)
           ],
